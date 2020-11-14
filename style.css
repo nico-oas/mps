@@ -1,0 +1,24 @@
+:root {
+    --primary: #339933;
+    --secondary: #006600;
+}
+body {
+    background-color: var(--primary);
+    color: black;
+}
+nav {
+    color: white;
+}
+#main-container {
+    background-color: whitesmoke;
+    padding: 2rem;
+    border-radius: 0 0 1rem 1rem;
+}
+.btn-green {
+    color: white;
+    background-color: var(--primary);
+}
+.btn-green:hover {
+    color: white;
+    background-color: var(--secondary);
+}
