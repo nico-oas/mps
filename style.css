@@ -1,18 +1,19 @@
 :root {
-    --primary: #996d339a;
-    --secondary: #00661a25;
+    --primary: #216523;
+    --secondary: #28792b;
 }
 body {
     background-color: var(--primary);
+    background-image: url("topography.svg");
     color: black;
 }
 nav {
     color: white;
 }
 #main-container {
-    background-color: whitesmoke;
+    margin-top: 2rem;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 2rem;
-    border-radius: 0 0 1rem 1rem;
 }
 .btn-green {
     color: white;
@@ -29,3 +30,8 @@ nav {
     }
 } 
 */
+@media (min-width: 576px) {
+    #main-container {
+        border-radius: 1rem;
+    }
+}
