@@ -1,6 +1,6 @@
 :root {
-    --primary: #339933;
-    --secondary: #006600;
+    --primary: #996d339a;
+    --secondary: #00661a25;
 }
 body {
     background-color: var(--primary);
@@ -22,3 +22,10 @@ nav {
     color: white;
     background-color: var(--secondary);
 }
+/* @media (min-width: 576px) { 
+    .navbar-toggler {
+        display: none;
+
+    }
+} 
+*/
