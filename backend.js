@@ -39,3 +39,34 @@ function add_item(item) {
 function retrieve_items() {
 
 }
+
+
+
+/*
+HELPER FUNCTIONS
+---------------------------------
+*/
+
+function _set_cookie(cookie_key, cookie_value, cookie_path = "") {
+    var d = new Date();
+    var expires = "expires=" + d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000)).toUTCString();
+    document.cookie = cookie_key + "=" + cookie_value + ";" + expires + ";path=/" + cookie_path;
+}
+
+function _get_cookie(cookie_key) {
+    var name = cookie_key + "=";
+    var decoded_cookie = decodeURIComponent(document.cookie);
+    var cookies = decoded_cookie.split(';');
+
+    for (var i = 0; i < cookies.length; i++) {
+        var c = cookies[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+
+    return "";
+}
