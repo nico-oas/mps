@@ -1,6 +1,8 @@
 // init function to prepare all cookies/variables
-function backend_init() {
-
+function init_backend() {
+    //_set_cookie("test_cookie", "test_value");
+    //console.log(_get_cookie("test_cookie"))
+    //_del_cookie("test_cookie")
 }
 
 // function that handles the registration through cookies (faking)
@@ -49,8 +51,9 @@ HELPER FUNCTIONS
 
 function _set_cookie(cookie_key, cookie_value, cookie_path = "") {
     var d = new Date();
-    var expires = "expires=" + d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000)).toUTCString();
-    document.cookie = cookie_key + "=" + cookie_value + ";" + expires + ";path=/" + cookie_path;
+    d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cookie_key + "=" + cookie_value + ";" + expires + ";path=/" + cookie_path + ";SameSite=Lax";
 }
 
 function _get_cookie(cookie_key) {
@@ -69,4 +72,17 @@ function _get_cookie(cookie_key) {
     }
 
     return "";
+}
+
+function _get_cookie_2(cookie_key) {
+    value = document.cookie.split('; ').find(row => row.startsWith(cookie_key)).split('=')[1];
+    return typeof value !== "undefined" ? value : "";
+}
+
+function _del_cookie(cookie_key, cookie_path = "") {
+    if (_get_cookie(cookie_key) == "") {
+        console.log("ERROR: aufruf von _del_cookie() ohne existierenden cookie: " + cookie_key)
+        return;
+    }
+    document.cookie = cookie_key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/" + cookie_path + ";";
 }
