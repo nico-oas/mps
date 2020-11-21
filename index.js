@@ -2,7 +2,7 @@ var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla"
 
 window.addEventListener("load", function(){
     $("input[name='birthdate']").attr("max", new Date().toISOString().split("T")[0]);
-    for(i in availableCountries){
+    for(i in countries){
         $("#countrySelect").append("<option value='" + countries[i] + "'>" + countries[i] + "</option>");
     }
 });
