@@ -3,10 +3,18 @@ function __init_backend() {
     if (1) {
         console.log("registration: " + registration("phil", "kuhle@mail", "420", "Musterland", "SiChEr", "MusterMax", "Male"));
         console.log("login: " + login("phil", "SiChEr"));
-        add_item("Banane");
+        console.log("check login: " + check_login())
+        console.log("add item Banane: " + add_item("Banane"));
         add_item("Brot");
         add_item("Bananenbrot");
         console.log(retrieve_items());
+        logout();
+        console.log("ausgeloggt");
+        console.log("check login: " + check_login())
+        console.log("add item Banane: " + add_item("Banane"));
+        console.log(retrieve_items());
+
+
     } else {
         document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
     }
@@ -23,7 +31,9 @@ function registration(username, mail, birthdate, region, password, real_name, ge
     _set_cookie("password", password);
     _set_cookie("real_name", real_name);
     _set_cookie("gender", gender);
+
     _set_cookie("n_items", -1);
+    _set_cookie("current_login", true);
     return true;
 }
 
@@ -39,12 +49,12 @@ function login(login_ID, password) {
 // function that checks whether the user is already logged in
 // returns false when user is not currently logged in otherwise true
 function check_login() {
-    return _get_cookie("current_login") == true ? true : false;
+    return _get_cookie("current_login") ? true : false;
 }
 
 // function that handles the logout through cookies (faking)
 function logout() {
-    _del_cookie("current_loging");
+    _del_cookie("current_login");
 }
 
 
@@ -55,14 +65,19 @@ ITEM HANDLING
 */
 
 // function that adds one item to the list of item the user has put in (stored clientsided using cookies)
+// returns false if the user is not currently logged in
 function add_item(item) {
+    if (!_get_cookie("current_login")) return false;
     n_items = parseInt(_get_cookie("n_items")) + 1;
     _set_cookie("item_" + n_items, item);
     _set_cookie("n_items", n_items);
+    return true;
 }
 
 // function that retrieves all items that have been submited by the user (stored clientsided using cookies)
+// returns null if the user is not currently logged in
 function retrieve_items() {
+    if (!_get_cookie("current_login")) return null;
     ret = [];
     for (i = 0; i <= parseInt(_get_cookie("n_items")); i++) {
         ret.push(_get_cookie("item_" + i));
