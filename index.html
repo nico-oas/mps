@@ -14,6 +14,7 @@
 <body>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="countdown.js"></script>
     <script src="index.js"></script>
     <script src="backend.js"></script>
 
@@ -37,20 +38,27 @@
 
 
         </div>
-    </nav>
-    <div class="container" id="main-container">
-        <h1>
-            Sample Text
-        </h1>
-        <p>
-            Lorem ipsum.
-        </p>
-        <button type="button" id="test-button" class="btn btn-green" data-toggle="modal" data-target="#registerModal">
-            Button to test Register Modal
-        </button>
-        <button type="button" id="test-button" class="btn btn-green" data-toggle="modal" data-target="#loginModal">
-            Button to test Login Modal
-        </button>
+
+        <div class="container py-5"></div>
+            <div class="py-5">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+        
+                        <!-- Countdown 1-->
+                        <div class="rounded bg-gradient-1 text-white shadow p-5 text-center mb-5">
+                            <div id="clock" class="countdown-circles "></div>
+                        </div>
+        
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <!-- <div id="clock"></div> --> 
+        
+        
     </div>
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
