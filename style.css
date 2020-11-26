@@ -102,6 +102,27 @@ body {
 }
 
 .headline{
-font-size: 25px;
+    font-size: 25px;
+}
 
+.modal-body article {
+    max-width: 400px;
+    padding-bottom: 0;
+}
+.form-group .input-group-prepend:nth-child(3) {
+    margin-left: .5rem;
+}
+.fab {
+    margin-right: 1rem;
+}
+.social-login {
+    margin-top: -1.8rem;
+    margin-bottom: .5rem;
+}
+.input-group-text {
+    width: 2.5rem;
+}
+button.close {
+    position: absolute;
+    right: 1rem;
 }
