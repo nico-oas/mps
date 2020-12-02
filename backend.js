@@ -1,60 +1,114 @@
+/*
+
+TODO:
+
+discuss whether the cooler functional implementation or the easier procedural programming shall be used
+
+*/
+
+users = []
+current_user = "";
+current_user_index = -1;
+
 // init/test function to prepare all cookies/variables
 function __init_backend() {
-    if (1) {
-        console.log("registration: " + registration("phil", "kuhle@mail", "420", "Musterland", "SiChEr", "MusterMax", "Male"));
-        console.log("login: " + login("phil", "SiChEr"));
-        console.log("check login: " + check_login())
-        console.log("add item Banane: " + add_item("Banane"));
-        add_item("Brot");
-        add_item("Bananenbrot");
-        console.log(retrieve_items());
-        logout();
-        console.log("ausgeloggt");
-        console.log("check login: " + check_login())
-        console.log("add item Banane: " + add_item("Banane"));
-        console.log(retrieve_items());
+    switch (2) {
+        case 0:
+            // falls cookie mit usern vorhanden => eintragen in users liste
+            if (_get_cookie("users") == "")
+                break;
 
-
-    } else {
-        document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+            users = JSON.parse(_get_cookie("users"));
+            items = JSON.parse(_get_cookie("items"));
+            break;
+        case 1:
+            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+            break;
+        case 2:
+            console.log("registration: " + registration("phil", "kuhle@mail", "420", "Musterland", "SiChEr", "MusterMax", "Male"));
+            console.log("login: " + login("phil", "SiChEr"));
+            console.log("check login: " + check_login())
+            console.log("add item Banane: " + add_item("Banane"));
+            add_item("Brot");
+            add_item("Bananenbrot");
+            console.log(retrieve_items());
+            logout();
+            console.log("ausgeloggt");
+            console.log("check login: " + check_login())
+            console.log("add item Banane: " + add_item("Banane"));
+            console.log(retrieve_items());
+            console.log("====================================");
+            console.log("register second user: " + registration("phil2", "kuhle@mail2", "4202", "Musterland2", "SiChEr2", "MusterMax2", "Male2"));
+            console.log("adding items second user: " + add_item("Yacht"));
+            add_item("Haus");
+            add_item("Jet");
+            console.log("items second user: ");
+            console.log(retrieve_items());
+            break;
     }
 }
 
 // function that handles the registration through cookies (faking)
 // returns false if there is already an account with same credentials otherwise (on success) true
 function registration(username, mail, birthdate, region, password, real_name, gender) {
-    if (_get_cookie("username") != "" || _get_cookie("mail") != "") return false;
-    _set_cookie("username", username);
-    _set_cookie("mail", mail);
-    _set_cookie("birthdate", birthdate);
-    _set_cookie("region", region);
-    _set_cookie("password", password);
-    _set_cookie("real_name", real_name);
-    _set_cookie("gender", gender);
+    if (_users_key_existence_check("username", username) || _users_key_existence_check("mail", mail))
+        return false;
 
-    _set_cookie("n_items", -1);
-    _set_cookie("current_login", true);
+    new_user = {
+        username: username,
+        mail: mail,
+        birthdate: birthdate,
+        region: region,
+        password: password,
+        real_name: real_name,
+        gender: gender,
+        items: [],
+        current_login: true
+    };
+
+    users.push(new_user);
+    current_user = "username";
+    current_user_index = users.length - 1; //TODO: pruefen!
+    _set_cookie("users", JSON.stringify(users));
+
     return true;
 }
 
 // function that handles the login through cookies (faking)
 // returns false if credentials are wrong or the account does not exist
 function login(login_ID, password) {
-    if (_get_cookie("username") == "" || _get_cookie("mail") == "" || _get_cookie("password") == "" || _get_cookie("n_items") == "") return false;
-    ret = ((_get_cookie("username") == login_ID || _get_cookie("mail") == login_ID) && _get_cookie("password") == password) ? true : false;
-    _set_cookie("current_login", true);
-    return ret;
+    var i = _users_index_of_login_ID(login_ID);
+
+    if (users[i]['password'] == password) {
+        users[i]['current_login'] = true;
+        _set_cookie("users", JSON.stringify(users));
+        current_user = login_ID;
+        current_user_index = i;
+        return true;
+    }
+
+    return false;
 }
 
 // function that checks whether the user is already logged in
 // returns false when user is not currently logged in otherwise true
 function check_login() {
-    return _get_cookie("current_login") ? true : false;
+    return (current_user = "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
 }
 
 // function that handles the logout through cookies (faking)
 function logout() {
-    _del_cookie("current_login");
+    if (current_user = "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) {
+        current_user = "";
+        current_user_index = -1;
+        return;
+    }
+
+    users[current_user_index]['current_login'] == false;
+    _set_cookie("users", JSON.stringify(users));
+    current_user = "";
+    current_user_index = -1;
+    return;
 }
 
 
@@ -67,22 +121,24 @@ ITEM HANDLING
 // function that adds one item to the list of item the user has put in (stored clientsided using cookies)
 // returns false if the user is not currently logged in
 function add_item(item) {
-    if (!_get_cookie("current_login")) return false;
-    n_items = parseInt(_get_cookie("n_items")) + 1;
-    _set_cookie("item_" + n_items, item);
-    _set_cookie("n_items", n_items);
+    if (check_login() == false)
+        return false;
+
+    users[current_user_index]['items'].push(item);
+    _set_cookie("users", JSON.stringify(users));
     return true;
 }
 
 // function that retrieves all items that have been submited by the user (stored clientsided using cookies)
 // returns null if the user is not currently logged in
 function retrieve_items() {
-    if (!_get_cookie("current_login")) return null;
-    ret = [];
-    for (i = 0; i <= parseInt(_get_cookie("n_items")); i++) {
-        ret.push(_get_cookie("item_" + i));
-    }
+    if (check_login() == false)
+        return null;
 
+    ret = [];
+    for (var i = 0; i < users[current_user_index]['items'].length; i++) {
+        ret.push(users[current_user_index]['items'][i]);
+    }
     return ret;
 }
 
@@ -97,7 +153,7 @@ function _set_cookie(cookie_key, cookie_value, cookie_path = "") {
     var d = new Date();
     d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
-    document.cookie = cookie_key + "=" + cookie_value + ";" + expires + ";path=/" + cookie_path + ";SameSite=Lax";
+    document.cookie = cookie_key + "=" + cookie_value + ";" + expires + ";path=/" + cookie_path + ";SameSite=Strict";
 }
 
 function _get_cookie(cookie_key) {
@@ -129,6 +185,22 @@ function _del_cookie(cookie_key, cookie_path = "") {
         return;
     }
     document.cookie = cookie_key + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/" + cookie_path + ";";
+}
+
+function _users_key_existence_check(key_type, key) {
+    for (var i = 0; i < users.length; i++) {
+        if (users[i][key_type] == key)
+            return true;
+    }
+    return false;
+}
+
+function _users_index_of_login_ID(login_ID) {
+    for (var i = 0; i < users.length; i++) {
+        if (users[i]['username'] == login_ID || users[i]['mail'] == login_ID)
+            return i;
+    }
+    return -1;
 }
 
 __init_backend();
