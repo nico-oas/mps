@@ -19,32 +19,82 @@
     <script src="index.js"></script>
     <script src="backend.js"></script>
     
-
-    <nav class="navbar-toggleable-md navbar-light bd-faded">
+     <div style="float: right;"></div>
+    
+    <nav class="navbar-toggleable-md navbar-light bd-faded"> 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+             <span class=  "navbar-toggler-icon"></span> 
         </button>
         <img src="BaumLogo.png">
         <a class="navbar-brand" style="font-size: 30px; color: rgb(255, 255, 255);" href="#">Carbon Footprint Tracker </a>
-        
+   
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" data-toggle="modal" data-target="#loginModal">
-                    <a class="nav-link">Login</a>
+                    <a class="nav-link" style="font-size: 30px; color: rgb(255, 255, 255);" >Login</a>
                 </li>
                 <li class="nav-item" data-toggle="modal" data-target="#registerModal">
-                    <a class="nav-link">Register</a>
+                    <a class="nav-link" style="font-size: 30px; color: rgb(255, 255, 255);" >Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" target="_blank" href="https://www.overshootday.org/">Learn more</a>
+                    <a class="nav-link" style="font-size: 30px; color: rgb(255, 255, 255);" target="_blank" href="https://www.overshootday.org/">Learn more</a>
                 </li>
             </ul>
         </div>
     </nav>
 
+
     <div class="container text-center bg-gradient-1 text-white shadow p-5 mb-5">
         <div id="clock" class="countdown-circles "></div>
     </div>
+
+    <html> 
+        <head>
+            <title>Greeting Message using JavaScript</title> 
+        </head>
+        <body>
+            <label id="lblGreetings"></label>
+        </body>
+        
+        <script>
+            var myDate = new Date();
+            var hrs = myDate.getHours();
+            var username;
+            var greet;
+        
+            if (hrs < 12)
+                greet = 'Good Morning '  + username;
+            else if (hrs >= 12 && hrs <= 17)
+                greet = 'Good Afternoon ' + username;
+            else if (hrs >= 17 && hrs <= 24)
+                greet = 'Good Evening ' + username;
+        
+            document.getElementById('lblGreetings').innerHTML =
+                '<b>' + greet + '</b> and welcome to Carbon Footprint Tracker!';
+        </script> 
+        </html>  
+
+
+        
+    <div class="card" style="float: left;">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+      </div>
+
+
+
+    <div class="card" style="float: right;">
+        <div class="card-body">
+          <h5 class="card-title">Thats</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+      </div>
     
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

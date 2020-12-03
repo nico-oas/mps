@@ -1,14 +1,16 @@
 /* variables */
 :root {
-    --primary: #216523;
-    --secondary: #28792b;
+    --primary: hsl(0, 0%, 6%);
+    --secondary: #1d1f1d;
 }
 
 /* general css */
 body {
-    background-color: var(--primary);
-    background-image: url("topography.svg");
-    color: black;
+    background-color: var(--secondary);
+    background-image: url("file:///Users/malikkaragoz/Downloads/hexagons.svg");
+    color: rgb(0, 0, 0);
+
+    
 }
 .container {
     margin-top: 2rem;
@@ -113,3 +115,4 @@ button.close {
     position: absolute;
     right: 1rem;
 }
+
