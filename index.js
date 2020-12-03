@@ -5,14 +5,15 @@ window.addEventListener("load", function(){
     $('#clock').countdown(countdown, {elapse: true})
     .on('update.countdown', function(event) {
       var $this = $(this);
-      var clock = '<div class="d-flex flex-wrap justify-content-center pt-4" > <span class="h1 font-weight-bold">%D</span> Day%!d' +
+      var clock = '<div class="d-flex flex-wrap justify-content-center pt-4">' +
+      '<span class="h1 font-weight-bold">%D</span> Day%!d' +
       '<span class="h1 font-weight-bold">%H</span> Hr' +
       '<span class="h1 font-weight-bold">%M</span> Min' +
       '<span class="h1 font-weight-bold">%S</span> Sec </div>';  
       if (!event.elapsed) {
-        $this.html(event.strftime('<p class="headline" >time left until Earth Overshootday:</p>' + clock));
+        $this.html(event.strftime('<p class="headline" >Time left until Earth Overshoot Day</p>' + clock));
       } else {
-        $this.html(event.strftime( '<p class="headline" >time passed since Earth Overshootday:</p>' + clock));
+        $this.html(event.strftime( '<p class="headline" >Time passed since Earth Overshoot Day</p>' + clock));
       }
     });   
     $("input[name='birthdate']").attr("max", new Date().toISOString().split("T")[0]);

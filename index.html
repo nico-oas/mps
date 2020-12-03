@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
     <title>Carbon Footprint Tracker</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -17,12 +18,15 @@
     <script src="countdown.js"></script>
     <script src="index.js"></script>
     <script src="backend.js"></script>
+    
 
     <nav class="navbar-toggleable-md navbar-light bd-faded">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">Carbon Footprint Tracker</a>
+        <img src="BaumLogo.png">
+        <a class="navbar-brand" style="font-size: 30px; color: rgb(255, 255, 255);" href="#">Carbon Footprint Tracker </a>
+        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" data-toggle="modal" data-target="#loginModal">
@@ -35,34 +39,15 @@
                     <a class="nav-link" target="_blank" href="https://www.overshootday.org/">Learn more</a>
                 </li>
             </ul>
-
-
         </div>
+    </nav>
 
-        <div class="container py-5"></div>
-            <div class="py-5">
-                <div class="row">
-                    <div class="col-lg-8 mx-auto">
-        
-                        <!-- Countdown 1-->
-                        <div class="rounded bg-gradient-1 text-white shadow p-5 text-center mb-5">
-                            <div id="clock" class="countdown-circles "></div>
-                        </div>
-        
-                        </div>
-        
-                    </div>
-                </div>
-            </div>
-        </div>
-
-       <!-- <div id="clock"></div> --> 
-        
-        
+    <div class="container text-center bg-gradient-1 text-white shadow p-5 mb-5">
+        <div id="clock" class="countdown-circles "></div>
     </div>
-
-
+  
     <div class="container">btn-green</div>
+  
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
