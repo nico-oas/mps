@@ -11,15 +11,20 @@ current_user = "";
 current_user_index = -1;
 
 // init/test function to prepare all cookies/variables
+// set switch case statement to 0 for normal operation, 1 to reset all cookies in the browser, 2 for testing/debugging
 function __init_backend() {
-    switch (2) {
+    switch (0) {
         case 0:
             // falls cookie mit usern vorhanden => eintragen in users liste
             if (_get_cookie("users") == "")
                 break;
 
             users = JSON.parse(_get_cookie("users"));
-            items = JSON.parse(_get_cookie("items"));
+
+            console.log("login user phil: " + login("phil", "SiChEr"));
+            console.log("adding item to phil: " + add_item("Karotte"));
+            console.log("phils items: ");
+            console.log(retrieve_items());
             break;
         case 1:
             document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
@@ -79,15 +84,15 @@ function registration(username, mail, birthdate, region, password, real_name, ge
 function login(login_ID, password) {
     var i = _users_index_of_login_ID(login_ID);
 
-    if (users[i]['password'] == password) {
-        users[i]['current_login'] = true;
-        _set_cookie("users", JSON.stringify(users));
-        current_user = login_ID;
-        current_user_index = i;
-        return true;
-    }
+    if (users[i]['password'] != password)
+        return false;
 
-    return false;
+    users[i]['current_login'] = true;
+    _set_cookie("users", JSON.stringify(users));
+    current_user = login_ID;
+    current_user_index = i;
+    return true;
+
 }
 
 // function that checks whether the user is already logged in
@@ -136,9 +141,8 @@ function retrieve_items() {
         return null;
 
     ret = [];
-    for (var i = 0; i < users[current_user_index]['items'].length; i++) {
-        ret.push(users[current_user_index]['items'][i]);
-    }
+    users[current_user_index]['items'].forEach(i => ret.push(i));
+
     return ret;
 }
 
