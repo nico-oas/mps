@@ -1,30 +1,20 @@
-/*
-
-TODO:
-
-discuss whether the cooler functional implementation or the easier procedural programming shall be used
-
-*/
-
 users = []
 current_user = "";
 current_user_index = -1;
 
 // init/test function to prepare all cookies/variables
 // set switch case statement to 0 for normal operation, 1 to reset all cookies in the browser, 2 for testing/debugging
-function __init_backend() {
-    switch (0) {
+function __init_backend(switch_arg) {
+    switch (switch_arg) {
         case 0:
             // falls cookie mit usern vorhanden => eintragen in users liste
-            if (_get_cookie("users") == "")
+            if (_get_cookie("users") == "") {
+                console.log("No users existed in backend...");
                 break;
+            }
 
             users = JSON.parse(_get_cookie("users"));
-
-            console.log("login user phil: " + login("phil", "SiChEr"));
-            console.log("adding item to phil: " + add_item("Karotte"));
-            console.log("phils items: ");
-            console.log(retrieve_items());
+            console.log("Data of previously created accounts has been loaded...");
             break;
         case 1:
             document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
@@ -83,6 +73,8 @@ function registration(username, mail, birthdate, region, password, real_name, ge
 // returns false if credentials are wrong or the account does not exist
 function login(login_ID, password) {
     var i = _users_index_of_login_ID(login_ID);
+    if (i == -1) 
+        return false;
 
     if (users[i]['password'] != password)
         return false;
@@ -114,6 +106,23 @@ function logout() {
     current_user = "";
     current_user_index = -1;
     return;
+}
+
+// function that retrieves the userinforamtion for the currently logged in user
+// returns a dictonary if the user is logged in otherwise null
+function user_information() {
+    if (check_login() == false) return null;
+
+    user_data = {
+        username: users[current_user_index].username,
+        mail: users[current_user_index].mail,
+        birthdate: users[current_user_index].birthdate,
+        region: users[current_user_index].region,
+        real_name: users[current_user_index].real_name,
+        gender: users[current_user_index].gender,
+    };
+
+    return user_data;
 }
 
 
@@ -207,4 +216,4 @@ function _users_index_of_login_ID(login_ID) {
     return -1;
 }
 
-__init_backend();
+//__init_backend();
