@@ -90,18 +90,18 @@ function login(login_ID, password) {
 // function that checks whether the user is already logged in
 // returns false when user is not currently logged in otherwise true
 function check_login() {
-    return (current_user = "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
+    return (current_user == "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
 }
 
 // function that handles the logout through cookies (faking)
 function logout() {
-    if (current_user = "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) {
+    if (current_user == "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) {
         current_user = "";
         current_user_index = -1;
         return;
     }
 
-    users[current_user_index]['current_login'] == false;
+    users[current_user_index]['current_login'] = false;
     _set_cookie("users", JSON.stringify(users));
     current_user = "";
     current_user_index = -1;
