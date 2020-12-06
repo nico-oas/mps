@@ -216,4 +216,5 @@ function _users_index_of_login_ID(login_ID) {
     return -1;
 }
 
-//__init_backend();
+// auskommentieren wenn das backend nicht automatisch mit dem aufruf der seite mitgestartet werden soll, sondern manuell benutzt werden soll
+__init_backend(0);
