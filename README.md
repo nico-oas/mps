@@ -8,7 +8,9 @@ Signature:
 registration(username, mail, birthdate, region, password, real_name, gender);
 ```
 
-Function that handles the registration of users to out fake backend. This function returns "true" if the registration was succesfull, and false if there was already an account with this username/mail
+Function that handles the registration of users to out fake backend. 
+
+This function returns "true" if the registration was succesfull, and false if there was already an account with this username/mail
 
 ### Backend API: login
 Signature: 
@@ -17,6 +19,7 @@ login(login_ID, password);
 ```
 
 Funtion that handles the login of a user, using his username or email (-> login_ID) and his correspoding password.
+
 This function returns true if the login was succesfull and false if there was no account matching the given credentials
 
 ### Backend API: check_login
@@ -26,6 +29,7 @@ check_login();
 ```
 
 Function that is used to check if someone is still logged in with this browser (the logout function was not called after the user logged in).
+
 This function returns true if a user is currently logged in. If this is the case, all user related functions can be used (eg. add_item, retrieve item...). This function returns false, in case the user is not logged in.
 
 ### Backend API: logout
@@ -35,6 +39,7 @@ logout();
 ```
 
 Function that shall be called when the user wants to log out from our site.
+
 This function does not return any values (might be changed in the future if needed)
 
 ### Backend API: user_information
@@ -43,6 +48,7 @@ Signature:
 user_information();
 ```
 Function that handles the fronted request concerning information about the currently logged in user. The data is retreived from the backend.
+
 This function returns a dictinary in the following format, if the user is logged in.
 ```javascript
 user_data = {
@@ -62,6 +68,7 @@ Signature:
 add_item(item);
 ```
 Functions that add's one item to list of items belonging to the user.
+
 This function returns true if the items was added sucessfully or false if the function got called, even though the user is not logged in.
 
 ### Backend API: retrieve_items
@@ -70,6 +77,7 @@ Signature:
 retrieve_items();
 ```
 Function that retrieves all items, belonging to the currently logged in user, from the backend. The items are returned as a list/array
+
 This function returns a list/array on success and null, if the function got called, even though the user is not logged in.
 
 
