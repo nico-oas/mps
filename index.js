@@ -9,6 +9,7 @@ var facts = [ "Per day a cruise emits as much carbon as 84000 cars",
               "100g of beef equal 8km of a car drive",
               "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
               "A plant based diet cuts your carbon footprint by 50%"];
+
 var frontEndLogin = function(){
     var fields = $("#loginForm input");
     if(login($(fields[0]).val(), $(fields[1]).val())){
@@ -16,6 +17,17 @@ var frontEndLogin = function(){
     }else{
         $("#loginError").show();
         $("#loginForm input").val("");
+    }
+}
+
+var frontEndRegistration = function(){
+    var fields = $("#registerForm input");
+    //todo: basic validation!!! e.g. password = repeat password, email = email, ...
+    if(registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val())){
+        location.reload();
+    }else{
+        $("#registerError").show();
+        //$("#registerForm input").val("");
     }
 }
 

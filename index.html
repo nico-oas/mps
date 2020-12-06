@@ -21,7 +21,7 @@
     
     <nav class="navbar-toggleable-md navbar-dark bd-faded"> 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-             <span class=  "navbar-toggler-icon"></span> 
+             <span class="navbar-toggler-icon"></span> 
         </button>
         <img src="BaumLogo.png">
         <a class="navbar-brand">Carbon Footprint Tracker </a>
@@ -123,12 +123,13 @@
                                 <input name="" class="form-control" placeholder="Real name" type="text">
                             </div>
                             <p class="text-center">Already have an account? <a href data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Login instead</a></p>
+                            <p id="registerError" class="error text-center" style="color:red; display:none;">There's already an account with this username or email.</p>
                         </form>
                     </article>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-green" form="registerForm">Register</button>
+                    <button type="submit" class="btn btn-green" onclick="frontEndRegistration();">Register</button>
                 </div>
             </div>
         </div>

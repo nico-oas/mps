@@ -10,7 +10,7 @@
 }
 body {
     background-color: var(--secondary);
-    background-image: url("hexagons.svg");
+    background-image: url("topography.svg");
 }
 a {
     cursor: pointer;
