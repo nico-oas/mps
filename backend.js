@@ -119,7 +119,7 @@ function user_information() {
         birthdate: users[current_user_index].birthdate,
         region: users[current_user_index].region,
         real_name: users[current_user_index].real_name,
-        gender: users[current_user_index].gender,
+        gender: users[current_user_index].gender
     };
 
     return user_data;
