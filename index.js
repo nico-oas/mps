@@ -10,7 +10,10 @@ var facts = [ "Per day a cruise emits as much carbon as 84000 cars",
               "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
               "A plant based diet cuts your carbon footprint by 50%"];
 
-var frontEndLogin = function(){
+function frontEndLogin(){
+    if(!$("#loginForm")[0].reportValidity()){
+        return;
+    }
     var fields = $("#loginForm input");
     if(login($(fields[0]).val(), $(fields[1]).val())){
         location.reload();
@@ -20,9 +23,16 @@ var frontEndLogin = function(){
     }
 }
 
-var frontEndRegistration = function(){
-    var fields = $("#registerForm input");
-    //todo: basic validation!!! e.g. password = repeat password, email = email, ...
+function frontEndRegistration(){
+    if(!$("#registerForm")[0].reportValidity()){
+        return;
+    }
+    var fields = $("#registerForm input, #registerForm select");
+    if($(fields[3]).val() != $(fields[4]).val()){
+        $("#validationError").show();
+        return;
+    }
+    $("#validationError").hide();
     if(registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val())){
         location.reload();
     }else{
@@ -32,24 +42,34 @@ var frontEndRegistration = function(){
 }
 
 if(check_login()){
-    $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; }</style>")
+    $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; } .ifLoggedOut { display: none; }</style>")
+}else{
+    $("body").append("<style id='loggedOutStyle'>.ifLoggedOut { display: block; } .ifLoggedIn { display: none; }</style>")
 }
 
 window.addEventListener("load", function(){
     if(check_login()){
         //greeting
-        var hrs = new Date().getHours();
-        var username; //TODO: get username
-        var greet;
-    
-        if (hrs < 12)
+        let hrs = new Date().getHours();
+        let realname = user_information()['real_name'];
+        let username = (realname && realname!='') ? realname : user_information()['username'];
+        let user_items = users[current_user_index]['items'];
+        let greet = 'Good Evening ' + username;
+        let greet2 = 'So far, you have not logged any carbon usage.'
+        
+        if (hrs < 12){
             greet = 'Good Morning '  + username;
-        else if (hrs >= 12 && hrs <= 17)
+        }else if (hrs <= 17){
             greet = 'Good Afternoon ' + username;
-        else if (hrs >= 17 && hrs <= 24)
-            greet = 'Good Evening ' + username;
-    
-        document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!';
+        }
+        let carbon = 0;
+        for(i in user_items){
+            carbon += parseInt(user_items[i].carbon);
+        }
+        if(carbon > 0){
+            greet2 = 'So far, you\'ve tracked <b>' + carbon + '</b> kg of carbon.'
+        }
+        document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
     }
 
     //countdown

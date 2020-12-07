@@ -27,11 +27,14 @@
         <a class="navbar-brand">Carbon Footprint Tracker </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item" data-toggle="modal" data-target="#loginModal">
+                <li class="ifLoggedOut nav-item" data-toggle="modal" data-target="#loginModal">
                     <a class="navbar-link">Login</a>
                 </li>
-                <li class="nav-item" data-toggle="modal" data-target="#registerModal">
+                <li class="ifLoggedOut nav-item" data-toggle="modal" data-target="#registerModal">
                     <a class="navbar-link">Register</a>
+                </li>
+                <li class="ifLoggedIn nav-item" onclick="logout(); location.reload();">
+                    <a class="navbar-link">Logout</a>
                 </li>
                 <li class="nav-item">
                     <a class="navbar-link" target="_blank" href="https://www.overshootday.org/">Learn more</a>
@@ -123,6 +126,7 @@
                                 <input name="" class="form-control" placeholder="Real name" type="text">
                             </div>
                             <p class="text-center">Already have an account? <a href data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Login instead</a></p>
+                            <p id="validationError" class="error text-center" style="color:red; display:none;">Please make sure you have entered the same password in the two password fields.</p>
                             <p id="registerError" class="error text-center" style="color:red; display:none;">There's already an account with this username or email.</p>
                         </form>
                     </article>
