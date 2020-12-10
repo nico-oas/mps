@@ -15,6 +15,12 @@ h1 {
     font-weight: lighter;
 }
 
+h2 { 
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(252, 251, 249);
+    font-weight: lighter;
+}
+
 ol {
     font-family: Arial, Helvetica, sans-serif;
     color: rgb(8, 8, 8);

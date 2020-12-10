@@ -1,12 +1,3 @@
-/*
-TODO:
-wenn sich ein user einloggt oder registriert, dann müssen alle anderen ausgeloggt werden (iterieren ueber die datenstruktur)
--> besser wenn sich gemerkt wird welcher user der zuletzt eingeloggte war mittels cookie
-*/
-
-
-
-
 users = []
 current_user_index = -1;
 

@@ -55,6 +55,14 @@
         <h1>Fun fact about carbon emissions</h1>
         <p id="fact">Per day a cruise emits as much carbon as 84000 cars</p>
     </div>
+
+    <div class="container text-center" id="abc" style="display: none"> <!--Deeds-->
+        <h2 id="container"> One good deed a day challenge:</h1>
+        <p id="deeds">Inform yourself about ECO-friendly-electricity providers</p>
+        <div data-toggle="modal" data-target="#shareSucess">
+            <a class="nav-link">Share your sucess</a>
+        </div>
+    </div>
   
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -175,6 +183,35 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-green" onclick="frontEndLogin();">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="shareSucess" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="loginModalLabel">Share your sucess via:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- login html -->
+                    <article class="card-body mx-auto">
+                        <div class="social-login">
+                            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>Twitter</a>
+                            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>Facebook</a>
+                            <a href="" class="btn btn-block btn-instagram"> <i class="fab fa-instagram"></i>Instagram</a>
+                            <a href="" class="btn btn-block btn-envelope"> <i class="fas fa-envelope"></i>  E-Mail</a>
+                            <a href="" class="btn btn-block btn-whatsapp"> <i class="fab fa-whatsapp"></i>WhatsApp</a>
+                            <a href="" class="btn btn-block btn-snapchat"> <i class="fab fa-snapchat"></i>Snapchat</a>
+                        </div>
+                    </article>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
