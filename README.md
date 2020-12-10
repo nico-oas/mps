@@ -53,11 +53,11 @@ This function returns a dictinary in the following format, if the user is logged
 ```javascript
 user_data = {
     username: "name",
-    mail: "user@mail",
-    birthdate: "01.01.1970",
+    mail: "user@mail.com",
+    birthdate: "1970-01-01",
     region: "Country",
     real_name: "Ausgemusterter Max",
-    gender: "Male/Female/Other"
+    gender: "Other"
 };
 ```
 If this function is called while the user is not logged in, it returns null.
@@ -81,3 +81,8 @@ Function that retrieves all items, belonging to the currently logged in user, fr
 This function returns a list/array on success and null, if the function got called, even though the user is not logged in.
 
 
+### Item Structure
+Each Item is a JSON Object which contains the following information:
+ - category
+ - name
+ - carbon (in kg)

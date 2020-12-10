@@ -1,5 +1,4 @@
 users = []
-current_user = "";
 current_user_index = -1;
 
 // init/test function to prepare all cookies/variables
@@ -14,6 +13,7 @@ function __init_backend(switch_arg) {
             }
 
             users = JSON.parse(_get_cookie("users"));
+            current_user_index = JSON.parse(_get_cookie("current_user_index"));
             console.log("Data of previously created accounts has been loaded...");
             break;
         case 1:
@@ -62,8 +62,8 @@ function registration(username, mail, birthdate, region, password, real_name, ge
     };
 
     users.push(new_user);
-    current_user = "username";
     current_user_index = users.length - 1; //TODO: pruefen!
+    _set_cookie("current_user_index", current_user_index);
     _set_cookie("users", JSON.stringify(users));
 
     return true;
@@ -81,8 +81,10 @@ function login(login_ID, password) {
 
     users[i]['current_login'] = true;
     _set_cookie("users", JSON.stringify(users));
-    current_user = login_ID;
     current_user_index = i;
+    _set_cookie("current_user_index", current_user_index);
+
+
     return true;
 
 }
@@ -90,21 +92,21 @@ function login(login_ID, password) {
 // function that checks whether the user is already logged in
 // returns false when user is not currently logged in otherwise true
 function check_login() {
-    return (current_user = "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
+    return (current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
 }
 
 // function that handles the logout through cookies (faking)
 function logout() {
-    if (current_user = "" || current_user_index == -1 || users[current_user_index]['current_login'] == false) {
-        current_user = "";
+    if (current_user_index == -1 || users[current_user_index]['current_login'] == false) {
         current_user_index = -1;
+        _set_cookie("current_user_index", current_user_index);
         return;
     }
 
-    users[current_user_index]['current_login'] == false;
+    users[current_user_index]['current_login'] = false;
     _set_cookie("users", JSON.stringify(users));
-    current_user = "";
     current_user_index = -1;
+    _set_cookie("current_user_index", current_user_index);
     return;
 }
 
