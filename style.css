@@ -120,7 +120,7 @@ nav>img {
 .form-group .input-group-prepend:nth-child(3) {
     margin-left: .5rem;
 }
-.fab {
+.fab, .fas {
     margin-right: 1rem;
 }
 .social-login {
