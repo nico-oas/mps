@@ -4,11 +4,21 @@ var facts = [ "Per day a cruise emits as much carbon as 84000 cars",
               "A commuter driving 40 km a day to and back from work in a mid-range car emits 1.2 tons of carbon a year",
               "In a household switching to green energy saves up to 1 ton of carbon emissions",  
               "Heating is responsible for 70% of a households emissions",
-              "Data centers through which internet runs worldwide emit as much carbon as international air traffic",
-              "In 2015 the textile industry produced 1.2 billion tons of carbon - more than the international air and ship traffic together",
+              "Data centers through which internet runs worldwide produce as much emissions as international air traffic",
+              "In 2015 the textile industry produced 1.2 billion tons of emissions - more than the international air and ship traffic together",
               "100g of beef equal 8km of a car drive",
               "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
               "A plant based diet cuts your carbon footprint by 50%"]
+var sources = [ "- Utopia.de",
+                "- VICE Deutschland",
+                "- VICE Deutschland",
+                "- Bundesumweltamt",
+                "- Bundesumweltamt",
+                "- Frankfurter Rundschau",
+                "- Quarks",
+                "- VICE Deutschland",
+                "- Drew Shindell, Climate Specialist",
+                "- Cowspiracy"]
 window.addEventListener("load", function(){
     var countdown = new Date(new Date().getFullYear(), 07, 22);
     $('#clock').countdown(countdown, {elapse: true})

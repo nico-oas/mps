@@ -113,3 +113,18 @@ button.close {
     position: absolute;
     right: 1rem;
 }
+table {
+    width: 800px;
+}
+
+th {
+    text-align: left;
+}
+
+table, th, td {
+    border: 1px solid #0c0e0b
+}
+
+td{
+    text-align: left;
+}
