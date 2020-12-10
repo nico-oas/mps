@@ -8,8 +8,71 @@ var facts = [ "Per day a cruise emits as much carbon as 84000 cars",
               "In 2015 the textile industry produced 1.2 billion tons of carbon - more than the international air and ship traffic together",
               "100g of beef equal 8km of a car drive",
               "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
-              "A plant based diet cuts your carbon footprint by 50%"]
+              "A plant based diet cuts your carbon footprint by 50%"];
+
+function frontEndLogin(){
+    if(!$("#loginForm")[0].reportValidity()){
+        return;
+    }
+    var fields = $("#loginForm input");
+    if(login($(fields[0]).val(), $(fields[1]).val())){
+        location.reload();
+    }else{
+        $("#loginError").show();
+        $("#loginForm input").val("");
+    }
+}
+
+function frontEndRegistration(){
+    if(!$("#registerForm")[0].reportValidity()){
+        return;
+    }
+    var fields = $("#registerForm input, #registerForm select");
+    if($(fields[3]).val() != $(fields[4]).val()){
+        $("#validationError").show();
+        return;
+    }
+    $("#validationError").hide();
+    if(registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val())){
+        location.reload();
+    }else{
+        $("#registerError").show();
+        //$("#registerForm input").val("");
+    }
+}
+
+if(check_login()){
+    $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; } .ifLoggedOut { display: none; }</style>")
+}else{
+    $("body").append("<style id='loggedOutStyle'>.ifLoggedOut { display: block; } .ifLoggedIn { display: none; }</style>")
+}
+
 window.addEventListener("load", function(){
+    if(check_login()){
+        //greeting
+        let hrs = new Date().getHours();
+        let realname = user_information()['real_name'];
+        let username = (realname && realname!='') ? realname : user_information()['username'];
+        let user_items = users[current_user_index]['items'];
+        let greet = 'Good Evening ' + username;
+        let greet2 = 'So far, you have not logged any carbon usage.'
+        
+        if (hrs < 12){
+            greet = 'Good Morning '  + username;
+        }else if (hrs <= 17){
+            greet = 'Good Afternoon ' + username;
+        }
+        let carbon = 0;
+        for(i in user_items){
+            carbon += parseInt(user_items[i].carbon);
+        }
+        if(carbon > 0){
+            greet2 = 'So far, you\'ve tracked <b>' + carbon + '</b> kg of carbon.'
+        }
+        document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
+    }
+
+    //countdown
     var countdown = new Date(new Date().getFullYear(), 07, 22);
     $('#clock').countdown(countdown, {elapse: true})
     .on('update.countdown', function(event) {
@@ -20,14 +83,22 @@ window.addEventListener("load", function(){
       '<span class="h1 font-weight-bold">%M</span> Min' +
       '<span class="h1 font-weight-bold">%S</span> Sec </div>';  
       if (!event.elapsed) {
-        $this.html(event.strftime('<p class="headline" >Time left until Earth Overshoot Day</p>' + clock));
+        $this.html(event.strftime('<h1>Time left until Earth Overshoot Day</h1>' + clock));
       } else {
-        $this.html(event.strftime( '<p class="headline" >Time passed since Earth Overshoot Day</p>' + clock));
+        $this.html(event.strftime('<h1>Time passed since Earth Overshoot Day</h1>' + clock));
       }
-    });   
+    });
+  
+    //facts
     $('#fact').text(facts[Math.floor(Math.random()*facts.length)])
+
+    //forms
     $("input[name='birthdate']").attr("max", new Date().toISOString().split("T")[0]);
     for(i in countries){
         $("#countrySelect").append("<option value='" + countries[i] + "'>" + countries[i] + "</option>");
     }
+    $(".modal").on('hidden.bs.modal', function(){
+        $(this).find("input").val("");
+        $(this).find(".error").hide();
+    });
 });
