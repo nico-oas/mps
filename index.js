@@ -9,6 +9,15 @@ var facts = [ "Per day a cruise emits as much carbon as 84000 cars",
               "100g of beef equal 8km of a car drive",
               "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
               "A plant based diet cuts your carbon footprint by 50%"]
+var deeds = [ "Forego the car today and only walk instead",
+              "Forego the car today and only ride a bike instead",
+              "Eat only regional foods today",
+              "Forego the car today and use public transportation instead",
+              "Before buying clothes next time look for something second hand instead",
+              "Plant a tree",
+              "Pick up as much trash as u can today",
+              "Donate something to a envoiremental organisation of your liking"]
+
 window.addEventListener("load", function(){
     var countdown = new Date(new Date().getFullYear(), 07, 22);
     $('#clock').countdown(countdown, {elapse: true})
@@ -30,4 +39,14 @@ window.addEventListener("load", function(){
     for(i in countries){
         $("#countrySelect").append("<option value='" + countries[i] + "'>" + countries[i] + "</option>");
     }
+});
+window.addEventListener("click", function(){
+  if(check_login){
+      document.getElementById("abc").style.display = "block";
+      var x = Math.floor((new Date().getTime()/(1000*60*60*24))*parseInt(user_information(name))%deeds.length);
+      $('#deeds').text(deeds[x])
+  }
+  else{
+    document.getElementById("abc").style.display = "none";
+  }
 });
