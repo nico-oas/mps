@@ -8,7 +8,6 @@ users = []
 current_user_index = -1;
 
 // init/test function to prepare all cookies/variables
-// set switch case statement to 0 for normal operation, 1 to reset all cookies in the browser, 2 for testing/debugging
 function __init_backend(switch_arg) {
     switch (switch_arg) {
         case "prod":
@@ -79,8 +78,7 @@ function registration(username, mail, birthdate, region, password, real_name, ge
         password: password,
         real_name: real_name,
         gender: gender,
-        items: [],
-        current_login: true
+        items: []
     };
 
     users.push(new_user);
@@ -98,8 +96,6 @@ function login(login_ID, password) {
     if (i == -1 || users[i]['password'] != password) 
         return false;
 
-    users[i]['current_login'] = true;
-    _set_cookie("users", JSON.stringify(users));
     current_user_index = i;
     _set_cookie("current_user_index", current_user_index);
 
@@ -109,19 +105,14 @@ function login(login_ID, password) {
 // function that checks whether the user is already logged in
 // returns false when user is not currently logged in otherwise true
 function check_login() {
-    return (current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
+    return (current_user_index == -1) ? false : true;
 }
 
 // function that handles the logout through cookies (faking)
 function logout() {
-    if (current_user_index == -1 || users[current_user_index]['current_login'] == false) {
-        current_user_index = -1;
-        _set_cookie("current_user_index", current_user_index);
+    if (current_user_index == -1)
         return;
-    }
 
-    users[current_user_index]['current_login'] = false;
-    _set_cookie("users", JSON.stringify(users));
     current_user_index = -1;
     _set_cookie("current_user_index", current_user_index);
     return;
@@ -153,9 +144,15 @@ ITEM HANDLING
 
 // function that adds one item to the list of item the user has put in (stored clientsided using cookies)
 // returns false if the user is not currently logged in
-function add_item(item) {
+function add_item(category, name, carbon) {
     if (check_login() == false)
         return false;
+
+    item = {
+        'category': category,
+        'name': name,
+        'carbon': carbon
+    };
 
     users[current_user_index]['items'].push(item);
     _set_cookie("users", JSON.stringify(users));
