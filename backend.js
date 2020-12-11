@@ -1,12 +1,16 @@
+/*
+TODO:   - remove current_login field from users (no longer needed)
+        - documentation of new __init_backend()
+*/
+
+
 users = []
 current_user_index = -1;
 
 // init/test function to prepare all cookies/variables
-// set switch case statement to 0 for normal operation, 1 to reset all cookies in the browser, 2 for testing/debugging
 function __init_backend(switch_arg) {
     switch (switch_arg) {
-        case 0:
-            // falls cookie mit usern vorhanden => eintragen in users liste
+        case "prod":
             if (_get_cookie("users") == "") {
                 console.log("No users existed in backend...");
                 break;
@@ -16,29 +20,46 @@ function __init_backend(switch_arg) {
             current_user_index = JSON.parse(_get_cookie("current_user_index"));
             console.log("Data of previously created accounts has been loaded...");
             break;
-        case 1:
-            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+
+        case "revert_testing":
+            users_testing_backup = _get_cookie("users_testing_backup");
+            if (users_testing_backup  != "") {
+                _del_cookie("users_testing_backup");
+                _set_cookie("users", users_testing_backup);
+                _set_cookie("current_user_index", _get_cookie("current_user_index_testing_backup"));
+                _del_cookie("current_user_index_testing_backup");
+                console.log("Users that existed before the testing have been restored");
+            }
+            else {
+                console.log("You need to activate the testing mode, bofore you can disable it!");
+                break;
+            }
+
+            console.log("Please refresh the site to change to the normal mode, and use the normal accounts (BACK TO NORMAL)");
             break;
-        case 2:
-            console.log("registration: " + registration("phil", "kuhle@mail", "420", "Musterland", "SiChEr", "MusterMax", "Male"));
-            console.log("login: " + login("phil", "SiChEr"));
-            console.log("check login: " + check_login())
-            console.log("add item Banane: " + add_item("Banane"));
-            add_item("Brot");
-            add_item("Bananenbrot");
-            console.log(retrieve_items());
-            logout();
-            console.log("ausgeloggt");
-            console.log("check login: " + check_login())
-            console.log("add item Banane: " + add_item("Banane"));
-            console.log(retrieve_items());
-            console.log("====================================");
-            console.log("register second user: " + registration("phil2", "kuhle@mail2", "4202", "Musterland2", "SiChEr2", "MusterMax2", "Male2"));
-            console.log("adding items second user: " + add_item("Yacht"));
-            add_item("Haus");
-            add_item("Jet");
-            console.log("items second user: ");
-            console.log(retrieve_items());
+
+        case "testing":
+            console.log("\n=============\nTESTING SETTINGS\n=============\n");
+            console.log('To leave the testing environement, you just have to call the function: __init_backend("revert_testing");');
+
+            if (_get_cookie("users") != "") {
+                console.log("There is/are already one/some user(s)!\ncreating backup so that those user(s) still exist for PROD-ENV");
+                _set_cookie("users_testing_backup", _get_cookie("users"));
+                _set_cookie("current_user_index_testing_backup", _get_cookie("current_user_index"));
+                _del_cookie("users");
+                console.log("\n=============\nBACKUP CREATED\n=============\n");
+            }
+
+            users = [];
+            registration("test1", "test1@mail.de", "1970-01-01", "Musterland", "password", "test user 1", "Male");
+            registration("test2", "test2@mail.de", "1970-01-01", "Musterland", "password", "test user 2", "Female");
+            console.log("\n=============\nTESTUSERS CREATED! Credentials: test1/password, test2/password\n=============\n");
+            console.log("Please refresh the site to use the newly created testing accounts!")
+            break;
+
+        case "full_reset":
+            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+            location.reload();
             break;
     }
 }
@@ -57,12 +78,11 @@ function registration(username, mail, birthdate, region, password, real_name, ge
         password: password,
         real_name: real_name,
         gender: gender,
-        items: [],
-        current_login: true
+        items: []
     };
 
     users.push(new_user);
-    current_user_index = users.length - 1; //TODO: pruefen!
+    current_user_index = users.length - 1;
     _set_cookie("current_user_index", current_user_index);
     _set_cookie("users", JSON.stringify(users));
 
@@ -73,38 +93,26 @@ function registration(username, mail, birthdate, region, password, real_name, ge
 // returns false if credentials are wrong or the account does not exist
 function login(login_ID, password) {
     var i = _users_index_of_login_ID(login_ID);
-    if (i == -1) 
+    if (i == -1 || users[i]['password'] != password) 
         return false;
 
-    if (users[i]['password'] != password)
-        return false;
-
-    users[i]['current_login'] = true;
-    _set_cookie("users", JSON.stringify(users));
     current_user_index = i;
     _set_cookie("current_user_index", current_user_index);
 
-
     return true;
-
 }
 
 // function that checks whether the user is already logged in
 // returns false when user is not currently logged in otherwise true
 function check_login() {
-    return (current_user_index == -1 || users[current_user_index]['current_login'] == false) ? false : true;
+    return (current_user_index == -1) ? false : true;
 }
 
 // function that handles the logout through cookies (faking)
 function logout() {
-    if (current_user_index == -1 || users[current_user_index]['current_login'] == false) {
-        current_user_index = -1;
-        _set_cookie("current_user_index", current_user_index);
+    if (current_user_index == -1)
         return;
-    }
 
-    users[current_user_index]['current_login'] = false;
-    _set_cookie("users", JSON.stringify(users));
     current_user_index = -1;
     _set_cookie("current_user_index", current_user_index);
     return;
@@ -136,9 +144,15 @@ ITEM HANDLING
 
 // function that adds one item to the list of item the user has put in (stored clientsided using cookies)
 // returns false if the user is not currently logged in
-function add_item(item) {
+function add_item(category, name, carbon) {
     if (check_login() == false)
         return false;
+
+    item = {
+        'category': category,
+        'name': name,
+        'carbon': carbon
+    };
 
     users[current_user_index]['items'].push(item);
     _set_cookie("users", JSON.stringify(users));
@@ -219,4 +233,4 @@ function _users_index_of_login_ID(login_ID) {
 }
 
 // auskommentieren wenn das backend nicht automatisch mit dem aufruf der seite mitgestartet werden soll, sondern manuell benutzt werden soll
-__init_backend(0);
+__init_backend("prod");
