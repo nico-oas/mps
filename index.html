@@ -48,7 +48,9 @@
     </div>
            
     <div class="ifLoggedIn container text-center">
+    <!---<div class="container text-center"> Use this line instead of line above in order to track stuff even when not logged in-->
         <p id="greeting"></p>
+        <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#trackModal">Track Carbon usage now!</button>
     </div>
   
     <div class="container text-center">
@@ -149,9 +151,9 @@
                                     <span class="input-group-text"> <i class="fas fa-venus-mars"></i> </span>
                                 </div>
                                 <select class="form-control">
-                                    <option selected>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
+                                    <option value="Male" selected>Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                             <div class="form-group input-group">
@@ -168,7 +170,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-green" onclick="frontEndRegistration();">Register</button>
+                    <button type="submit" class="btn btn-dark" onclick="frontEndRegistration();">Register</button>
                 </div>
             </div>
         </div>
@@ -210,17 +212,17 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-green" onclick="frontEndLogin();">Login</button>
+                    <button type="submit" class="btn btn-dark" onclick="frontEndLogin();">Login</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="shareSucess" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="col-12 modal-title text-center" id="loginModalLabel">Share your sucess via:</h5>
+                    <h5 class="col-12 modal-title text-center" id="shareModalLabel">Share your sucess via:</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -240,6 +242,116 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="trackModal" tabindex="-1" role="dialog" aria-labelledby="trackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="trackModalLabel">Track Carbon Usage</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- track html -->
+                    <div id="trackCategories" class="row text-center">
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#transportationCategory" aria-expanded="false" aria-controls="transportationCategory">
+                            Transportation
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#purchaseCategory" aria-expanded="false" aria-controls="purchaseCategory">
+                            Purchase
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#householdCategory" aria-expanded="false" aria-controls="householdCategory">
+                            Household
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#otherCategory" aria-expanded="false" aria-controls="otherCategory">
+                            Other
+                        </button>
+                    </div>
+                    <div class="categoryform collapse" id="transportationCategory" data-parent="#trackModal .modal-body">
+                        <article class="card-body mx-auto">
+                            <form id="transportationForm">
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-road"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="GasCar" selected>Gas Car</option>
+                                        <option value="Motorcycle">Motorcycle</option>
+                                        <option value="Truck">Truck</option>
+                                        <option value="ElectricCar">Electric Car</option>
+                                        <option value="Bus">Bus</option>
+                                        <option value="Train">Train</option>
+                                        <option value="Plane">Plane</option>
+                                        <option value="Boat">Boat</option>
+                                    </select>
+                                </div>
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-route"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Distance in km" type="number" min="0.001" step="0.001" required>
+                                </div>
+                                <div data-dep="GasCar Motorcycle Truck" class="form-group input-group" style="display: flex;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-gas-pump"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="gas" selected>Gasoline</option>
+                                        <option value="diesel">Diesel</option>
+                                        <option value="lpg">Autogas (LPG)</option>
+                                        <option value="cng">Compressed Natural Gas (CNG)</option>
+                                    </select>
+                                </div>
+                                <div data-dep="GasCar Motorcycle Truck" class="form-group input-group" style="display: flex;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-burn"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Avg. Fuel Consumption in l/100km" type="number" min="1" step="0.01" required>
+                                </div>
+                                <div data-dep="ElectricCar" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-charging-station"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Avg. Energy Consumption in Wh/km" type="number" min="1" step="0.01">
+                                </div>
+                            </form>
+                        </article>
+                    </div>
+                    <div class="categoryform collapse" id="purchaseCategory" data-parent="#trackModal .modal-body">
+                        To Do: Implement form for purchase Category
+                    </div>
+                    <div class="categoryform collapse" id="householdCategory" data-parent="#trackModal .modal-body">
+                        To Do: Implement form for household Category
+                    </div>
+                    <div class="categoryform collapse" id="otherCategory" data-parent="#trackModal .modal-body">
+                        <article class="card-body mx-auto">
+                            <form id="otherForm">
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-pen"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Name/Note" type="text" required>
+                                </div>
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-wind"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="CO2 in kg" type="number" min="0.001" step="0.001" required>
+                                </div>
+                            </form>
+                        </article>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <span id="trackSubmit" class="d-inline-block" data-toggle="popover" data-trigger="hover" data-content="Please select a category first.">
+                        <button type="submit" class="btn btn-dark" onclick="calculateCarbonUsage();" disabled>Track!</button>
+                    </span>
                 </div>
             </div>
         </div>

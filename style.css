@@ -5,12 +5,17 @@
 }
 
 /* general css */
+html {
+    overflow: auto;
+}
 .ifLoggedIn {
     display: none;
 }
 body {
+    overflow: hidden;
     background-color: var(--secondary);
     background-image: url("topography.svg");
+    padding-bottom: 2rem;
 }
 a {
     cursor: pointer;
@@ -24,14 +29,6 @@ a {
     .container {
         border-radius: 1rem;
     }
-}
-.btn-green {
-    color: white;
-    background-color: var(--primary);
-}
-.btn-green:hover {
-    color: white;
-    background-color: var(--secondary);
 }
 
 /* navbar */
@@ -147,4 +144,22 @@ table, th, td {
 }
 td{
     text-align: left;
+}
+
+/* tracking modal */
+#trackCategories {
+    padding: inherit;
+}
+#trackCategories button {
+    margin: 0.2rem;
+}
+#trackCategories button:not(.collapsed) {
+    background-color: #171a1d;
+    pointer-events: none;
+}
+#trackSubmit>button[disabled] {
+    pointer-events: none;
+}
+div[data-dep] {
+    display: none;
 }
