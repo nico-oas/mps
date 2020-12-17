@@ -20,7 +20,7 @@ function __init_backend(switch_arg) {
             current_user_index = JSON.parse(_get_local_storage("current_user_index"));
             console.log("Data of previously created accounts has been loaded...");
             break;
-
+        
         case "testing":
             clear();
             console.log("=============\nTESTING SETTINGS\n=============\n");
@@ -32,6 +32,7 @@ function __init_backend(switch_arg) {
                 _set_local_storage("current_user_index_testing_backup", _get_local_storage("current_user_index"));
                 console.log("=============\nBACKUP CREATED\nsaved users: \n\t" + JSON.parse(_get_local_storage("users")).map(function(user) {return " " + user['username'];}) + "\n=============\n");
                 local_storage.removeItem("users");
+
             }
 
             users = [];
