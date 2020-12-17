@@ -22,6 +22,32 @@ var facts = [   {fact : "Per day a cruise emits as much carbon as 84000 cars",
                     source : "- Cowspiracy"}
             ];
 
+var numbers = {
+                accuracy : 3, //i.e. we round to 3 decimal digits e.g. 123.456789 kg -> 123.457 kg
+                co2PerKm : { //source: https://www.bbc.com/news/science-environment-49349566
+                    shortPlane : 0.254,
+                    longPlane : 0.195,
+                    shortBus : 0.104,
+                    longBus : 0.027,
+                    shortTrain : 0.041,
+                    longTrain : 0.006,
+                    shortBoat : 0.018,
+                    longBoat : 0.251
+                },
+                thresholds : {
+                    Plane : 2000, //i.e. we assume every flight of 2000km or less is short haul
+                    Bus : 20, //i.e. we assume it's a coach bus ride if it's more than 20km
+                    Train : 60, //i.e. we assume it's domestic rail if it's 60km or less
+                    Boat : 300 //i.e. we assume it's a cruise if it's more than 300km
+                },
+                consumptionToCo2 : { //source: https://www.deutsche-handwerks-zeitung.de/kraftstoffverbrauch-in-co2-ausstoss-umrechnen/150/3097/57956
+                    gas : 0.0232,
+                    diesel : 0.0265,
+                    lpg : 0.0179,
+                    cng : 0.0163
+                }
+            };
+
 var deeds = [ "Forego the car today and only walk instead",
               "Forego the car today and only ride a bike instead",
               "Only eat regional foods today",
@@ -59,7 +85,60 @@ function frontEndRegistration(){
         location.reload();
     }else{
         $("#registerError").show();
-        //$("#registerForm input").val("");
+    }
+}
+
+function calculateCarbonUsage(){
+    if(!$(".categoryform.show form")[0].reportValidity()){
+        return;
+    }
+    let form = $(".categoryform.show");
+    let fields = form.find("input:visible, select:visible")
+    let result = 0.0;
+    let category = null, name = null;
+    switch(form.attr("id")){
+        case "transportationCategory":
+            category = "Transportation";
+            let vehicle = $(fields[0]).val();
+            let distance = parseFloat($(fields[1]).val());
+            name = "Travelled " + distance + "km in a " + (["ElectricCar", "GasCar"].indexOf(vehicle)>-1 ? "Car" : vehicle);
+            if(["GasCar", "Motorcycle", "Truck"].indexOf(vehicle)>-1){
+                let fuelType = $(fields[2]).val();
+                let consumption = parseFloat($(fields[3]).val());
+                result = (distance * consumption * numbers.consumptionToCo2[fuelType]).toFixed(numbers.accuracy);
+            }else if(["Bus", "Plane", "Boat", "Train"].indexOf(vehicle)>-1){
+                let th = numbers.thresholds[vehicle];
+                console.log("Threshold: "+th);
+                result = (parseFloat( (distance > th) ? numbers.co2PerKm["long"+vehicle] : numbers.co2PerKm["short"+vehicle])*distance).toFixed(numbers.accuracy);
+            }else if(vehicle == "ElectricCar"){
+                //to do: get CO2 emitted by keeping user country's electricity generation in mind! API?
+            }else{
+                console.error("No Vehicle selected!");
+                return;
+            }
+            break;
+        case "purchaseCategory":
+            category = "Purchase";
+            /*https://www.programmableweb.com/api/brighter-planet-cm1
+            https://www.programmableweb.com/api/carbon-calculated
+            https://www.programmableweb.com/api/co2-benchmark */
+            break;
+        case "householdCategory":
+            category = "Household";
+            break;
+        case "otherCategory":
+            category = "Other";
+            name = $(fields[0]).val();
+            result = parseFloat($(fields[1]).val()).toFixed(numbers.accuracy);
+            break;
+        default:
+            console.error("No Category selected!");
+            return;
+    }
+    if(add_item(category, name, result)){
+        location.reload();
+    }else{
+        alert(name + ", emitted " + result + " (Not tracked because not logged in)");
     }
 }
 
@@ -98,6 +177,9 @@ if(check_login()){
 }
 
 window.addEventListener("load", function(){
+    //bootstrap magic
+    $("span[data-toggle='popover']").popover({placement : "top"});
+
     if(check_login()){
         //greeting
         let hrs = new Date().getHours();
@@ -114,14 +196,15 @@ window.addEventListener("load", function(){
         }
         let carbon = 0;
         for(i in user_items){
-            carbon += parseInt(user_items[i].carbon);
+            carbon += Math.round(user_items[i].carbon);
         }
         if(carbon > 0){
-            greet2 = 'So far, you\'ve tracked <b>' + carbon + '</b> kg of carbon.'
+            greet2 = 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon.'
         }
         document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
     }
 
+    //daily deeds
     if(check_login()){
         let x = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
         $('#deeds').text(deeds[x]);
@@ -146,7 +229,6 @@ window.addEventListener("load", function(){
   
     //facts
     var fact = facts[Math.floor(Math.random()*facts.length)];
-    console.log(fact);
     $('#fact').text(fact.fact);
     $('#source').text(fact.source);
 
@@ -157,6 +239,28 @@ window.addEventListener("load", function(){
     }
     $(".modal").on('hidden.bs.modal', function(){
         $(this).find("input").val("");
+        $(this).find("select").each(function(){
+            $(this).val($(this).find("option[selected]")[0].value);
+        });
         $(this).find(".error").hide();
+        $(this).find(".show").collapse("hide");
+    });
+
+    //track modal
+    $(".categoryform").on('shown.bs.collapse', function () {
+        $("#trackSubmit").popover("disable");
+        $("#trackSubmit>button").prop("disabled", false);
+        $(this).find("input").val("");
+        $(this).find("select").each(function(){
+            $(this).val($(this).find("option[selected]")[0].value).trigger("change");
+        });
+    });
+    $("#trackModal").on('hidden.bs.modal', function () {
+        $("#trackSubmit").popover("enable");
+        $("#trackSubmit>button").prop("disabled", true);
+    });
+    $("#transportationForm select:first").change(function () {
+        $("#transportationForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
+        $("#transportationForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
     });
 });
