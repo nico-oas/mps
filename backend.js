@@ -22,7 +22,7 @@ function __init_backend(switch_arg) {
             break;
         
         case "testing":
-            clear();
+            local_storage.clear();
             console.log("=============\nTESTING SETTINGS\n=============\n");
             console.log('To leave the testing environement, you just have to call the function: __init_backend("revert_testing");');
 
@@ -43,7 +43,7 @@ function __init_backend(switch_arg) {
             break;
 
         case "revert_testing":
-            clear();
+            local_storage.clear();
             users_testing_backup = _get_local_storage("users_testing_backup");
             if (users_testing_backup) {
                 local_storage.removeItem("users_testing_backup");
