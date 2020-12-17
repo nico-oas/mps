@@ -49,6 +49,7 @@ function frontEndRegistration(){
         return;
     }
     var fields = $("#registerForm input, #registerForm select");
+    
     if($(fields[3]).val() != $(fields[4]).val()){
         $("#validationError").show();
         return;
@@ -60,6 +61,34 @@ function frontEndRegistration(){
         $("#registerError").show();
         //$("#registerForm input").val("");
     }
+}
+
+function saveItemDelete(){
+    //Hier deleten
+}
+
+function saveChangePw(){
+    //Hier deleten
+    let usr = user_information();
+    let fields = $("#pwForm input");
+    if($(fields[1]).val() == $(fields[2]).val()){
+        //Hier neues pw setzen
+        if(true){ //Hier backend changepw aufrufen
+            $("#changepw").modal('hide');
+            $("#passwordConfirm").show();
+        }
+        else{
+            $("#passwordError").show();
+        }
+    }
+    else{
+        $("#passwordError2").show();
+    }
+}
+
+function saveAccountDelete(){
+    //Hier deleten
+    let usr = user_information();
 }
 
 if(check_login()){
