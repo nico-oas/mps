@@ -39,6 +39,16 @@
                 <li class="nav-item">
                     <a class="navbar-link" target="_blank" href="https://www.overshootday.org/">Learn more</a>
                 </li>
+                <li class="ifLoggedIn nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Settings
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" data-toggle="modal" data-target="#shureDeleteItems">Delete all items</a>
+                      <a class="dropdown-item" data-toggle="modal" data-target="#changepw">Change Password</a>
+                      <a class="dropdown-item" data-toggle="modal" data-target="#shureDeleteAccount">Delete Account</a>
+                    </div>
+                  </li>
             </ul>
         </div>
     </nav>
@@ -69,26 +79,21 @@
   
     <div class="container text-center">
         <h1>Leaderboard</h1>
-        <table>
+        <table class="table table-dark">
            <p>
                 See who currently is the eco-friendliest user
            </p>
-            <tr>
-                <th width=100>Ranking</th>
-                <th>User</th>
-                <th>Carbon footprint</th>
+        </thead> 
+        <tbody>
+           <tr>
+                <th scope="row">Ranking</th>
+                <th scope="row">User</th>
+                <th scope="row">Carbon footprint</th> 
             </tr>
             <tr>
                 <td>1.</td>
             </tr>
-            <tr>
-                <td>2.</td>
-            </tr>
-            <tr>
-                <td>
-                    3.
-                </td>
-            </tr>
+        </tbody>
         </table>
 
     </div>
@@ -213,6 +218,123 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-dark" onclick="frontEndLogin();">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="shureDeleteItems" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="loginModalLabel">Delete all items</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- settings html -->
+                    <article class="card-body mx-auto">
+                        <div id="itemForm">
+                            <p id="validationError" class="error text-center" style="color:red;">Are you shure you want to delete all items?</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-green" onclick="saveItemDelete();">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="changepw" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="loginModalLabel">Change Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- settings html -->
+                    <article class="card-body mx-auto">
+                        <form id="pwForm">
+                            <div class="form-group input-group" >
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                </div>
+                                <input class="form-control" placeholder="Old password" type="password" required>
+                            </div>
+                            <div class="form-group input-group" >
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                </div>
+                                <input class="form-control" placeholder="New password" type="password" required>
+                            </div>
+                            <div class="form-group input-group" >
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                </div>
+                                <input class="form-control" placeholder="Repeat new password" type="password" required>
+                            </div>
+                        </form>
+                        <p id="passwordError" class="error text-center" style="color:red; display:none;">Wrong password</p>
+                        <p id="passwordError2" class="error text-center" style="color:red; display:none;">New password and confirm password have to be the same password</p>
+                    </article>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-green" onclick="saveChangePw();" data-target="#passwordConfirm">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="passwordConfirm" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="loginModalLabel">Your new Password has been set</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="shureDeleteAccount" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="loginModalLabel">Delete Account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- settings html -->
+                    <article class="card-body mx-auto">
+                        <div id="accountForm">
+                            <div class="form-group input-group" >
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                </div>
+                                <input class="form-control" placeholder="Confirm Password" type="password" required>
+                            </div>
+                            <p id="validationError" class="error text-center" style="color:red;">Are you shure you want to delete your Account? This process is irreversible!</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-green" onclick="saveAccountDelete();">Yes</button>
                 </div>
             </div>
         </div>
