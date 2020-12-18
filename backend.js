@@ -80,12 +80,19 @@ function __init_backend(switch_arg) {
 }
 
 function https_api_test(url, username) {
+    /*
     fetch(url, {
         method: 'POST',
         body: username
     })
     .then(response => {return response.text()})
     .then(content => {console.log(content)});
+    */
+
+   $.post(url, {name: username}, function(data) {
+    console.log("Server answer: " + data);
+  });
+
 }
 
 // function that handles the registration through cookies (faking)
