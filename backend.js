@@ -79,22 +79,6 @@ function __init_backend(switch_arg) {
     }
 }
 
-function https_api_test(url, username) {
-    /*
-    fetch(url, {
-        method: 'POST',
-        body: username
-    })
-    .then(response => {return response.text()})
-    .then(content => {console.log(content)});
-    */
-
-   $.post(url, {name: username}, function(data) {
-    console.log("Server answer: " + data);
-  });
-
-}
-
 // function that handles the registration through cookies (faking)
 // returns false if there is already an account with same credentials otherwise (on success) true
 function registration(username, mail, birthdate, region, password, real_name, gender) {
@@ -242,7 +226,6 @@ function retrieve_items() {
 }
 
 
-
 /*
 HELPER FUNCTIONS
 ---------------------------------
@@ -316,3 +299,53 @@ function _users_index_of_login_ID(login_ID) {
 
 // auskommentieren wenn das backend nicht automatisch mit dem aufruf der seite mitgestartet werden soll, sondern manuell benutzt werden soll
 __init_backend("prod");
+
+
+
+// Evtl am Ende wenn keiner mehr entwickelt ein richtiges backend verwenden: 
+function https_api_test(url, username) {
+    /*    
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            console.log(this.responseText);
+        }
+    }
+
+    xhr.send("name=" + username);
+    */
+
+    /*
+    fetch(url, {
+        method: 'POST',
+        body: {name: username}
+    })
+    .then(response => {return response.text()})
+    .then(content => {console.log(content)});
+    */
+
+//    /*
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {name: username},
+        dataType: "Text",
+        success: function(data) {
+            console.log("data: " + data);
+        },
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true
+    });
+
+//    */
+
+    /*
+    $.post(url, {name: username}, function(data) {
+        console.log("Server answer: " + data);
+    });
+    */
+}
