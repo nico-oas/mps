@@ -11,6 +11,8 @@ local_storage = window.localStorage;
 function __init_backend(switch_arg) {
     switch (switch_arg) {
         case "prod":
+            //sha256("Hello World!").then(hash => {console.log(hash)});
+
             if (!_get_local_storage("users")) {
                 console.log("No users existed in backend...");
                 break;
@@ -81,20 +83,24 @@ function __init_backend(switch_arg) {
 
 // function that handles the registration through cookies (faking)
 // returns false if there is already an account with same credentials otherwise (on success) true
-function registration(username, mail, birthdate, region, password, real_name, gender) {
+async function registration(username, mail, birthdate, region, password, real_name, gender) {
     if (_users_key_existence_check("username", username) || _users_key_existence_check("mail", mail))
         return false;
 
     new_user = {
-        username: username,
-        mail: mail,
-        birthdate: birthdate,
-        region: region,
-        password: password,
-        real_name: real_name,
-        gender: gender,
-        items: []
+        'username': username,
+        'mail': mail,
+        'birthdate': birthdate,
+        'region': region,
+        'real_name': real_name,
+        'gender': gender,
+        'items': []
     };
+
+    await sha256(password).then(hash => {
+        new_user['password'] = hash;
+        return new_user;
+    });
 
     users.push(new_user);
     current_user_index = users.length - 1;
@@ -106,15 +112,17 @@ function registration(username, mail, birthdate, region, password, real_name, ge
 
 // function that handles the login through cookies (faking)
 // returns false if credentials are wrong or the account does not exist
-function login(login_ID, password) {
-    var i = _users_index_of_login_ID(login_ID);
-    if (i == -1 || users[i]['password'] != password) 
-        return false;
-
-    current_user_index = i;
-    _set_local_storage("current_user_index", current_user_index);
-
-    return true;
+async function login(login_ID, password) {
+    await sha256(password).then(hash => {    
+        let i = _users_index_of_login_ID(login_ID);
+        if (i == -1 || users[i]['password'] != hash) 
+            return false;
+    
+        current_user_index = i;
+        _set_local_storage("current_user_index", current_user_index);
+    
+        return true;
+    });
 }
 
 // function that checks whether the user is already logged in
@@ -144,8 +152,7 @@ function user_information() {
         'birthdate': users[current_user_index].birthdate,
         'region': users[current_user_index].region,
         'real_name': users[current_user_index].real_name,
-        'gender': users[current_user_index].gender,
-        'password': users[current_user_index].password //diskutieren ob die Prüfung ob das passt nicht ins backend verlangert werden sollte
+        'gender': users[current_user_index].gender
     };
 
     return user_data;
@@ -153,37 +160,54 @@ function user_information() {
 
 // function that deletes the currently logged in user account
 // return false if the password was incorrect or true if the correct password was given and the user was deleted and "logged out"
-function delete_account(verification_pw) {
-    if (!check_login() || verification_pw != users[current_user_index]['password']) 
+async function delete_account(verification_pw) {
+    if (!check_login()) 
         return false;
 
-    users = users.splice(current_user_index, 1);
-    _set_local_storage("users", JSON.stringify(users));
-    current_user_index = -1;
-    _set_local_storage("current_user_index", current_user_index);
-    return true;
+    await sha256(verification_pw).then(hash => {
+        if (users[current_user_index]['password'] != hash) 
+            return false;
+
+        users = users.splice(current_user_index, 1);
+        _set_local_storage("users", JSON.stringify(users));
+        current_user_index = -1;
+        _set_local_storage("current_user_index", current_user_index);
+        return true;
+    });
 }
 
 // function that changes the password of the currently logged in user
 // returns false if the function was called evnthough no one was loggen in or or the verification password did not match the user password or returns true on success
-function change_pw(verification_pw, new_pw) {
-    if (!check_login() || verification_pw != users[current_user_index]['password']) 
+async function change_pw(verification_pw, new_pw) {
+    if (!check_login())
         return false;
-
-    users[current_user_index]['password'] = new_pw;
-    _set_local_storage("users", JSON.stringify(users));
-    return true;
+    
+    await sha256(verification_pw).then(hash => {
+        if (users[current_user_index]['password'] != hash) 
+            return false;
+    });
+        
+    await sha256(new_pw).then(new_hash => {
+        users[current_user_index]['password'] = new_hash;
+        _set_local_storage("users", JSON.stringify(users));
+        return true;
+    });
 }
 
 // function that deletes all previously added items from the currently logged in user account
 // returns false if the function was called evnthough no one was loggen in or or the verification password did not match the user password or returns true on success
-function delete_all_items(verification_pw) {
-    if (!check_login() || verification_pw != users[current_user_index]['password']) 
-    return false;
+async function delete_all_items(verification_pw) {
+    if (!check_login())
+        return false;
 
-    users[current_user_index].items = [];
-    _set_local_storage("users", JSON.stringify(users));
-    return true;
+    await sha256(verification_pw).then(hash => {
+        if (users[current_user_index]['password'] != hash) 
+            return false;
+
+        users[current_user_index].items = [];
+        _set_local_storage("users", JSON.stringify(users));
+        return true;
+    });
 }
 
 
@@ -297,6 +321,24 @@ function _users_index_of_login_ID(login_ID) {
     return -1;
 }
 
+function _sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+async function sha256(code) {
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder().encode(code);                    
+
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string                  
+    const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+    return hashHex;
+}
 // auskommentieren wenn das backend nicht automatisch mit dem aufruf der seite mitgestartet werden soll, sondern manuell benutzt werden soll
 __init_backend("prod");
 
