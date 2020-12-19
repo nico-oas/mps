@@ -343,9 +343,41 @@ async function sha256(code) {
 __init_backend("prod");
 
 
+/*
+==============================================================
+TESTING AREA
+==============================================================
+*/
+
+async function test_api_login(url, user_name) {
+    if (_get_cookie("token")) {
+    
+    }
+    else {
+        _post_request(url, {username: user_name}).then(answer => console.log(answer));
+    }
+}
+
 
 // Evtl am Ende wenn keiner mehr entwickelt ein richtiges backend verwenden: 
-function https_api_test(url, username) {
+function _post_request(url, data) {
+    return $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        dataType: "Text",
+        success: function(data) {
+            return data;
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            return "error happende";
+        },
+        crossDomain: true
+    });
+
+
+
+// =========== Other implementations for http-post:
     /*    
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -359,6 +391,8 @@ function https_api_test(url, username) {
     xhr.send("name=" + username);
     */
 
+//-----------    
+
     /*
     fetch(url, {
         method: 'POST',
@@ -368,22 +402,7 @@ function https_api_test(url, username) {
     .then(content => {console.log(content)});
     */
 
-//    /*
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: {name: username},
-        dataType: "Text",
-        success: function(data) {
-            console.log("data: " + data);
-        },
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true
-    });
-
-//    */
+//-----------    
 
     /*
     $.post(url, {name: username}, function(data) {
