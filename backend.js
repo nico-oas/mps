@@ -255,7 +255,7 @@ HELPER FUNCTIONS
 ---------------------------------
 */
 
-function set_cookie(cookie_key, cookie_value, cookie_path = "") {
+function _set_cookie(cookie_key, cookie_value, cookie_path = "") {
     var d = new Date();
     d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
@@ -345,21 +345,107 @@ __init_backend("prod");
 
 /*
 ==============================================================
-TESTING AREA
+TESTING AREA  ---  Web API
 ==============================================================
 */
 
-async function test_api_login(url, user_name) {
+async function api_login(url = "https://mps-api.phildree.de/auth.php", login_id, password) {
+    await _post_request(url, {'login_id': login_id, 'password': password}).then(answer => {_set_cookie("token", answer); console.log(answer);});
+}
+
+async function api_registration(url = "https://mps-api.phildree.de/registration.php", username, mail, birthdate, region, password, real_name, gender) {
+    await _post_request(url, {'username': username, 'mail': mail, 'birthdate': birthdate, 'region': region, 'password': password, 'real_name': real_name, 'gender': gender})
+        .then(answer => console.log(answer));
+        // todo: auf serverseite pruefen dass es keinen acc mit username/mail gibt
+}
+
+async function api_check_login(url = "https://mps-api.phildree.de/registration.php") {
+    await _post_request(url, {'token': _get_cookie("token")}).then(answer => {
+        if(answer) console.log("Currently logged in!");
+        else console.log("Currently NOT logged in!");
+    });
+}
+
+function api_logout() {
+    _del_cookie("token");
+}
+
+async function api_user_information(url = "https://mps-api.phildree.de/user_info.php") {
     if (_get_cookie("token")) {
-    
+        await _post_request(url, {'token': _get_cookie("token")}).then(answer => {
+            if (answer == false) console.log("Too much time has past since your last login, you need to re-login!");
+            else console.log(answer);
+        });
     }
     else {
-        _post_request(url, {username: user_name}).then(answer => console.log(answer));
+        console.log("need to login first!");
+    }
+}
+
+async function api_change_pw(url = "https://mps-api.phildree.de/change_pw.php", password_old, password_new) {
+    if (_get_cookie("token")) {
+        await _post_request(url, {'token': _get_cookie("token"), 'password_old': password_old, 'password_new': password_new}).then(answer => {
+            if (answer == false) console.log("Too much time has past since your last login, you need to re-login!");
+            else console.log("Password successfully changed!");
+        });
+    }
+    else {
+        console.log("need to login first!");
+    }
+}
+
+async function api_delete_all_items(url = "https://mps-api.phildree.de/delete_items.php", password) {
+    if (_get_cookie("token")) {
+        await _post_request(url, {'token': _get_cookie("token"), 'password': password}).then(answer => {
+            if (answer == false) console.log("Too much time has past since your last login, you need to re-login!");
+            else console.log("Items successfully deleted!");
+        });
+    }
+    else {
+        console.log("need to login first!");
+    }
+}
+
+async function api_delete_account(url = "https://mps-api.phildree.de/delete_account.php", password) {
+    if (_get_cookie("token")) {
+        await _post_request(url, {'token': _get_cookie("token"), 'password': password}).then(answer => {
+            if (answer == false) console.log("Too much time has past since your last login, you need to re-login!");
+            else  {
+                console.log("Account was deleted!");
+                _del_cookie("token");
+            }
+        });
+    }
+    else {
+        console.log("need to login first!");
+    }
+}
+
+async function api_add_item(url = "https://mps-api.phildree.de/add_item.php", category, name, carbon) {
+    await _post_request(url, {'token': _get_cookie("token"), 'category': category, 'name': name, 'carbon': carbon}).then(answer => {
+        if(answer == true) console.log("Item added!");
+        else console.log("Currently NOT logged in!");
+    });
+}
+
+async function api_retrieve_items(url = "https://mps-api.phildree.de/retrieve_items.php") {
+    await _post_request(url, {'token': _get_cookie("token")}).then(answer => {
+        if(answer == false) console.log("Currently NOT logged in!");
+        else console.log(answer);
+    });
+}
+
+async function api_ressource(url) {
+    if (_get_cookie("token")) {
+        console.log(_get_cookie("token"));
+        await _post_request(url, {token: _get_cookie("token")}).then(answer => {console.log("ans: " + answer);});
+    }
+    else {
+        console.log("need to login first!");
     }
 }
 
 
-// Evtl am Ende wenn keiner mehr entwickelt ein richtiges backend verwenden: 
 function _post_request(url, data) {
     return $.ajax({
         type: "POST",
@@ -370,7 +456,7 @@ function _post_request(url, data) {
             return data;
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            return "error happende";
+            return "error happended";
         },
         crossDomain: true
     });
