@@ -181,7 +181,7 @@ window.addEventListener("load", function(){
         }
         document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
 
-        //set current country
+        //set correct country grid
         let c = user_information()['region'];
         let cd = countries.find(function(e){return e.name==c;});
         if(cd.intensity){
@@ -190,12 +190,21 @@ window.addEventListener("load", function(){
             cd = countries.find(function(e){return e.name=="Germany";});
             $("#grid").text("Germany "+ " (" + cd.intensity + "kg per kWh, No Data for " + user_information()['region'] + ")");
         }
-    }
 
-    //daily deeds
-    if(check_login()){
-        let x = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
-        $('#deeds').text(deeds[x]);
+        //daily deeds
+        var randomDeedId = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
+        $('#deeds').text(deeds[randomDeedId]);
+
+        //use share API
+        if(navigator.share){
+            $("#share").attr("data-target", "").click(function(){
+                navigator.share({
+                    title : 'Carbon Footprint Tracker',
+                    text : "I've completed my daily deed in the Carbon Footprint Tracker: " + deeds[randomDeedId],
+                    url : window.location.href
+                });
+            })
+        }
     }
 
     //countdown
