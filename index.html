@@ -92,7 +92,7 @@
                 <th scope="row">Carbon footprint</th> 
             </tr>
             <script>
-                leaders = rankings().slice(0, 5);
+                leaders = rankings().slice(0, 4);
                 console.log(leaders);
                 for (let i = 1; i <= 5 && i <= leaders.length; i++) {
                     $("#ranking_table").append("<tr><td>" + i + "</td><td>" + leaders[i - 1]['username'] + "</td><td>" + leaders[i - 1]['total_carbon'] + " kg</td></tr>"); 
