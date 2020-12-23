@@ -8,7 +8,7 @@ current_user_index = -1;
 local_storage = window.localStorage;
 
 // init/test function to prepare all cookies/variables
-function __init_backend(switch_arg) {
+async function __init_backend(switch_arg) {
     switch (switch_arg) {
         case "prod":
             //sha256("Hello World!").then(hash => {console.log(hash)});
@@ -42,8 +42,8 @@ function __init_backend(switch_arg) {
             }
 
             users = [];
-            registration("test1", "test1@mail.de", "1970-01-01", "Musterland", "password", "test user 1", "Male");
-            registration("test2", "test2@mail.de", "1970-01-01", "Musterland", "password", "test user 2", "Female");
+            await registration("test1", "test1@mail.de", "1970-01-01", "Musterland", "password", "test user 1", "Male");
+            await registration("test2", "test2@mail.de", "1970-01-01", "Musterland", "password", "test user 2", "Female");
             _set_local_storage("mode", "testing");
             console.log("=============\nTESTUSERS CREATED! Credentials: test1/password, test2/password\n=============\n");
             console.log("Please refresh the site to use the newly created testing accounts!")
@@ -99,7 +99,6 @@ async function registration(username, mail, birthdate, region, password, real_na
 
     await sha256(password).then(hash => {
         new_user['password'] = hash;
-        return new_user;
     });
 
     users.push(new_user);
