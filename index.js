@@ -57,6 +57,31 @@ var deeds = [ "Forego the car today and only walk instead",
               "Pick up as much trash as you can today",
               "Donate something to an environmental organisation of your liking"];
 
+function rankings() {
+    copy = JSON.parse(JSON.stringify(users));
+    /*
+    console.log(copy[1]['items'].reduce((a, b) => a['carbon'] + b['carbon']));
+    copy.sort((a, b) => b['items'].reduce((c, d) => c['carbon'] + d['carbon'], 0) - a['items'].reduce((c, d) => c['carbon'] + d['carbon'], 0));
+    console.log("copy: " + JSON.stringify(copy));
+    */
+
+    copy.sort((a, b) => {
+        var carbon_a = 0;
+        var carbon_b = 0;
+        a['items'].forEach(item => {
+            carbon_a += item['carbon']
+        });
+        b['items'].forEach(item => {
+            carbon_b += item['carbon']
+        });
+        a['total_carbon'] = carbon_a.toFixed(3);
+        b['total_carbon'] = carbon_b.toFixed(3);
+        return carbon_a - carbon_b;
+    ;});
+    
+    return copy;
+}
+
 function frontEndLogin(){
     if(!$("#loginForm")[0].reportValidity()){
         return;
