@@ -27,8 +27,6 @@ if (!empty($_POST) && isset($_POST['token'], $_POST['password'])) {
         exit(1);
     }
 
-    echo("user_id: " . $user_id . "\n");
-
     if ($mysqli->connect_errno) {
         error_log("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
         echo("Internal Server Error!");
@@ -55,7 +53,7 @@ if (!empty($_POST) && isset($_POST['token'], $_POST['password'])) {
 
     $result = $auth_statement->get_result();
     if ($result->num_rows != 1) {
-        echo("Falsche Anzahl matchender Eintraege in der DB!");
+        echo("Wrong number of results from DB");
         exit(1);
     }
     

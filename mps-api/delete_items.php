@@ -55,7 +55,7 @@ if (!empty($_POST) && isset($_POST['token'], $_POST['password'])) {
 
     $result = $auth_statement->get_result();
     if ($result->num_rows != 1) {
-        echo("Falsche Anzahl matchender Eintraege in der DB!");
+        echo("Wrong number of results from DB");
         exit(1);
     }
     

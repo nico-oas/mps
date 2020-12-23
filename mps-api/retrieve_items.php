@@ -22,7 +22,7 @@ if (!empty($_POST) && isset($_POST['token'])) {
     try {
         $user_id = ($jwt->_jwt_decode_data(htmlspecialchars($_POST['token'], ENT_QUOTES)))->user_id;
     } catch(\Exception $e) {
-        echo("asdf");
+        echo("Error");
         exit(1);
     }
 
