@@ -20,9 +20,14 @@ function __init_backend(switch_arg) {
             current_user_index = JSON.parse(_get_local_storage("current_user_index"));
             console.log("Data of previously created accounts has been loaded...");
             break;
-        
+
         case "testing":
-            local_storage.clear();
+            console.clear();
+            if (_get_local_storage("mode") == "testing") {
+                console.log("Testing mode is already active!");
+                break;
+            }
+
             console.log("=============\nTESTING SETTINGS\n=============\n");
             console.log('To leave the testing environement, you just have to call the function: __init_backend("revert_testing");');
 
@@ -32,18 +37,24 @@ function __init_backend(switch_arg) {
                 _set_local_storage("current_user_index_testing_backup", _get_local_storage("current_user_index"));
                 console.log("=============\nBACKUP CREATED\nsaved users: \n\t" + JSON.parse(_get_local_storage("users")).map(function(user) {return " " + user['username'];}) + "\n=============\n");
                 local_storage.removeItem("users");
-
             }
 
             users = [];
             registration("test1", "test1@mail.de", "1970-01-01", "Musterland", "password", "test user 1", "Male");
             registration("test2", "test2@mail.de", "1970-01-01", "Musterland", "password", "test user 2", "Female");
+            _set_local_storage("mode", "testing");
             console.log("=============\nTESTUSERS CREATED! Credentials: test1/password, test2/password\n=============\n");
             console.log("Please refresh the site to use the newly created testing accounts!")
             break;
 
         case "revert_testing":
-            local_storage.clear();
+            console.clear();
+
+            if (_get_local_storage("mode") != "testing") {
+                console.log("You need to activate the testing mode, bofore you can disable it!");
+                break;
+            }
+
             users_testing_backup = _get_local_storage("users_testing_backup");
             if (users_testing_backup) {
                 local_storage.removeItem("users_testing_backup");
@@ -52,12 +63,11 @@ function __init_backend(switch_arg) {
                 local_storage.removeItem("current_user_index_testing_backup");
                 console.log("Users that existed before the testing have been restored");
                 console.log("=============\nRESTORED FROM BACKUP\nusers: \n\t" + JSON.parse(_get_local_storage("users")).map(function(user) {return " " + user['username'];}) + "\n=============\n");
+            } else {
+                local_storage.clear();
             }
-            else {
-                console.log("You need to activate the testing mode, bofore you can disable it!");
-                break;
-            }
-
+            
+            _set_local_storage("mode", "normal");
             console.log("Please refresh the site to change to the normal mode, and use the normal accounts (BACK TO NORMAL)");
             break;
 
@@ -67,6 +77,15 @@ function __init_backend(switch_arg) {
             location.reload();
             break;
     }
+}
+
+function https_api_test(url, username) {
+    fetch(url, {
+        method: 'POST',
+        body: username
+    })
+    .then(response => {return response.text()})
+    .then(content => {console.log(content)});
 }
 
 // function that handles the registration through cookies (faking)
@@ -195,7 +214,7 @@ function add_item(category, name, carbon) {
         'category': category,
         'name': name,
         'carbon': carbon,
-        'add_date': d 
+        'add_date': d
     };
 
     users[current_user_index]['items'].push(item);
@@ -222,7 +241,7 @@ HELPER FUNCTIONS
 ---------------------------------
 */
 
-function set(cookie_key, cookie_value, cookie_path = "") {
+function set_cookie(cookie_key, cookie_value, cookie_path = "") {
     var d = new Date();
     d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
     var expires = "expires=" + d.toUTCString();
@@ -261,10 +280,6 @@ function _del_cookie(cookie_key, cookie_path = "") {
 }
 
 function _set_local_storage(storage_key, storage_value) {
-    var d = new Date();
-    d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-
     local_storage.setItem(storage_key, storage_value);
 }
 
