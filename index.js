@@ -1,62 +1,3 @@
-var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla","Antigua &amp; Barbuda","Argentina","Armenia","Aruba","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bermuda","Bhutan","Bolivia","Bosnia &amp; Herzegovina","Botswana","Brazil","British Virgin Islands","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Cape Verde","Cayman Islands","Chad","Chile","China","Colombia","Congo","Cook Islands","Costa Rica","Cote D Ivoire","Croatia","Cruise Ship","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Estonia","Ethiopia","Falkland Islands","Faroe Islands","Fiji","Finland","France","French Polynesia","French West Indies","Gabon","Gambia","Georgia","Germany","Ghana","Gibraltar","Greece","Greenland","Grenada","Guam","Guatemala","Guernsey","Guinea","Guinea Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Isle of Man","Israel","Italy","Jamaica","Japan","Jersey","Jordan","Kazakhstan","Kenya","Kuwait","Kyrgyz Republic","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macau","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Montserrat","Morocco","Mozambique","Namibia","Nepal","Netherlands","Netherlands Antilles","New Caledonia","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Puerto Rico","Qatar","Reunion","Romania","Russia","Rwanda","Saint Pierre &amp; Miquelon","Samoa","San Marino","Satellite","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","St Kitts &amp; Nevis","St Lucia","St Vincent","St. Lucia","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor L'Este","Togo","Tonga","Trinidad &amp; Tobago","Tunisia","Turkey","Turkmenistan","Turks &amp; Caicos","Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
-
-var facts = [   {fact : "Per day a cruise emits as much carbon as 84000 cars",
-                    source : "- Utopia.de"},
-                {fact : "If possible try travelling by train rather than by plane to emit only 1/5 of the Carbon",
-                    source : "- VICE Deutschland"},
-                {fact : "A commuter driving 40 km a day to and back from work in a mid-range car emits 1.2 tons of carbon a year",
-                    source : "- VICE Deutschland"},
-                {fact : "In a household switching to green energy saves up to 1 ton of carbon emissions",
-                    source : "- Bundesumweltamt"},
-                {fact : "Heating is responsible for 70% of a households emissions",
-                    source : "- Bundesumweltamt"},
-                {fact : "Data centers through which internet runs worldwide produce as much emissions as international air traffic",
-                    source : "- Frankfurter Rundschau"},
-                {fact : "In 2015 the textile industry produced 1.2 billion tons of emissions - more than the international air and ship traffic together",
-                    source : "- Quarks"},
-                {fact : "100g of beef equal 8km of a car drive",
-                    source : "- VICE Deutschland"},
-                {fact : "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
-                    source : "- Drew Shindell, Climate Specialist"},
-                {fact : "A plant based diet cuts your carbon footprint by 50%",
-                    source : "- Cowspiracy"}
-            ];
-
-var numbers = {
-                accuracy : 3, //i.e. we round to 3 decimal digits e.g. 123.456789 kg -> 123.457 kg
-                co2PerKm : { //source: https://www.bbc.com/news/science-environment-49349566
-                    shortPlane : 0.254,
-                    longPlane : 0.195,
-                    shortBus : 0.104,
-                    longBus : 0.027,
-                    shortTrain : 0.041,
-                    longTrain : 0.006,
-                    shortBoat : 0.018,
-                    longBoat : 0.251
-                },
-                thresholds : {
-                    Plane : 2000, //i.e. we assume every flight of 2000km or less is short haul
-                    Bus : 20, //i.e. we assume it's a coach bus ride if it's more than 20km
-                    Train : 60, //i.e. we assume it's domestic rail if it's 60km or less
-                    Boat : 300 //i.e. we assume it's a cruise if it's more than 300km
-                },
-                consumptionToCo2 : { //source: https://www.deutsche-handwerks-zeitung.de/kraftstoffverbrauch-in-co2-ausstoss-umrechnen/150/3097/57956
-                    gas : 0.0232,
-                    diesel : 0.0265,
-                    lpg : 0.0179,
-                    cng : 0.0163
-                }
-            };
-
-var deeds = [ "Forego the car today and only walk instead",
-              "Forego the car today and only ride a bike instead",
-              "Only eat regional foods today",
-              "Forego the car today and use public transportation instead",
-              "Before buying clothes next time look for something second hand instead",
-              "Plant a tree",
-              "Pick up as much trash as you can today",
-              "Donate something to an environmental organisation of your liking"];
-
 function frontEndLogin(){
     if(!$("#loginForm")[0].reportValidity()){
         return;
@@ -119,12 +60,37 @@ function calculateCarbonUsage(){
             break;
         case "purchaseCategory":
             category = "Purchase";
-            /*https://www.programmableweb.com/api/brighter-planet-cm1
+            /* MPS-15
+            https://www.programmableweb.com/api/brighter-planet-cm1
             https://www.programmableweb.com/api/carbon-calculated
             https://www.programmableweb.com/api/co2-benchmark */
             break;
         case "householdCategory":
             category = "Household";
+            let subcategory = $(fields[0]).val();
+            let usage = parseFloat($(fields[1]).val());
+            if(["water", "oil", "propane"].indexOf(subcategory)>-1){
+                name = "Used " + usage + " litres of " + subcategory;
+                result = (usage * numbers.consumptionToCo2[subcategory]).toFixed(numbers.accuracy);
+            }else if(["coal", "woodpellets"].indexOf(subcategory)>-1){
+                name = "Burned " + usage + " tonnes of " + fields[0].selectedOptions[0].innerText;
+                result = (usage * numbers.consumptionToCo2[subcategory]).toFixed(numbers.accuracy);
+            }else if(subcategory == "naturalgas"){
+                name = "Used " + usage + " kWh of natural gas";
+                result = (usage * numbers.consumptionToCo2.naturalgas).toFixed(numbers.accuracy);
+            }else if(subcategory == "electricity"){
+                //temporary solution, optimally we would use the costly API here: https://api.electricitymap.org/
+                name = "Consumed " + usage + " kWh of electricity";
+                let c = user_information()['region'];
+                let cd = countries.find(function(e){return e.name==c;});
+                if(!cd){
+                    cd = countries.find(function(e){return e.name=="Germany";});
+                }
+                result = (usage * cd.intensity).toFixed(numbers.accuracy);
+            }else{
+                console.error("No Household Subcategory selected!");
+                return;
+            }
             break;
         case "otherCategory":
             category = "Other";
@@ -134,6 +100,9 @@ function calculateCarbonUsage(){
         default:
             console.error("No Category selected!");
             return;
+    }
+    if(result == "NaN"){
+        alert("Error: Calculated value is not a number!");
     }
     if(add_item(category, name, result)){
         location.reload();
@@ -177,15 +146,22 @@ if(check_login()){
 }
 
 window.addEventListener("load", function(){
-    //bootstrap magic
+    //enable popovers
     $("span[data-toggle='popover']").popover({placement : "top"});
+    //enable submit on enter
+    $("input").keypress(function (e) {
+        if (e.which == 13) {
+            $(this).parents(".modal-content").find("button[type='submit']").click();
+            return false;
+        }
+    });
 
     if(check_login()){
         //greeting
         let hrs = new Date().getHours();
         let realname = user_information()['real_name'];
         let username = (realname && realname!='') ? realname : user_information()['username'];
-        let user_items = users[current_user_index]['items'];
+        let user_items = retrieve_items();
         let greet = 'Good Evening ' + username;
         let greet2 = 'So far, you have not logged any carbon usage.'
         
@@ -194,14 +170,26 @@ window.addEventListener("load", function(){
         }else if (hrs <= 17){
             greet = 'Good Afternoon ' + username;
         }
-        let carbon = 0;
+        let carbon = 0.0;
         for(i in user_items){
-            carbon += Math.round(user_items[i].carbon);
+            if(user_items[i].carbon > 0){
+                carbon += parseFloat(user_items[i].carbon);
+            }
         }
         if(carbon > 0){
-            greet2 = 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon.'
+            greet2 = 'So far, you\'ve tracked <b>' + carbon.toFixed(numbers.accuracy) + '</b> kg of carbon.'
         }
         document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
+
+        //set current country
+        let c = user_information()['region'];
+        let cd = countries.find(function(e){return e.name==c;});
+        if(cd.intensity){
+            $("#grid").text(cd.name + " (" + cd.intensity + "kg per kWh)");
+        }else{
+            cd = countries.find(function(e){return e.name=="Germany";});
+            $("#grid").text("Germany "+ " (" + cd.intensity + "kg per kWh, No Data for " + user_information()['region'] + ")");
+        }
     }
 
     //daily deeds
@@ -235,7 +223,7 @@ window.addEventListener("load", function(){
     //forms
     $("input[name='birthdate']").attr("max", new Date().toISOString().split("T")[0]);
     for(i in countries){
-        $("#countrySelect").append("<option value='" + countries[i] + "'>" + countries[i] + "</option>");
+        $("#countrySelect").append("<option value='" + countries[i].name + "'>" + countries[i].name + "</option>");
     }
     $(".modal").on('hidden.bs.modal', function(){
         $(this).find("input").val("");
@@ -262,5 +250,9 @@ window.addEventListener("load", function(){
     $("#transportationForm select:first").change(function () {
         $("#transportationForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
         $("#transportationForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
+    });
+    $("#householdForm select:first").change(function () {
+        $("#householdForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
+        $("#householdForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
     });
 });
