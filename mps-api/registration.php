@@ -61,11 +61,10 @@ if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdat
     $res->data_seek(0);
     $user_id = $res->fetch_assoc()['last_insert_ID'];
 
-    // after user has registered he should be automatically logged in
+    // after user has registered he should automatically be logged in
     $token = $jwt->_jwt_encode_data(['user_id' => $user_id]);
     http_response_code(200);
     echo($token);
-    //error_log("token inhalt: " . json_encode((array) $jwt->_jwt_decode_data($token)));
 }
 else {
     echo(FALSE);

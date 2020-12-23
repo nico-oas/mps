@@ -47,7 +47,7 @@ if (!empty($_POST) && isset($_POST['login_id']) && isset($_POST['password'])) {
 
     $result = $auth_statement->get_result();
     if($result->num_rows === 0) {
-        echo("Falsche Anfrage!");
+        echo(FALSE);
         exit(0);
     }
 
@@ -60,7 +60,7 @@ if (!empty($_POST) && isset($_POST['login_id']) && isset($_POST['password'])) {
         }
       }
 
-    echo("Falscher User/Pass!");
+    echo(FALSE);
 }
 else {
     echo("Error with api call!");
