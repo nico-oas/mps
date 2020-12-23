@@ -83,7 +83,7 @@ function calculateCarbonUsage(){
                 name = "Consumed " + usage + " kWh of electricity";
                 let c = user_information()['region'];
                 let cd = countries.find(function(e){return e.name==c;});
-                if(!cd){
+                if(!cd || !cd.intensity){
                     cd = countries.find(function(e){return e.name=="Germany";});
                 }
                 result = (usage * cd.intensity).toFixed(numbers.accuracy);
@@ -184,7 +184,7 @@ window.addEventListener("load", function(){
         //set correct country grid
         let c = user_information()['region'];
         let cd = countries.find(function(e){return e.name==c;});
-        if(cd.intensity){
+        if(cd && cd.intensity){
             $("#grid").text(cd.name + " (" + cd.intensity + "kg per kWh)");
         }else{
             cd = countries.find(function(e){return e.name=="Germany";});
