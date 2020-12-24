@@ -87,7 +87,6 @@ async function change_pw(password_old, password_new) {
         });
     }
     else {
-        console.log("need to login first!");
         return false;
     }
 }
@@ -104,7 +103,6 @@ async function delete_all_items(password) {
         });
     }
     else {
-        console.log("need to login first!");
         return false;
     }
 }
@@ -135,7 +133,6 @@ async function add_item(category, name, carbon) {
                 return true;
             }
             else {
-                console.log("Currently NOT logged in!");
                 return false;
             }
         });
