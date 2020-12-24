@@ -58,44 +58,33 @@ var deeds = [ "Forego the car today and only walk instead",
               "Donate something to an environmental organisation of your liking"];
 
 function rankings() {
-    leaders = JSON.parse(JSON.stringify(users));
-    /*
-    console.log(copy[1]['items'].reduce((a, b) => a['carbon'] + b['carbon']));
-    copy.sort((a, b) => b['items'].reduce((c, d) => c['carbon'] + d['carbon'], 0) - a['items'].reduce((c, d) => c['carbon'] + d['carbon'], 0));
-    console.log("copy: " + JSON.stringify(copy));
-    */
-
-    leaders.sort((a, b) => {
-        var carbon_a = 0;
-        var carbon_b = 0;
-        a['items'].forEach(item => {
-            carbon_a += item['carbon']
-        });
-        b['items'].forEach(item => {
-            carbon_b += item['carbon']
-        });
-        a['total_carbon'] = carbon_a.toFixed(3);
-        b['total_carbon'] = carbon_b.toFixed(3);
-        return carbon_a - carbon_b;
-    ;});
-
-    for (let i = 1; i <= 5 && i <= leaders.length; i++) {
-        $("#ranking_table").append("<tr><td>" + i + "</td><td>" + leaders[i - 1]['username'] + "</td><td>" + leaders[i - 1]['total_carbon'] + " kg</td></tr>"); 
-    }
-
+    retrieve_ranking().then(ans => {
+        if (ans) {
+            ans = JSON.parse(ans);
+            console.log(ans);
+            for (let i = 1; i <= 5 && i <= ans.length; i++) {
+                console.log(i);
+                $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+            }
+        }
+    });
 }
 
 function frontEndLogin(){
     if(!$("#loginForm")[0].reportValidity()){
         return;
     }
+
     var fields = $("#loginForm input");
-    if(login($(fields[0]).val(), $(fields[1]).val())){
-        location.reload();
-    }else{
-        $("#loginError").show();
-        $("#loginForm input").val("");
-    }
+    login($(fields[0]).val(), $(fields[1]).val()).then(ans => {
+        if (ans) {
+            location.reload();
+        }
+        else {
+            $("#loginError").show();
+            $("#loginForm input").val("");
+        }
+    });
 }
 
 function frontEndRegistration(){
@@ -109,11 +98,15 @@ function frontEndRegistration(){
         return;
     }
     $("#validationError").hide();
-    if(registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val())){
-        location.reload();
-    }else{
-        $("#registerError").show();
-    }
+    registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val()).then(ans => {
+        console.log("ans: " + ans);
+        if (ans) {
+            location.reload();
+        }
+        else {
+            $("#registerError").show();
+        }
+    });
 }
 
 function calculateCarbonUsage(){
@@ -121,7 +114,7 @@ function calculateCarbonUsage(){
         return;
     }
     let form = $(".categoryform.show");
-    let fields = form.find("input:visible, select:visible");
+    let fields = form.find("input:visible, select:visible")
     let result = 0.0;
     let category = null, name = null;
     switch(form.attr("id")){
@@ -163,20 +156,28 @@ function calculateCarbonUsage(){
             console.error("No Category selected!");
             return;
     }
-    if(add_item(category, name, result)){
-        location.reload();
-    }else{
-        alert(name + ", emitted " + result + " (Not tracked because not logged in)");
-    }
+    add_item(category, name, result).then(ans => {
+        if (ans) {
+            location.reload();
+        }
+        else {
+            alert(name + ", emitted " + result + " (Not tracked because not logged in)");
+        }
+    });
 }
 
+/*
 function saveItemDelete(){
     //Hier deleten
 }
 
 function saveChangePw(){
     //Hier deleten
-    let usr = user_information();
+    user_information().then(ans => {
+        if(!ans) {
+
+        }
+    })
     let fields = $("#pwForm input");
     if($(fields[1]).val() == $(fields[2]).val()){
         //Hier neues pw setzen
@@ -197,46 +198,61 @@ function saveAccountDelete(){
     //Hier deleten
     let usr = user_information();
 }
+*/
 
-if(check_login()){
-    $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; } .ifLoggedOut { display: none; }</style>");
-}else{
-    $("body").append("<style id='loggedOutStyle'>.ifLoggedOut { display: block; } .ifLoggedIn { display: none; }</style>");
-}
+check_login().then(ans => {
+    if (ans) {
+        $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; } .ifLoggedOut { display: none; }</style>");
+    }
+    else {
+        $("body").append("<style id='loggedOutStyle'>.ifLoggedOut { display: block; } .ifLoggedIn { display: none; }</style>");
+    }
+});
 
 window.addEventListener("load", function(){
     //bootstrap magic
     $("span[data-toggle='popover']").popover({placement : "top"});
 
-    if(check_login()){
-        //greeting
-        let hrs = new Date().getHours();
-        let realname = user_information()['real_name'];
-        let username = (realname && realname!='') ? realname : user_information()['username'];
-        let user_items = retrieve_items();
-        let greet = 'Good Evening ' + username;
-        let greet2 = 'So far, you have not logged any carbon usage.'
+    check_login().then(ans => {
+        if (ans) {
+            //greeting
+            let hrs = new Date().getHours();
+            user_information().then(ans => {
+                if (ans) {
+                    ans = JSON.parse(ans);
+                    let realname = ans['real_name'];
+                    let username = (realname && realname!='') ? realname : ans['username'];
+                    let greet = 'Good Evening ' + username;
         
-        if (hrs < 12){
-            greet = 'Good Morning '  + username;
-        }else if (hrs <= 17){
-            greet = 'Good Afternoon ' + username;
+                    if (hrs < 12){
+                        greet = 'Good Morning '  + username;
+                    }else if (hrs <= 17){
+                        greet = 'Good Afternoon ' + username;
+                    }
+                    document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>'
+                    retrieve_items().then(items => {
+                        if (items) {
+                            items = JSON.parse(items);
+                            var carbon = 0;
+                            for (i = 0; i < items.length; i++){
+                                carbon += Math.round(parseFloat(items[i]['carbon']));
+                            }
+                            if(carbon > 0){
+                                document.getElementById('greeting').innerHTML += 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon.';
+                            }
+                        }
+                    });
+                }
+            });
         }
-        let carbon = 0;
-        for(i in user_items){
-            carbon += Math.round(user_items[i].carbon);
-        }
-        if(carbon > 0){
-            greet2 = 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon.'
-        }
-        document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
-    }
+    });
 
-    //daily deeds
-    if(check_login()){
-        let x = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
-        $('#deeds').text(deeds[x]);
-    }
+    check_login().then(ans => {
+        if (ans) {
+            let x = Math.floor((new Date().getTime()/(1000*60*60*24)))%deeds.length;
+            $('#deeds').text(deeds[x]);
+        }
+    });
 
     //countdown
     var countdown = new Date(new Date().getFullYear(), 07, 22);

@@ -338,5 +338,32 @@ async function sha256(code) {
     const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
     return hashHex;
 }
+
+
+function rankings() {
+    copy = JSON.parse(JSON.stringify(users));
+    /*
+    console.log(copy[1]['items'].reduce((a, b) => a['carbon'] + b['carbon']));
+    copy.sort((a, b) => b['items'].reduce((c, d) => c['carbon'] + d['carbon'], 0) - a['items'].reduce((c, d) => c['carbon'] + d['carbon'], 0));
+    console.log("copy: " + JSON.stringify(copy));
+    */
+
+    copy.sort((a, b) => {
+        var carbon_a = 0;
+        var carbon_b = 0;
+        a['items'].forEach(item => {
+            carbon_a += parseFloat(item['carbon']);
+        });
+        b['items'].forEach(item => {
+            carbon_b += parseFloat(item['carbon']);
+        });
+        a['total_carbon'] = carbon_a.toFixed(3);
+        b['total_carbon'] = carbon_b.toFixed(3);
+        return carbon_a - carbon_b;
+    ;});
+    
+    return copy;
+}
+
 // auskommentieren wenn das backend nicht automatisch mit dem aufruf der seite mitgestartet werden soll, sondern manuell benutzt werden soll
 __init_backend("prod");

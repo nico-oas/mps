@@ -19,6 +19,7 @@ if (!empty($_POST) && isset($_POST['token'])) {
     $jwt = new JwtHandler();
     $mysqli = new mysqli("localhost", "mps", "=RCASrDR6+gZLf.@z^(EAR@CsE.B7!4!", "mps_db");
 
+    // OPTIONAL: (dann koennen nur eingeloggte user (gueltiger token) auch das ranking abfragen)
     try {
         $user_id = ($jwt->_jwt_decode_data(htmlspecialchars($_POST['token'], ENT_QUOTES)))->user_id;
     } catch(\Exception $e) {
@@ -32,29 +33,25 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($items_statement = $mysqli->prepare("SELECT item_name AS name, item_category AS category, carbon, date_added AS add_date FROM mps_user_items WHERE user_id = ?"))) {
+    if (!($ranking_statement = $mysqli->prepare("SELECT mps_users.name, SUM(mps_user_items.carbon) AS total_carbon FROM mps_users JOIN mps_user_items ON (mps_users.user_id = mps_user_items.user_id) GROUP BY mps_users.user_id ORDER BY SUM(mps_user_items.carbon) ASC LIMIT 5"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$items_statement->bind_param("i", $user_id)) {
-        error_log("Binding parameters failed: (" . $items_statement->errno . ") " . $items_statement->error);
+    if (!$ranking_statement->execute()) {
+        error_log("Execute failed: (" . $ranking_statement->errno . ") " . $ranking_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$items_statement->execute()) {
-        error_log("Execute failed: (" . $items_statement->errno . ") " . $items_statement->error);
-        echo("Internal Server Error!");
-        exit(1);
-    }
-
-    $result = $items_statement->get_result()->fetch_all(MYSQLI_ASSOC);
+    $result = $ranking_statement->get_result();
+    $result = $result->fetch_all(MYSQLI_ASSOC);
     http_response_code(200);
     echo(json_encode($result));
 }
 else { 
     echo(FALSE);
 }
+
 ?>

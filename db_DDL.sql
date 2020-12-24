@@ -26,3 +26,6 @@ CREATE TABLE `mps_user_items` (
 	`carbon` FLOAT NOT NULL,
 	`date_added` TIMESTAMP NOT NULL DEFAULT CURRENT_DATE()
 ) ENGINE=InnoDB;
+
+
+SELECT mps_users.username, SUM(mps_user_items.carbon) AS total_carbon FROM mps_users JOIN mps_user_items ON (mps_users.user_id = mps_user_items.user_id) GROUP BY user_id ORDER BY SUM(mps_user_items.carbon) ASC LIMIT 5;

@@ -19,22 +19,22 @@ if (!empty($_POST) && isset($_POST['token'])) {
     $jwt = new JwtHandler();
     $mysqli = new mysqli("localhost", "mps", "=RCASrDR6+gZLf.@z^(EAR@CsE.B7!4!", "mps_db");
 
+    try {
+        $user_id = ($jwt->_jwt_decode_data(htmlspecialchars($_POST['token'], ENT_QUOTES)))->user_id;
+    } catch(\Exception $e) {
+        echo("Error");
+        exit(1);
+    }
+
     if ($mysqli->connect_errno) {
         error_log("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!($auth_statement = $mysqli->prepare("SELECT name AS username, mail, birthdate, gender, real_name, region FROM mps_users WHERE user_id = ?"))) {
+    if (!($auth_statement = $mysqli->prepare("SELECT user_id, name AS username, mail, birthdate, gender, real_name, region FROM mps_users WHERE user_id = ?"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
-        exit(1);
-    }
-
-    try {
-        $user_id = ($jwt->_jwt_decode_data(htmlspecialchars($_POST['token'], ENT_QUOTES)))->user_id;
-    } catch(\Exception $e) {
-        echo("Error");
         exit(1);
     }
 
