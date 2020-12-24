@@ -61,13 +61,24 @@ function rankings() {
     retrieve_ranking().then(ans => {
         if (ans) {
             ans = JSON.parse(ans);
-            console.log(ans);
             for (let i = 1; i <= 5 && i <= ans.length; i++) {
-                console.log(i);
                 $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
             }
         }
     });
+}
+
+function check_deed_done() {
+    deed_check().then(ans => {
+        const today = new Date()
+        console.log("deed done: " + (ans.getDate() === today.getDate() && ans.getMonth() === today.getMonth() && ans.getFullYear() === today.getFullYear()));
+    });    
+}
+
+function mark_deed_done() {
+    deed_mark().then(ans => {
+        console.log(ans);
+    })
 }
 
 function frontEndLogin(){

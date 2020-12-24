@@ -32,36 +32,28 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($auth_statement = $mysqli->prepare("SELECT user_id, name AS username, mail, birthdate, gender, real_name, region FROM mps_users WHERE user_id = ?"))) {
+    if (!($deed_statement = $mysqli->prepare("UPDATE mps_users SET last_deed_accomplished=CURDATE() WHERE user_id = ?"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->bind_param("i", $user_id)) {
+    if (!$deed_statement->bind_param("i", $user_id)) {
         error_log("Binding parameters failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->execute()) {
-        error_log("Execute failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    if (!$deed_statement->execute()) {
+        error_log("Execute failed: (" . $deed_statement->errno . ") " . $deed_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    $result = $auth_statement->get_result();
-    if($result->num_rows != 1) {
-        echo("Wrong number of results from DB");
-        exit(0);
-    }
-
-    $result = $result->fetch_assoc();
     http_response_code(200);
-    echo(json_encode($result));
+    echo(true);
 }
 else { 
     echo(FALSE);
 }
-
 ?>

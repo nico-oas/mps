@@ -10,7 +10,7 @@ TESTING AREA  ---  Web API (https://mps-api.phildree.de)
 
 async function login(login_id, password) {
     return await _post_request("https://mps-api.phildree.de/auth.php", {'login_id': login_id, 'password': password}).then(answer => {
-        if (answer == false || answer == "Internal Server Error!") {
+        if (answer == "Internal Server Error!" || answer == false) {
             return false;
         }
         else {
@@ -24,7 +24,7 @@ async function login(login_id, password) {
 async function registration(username, mail, birthdate, region, password, real_name, gender) {
     return await _post_request("https://mps-api.phildree.de/registration.php", {'username': username, 'mail': mail, 'birthdate': birthdate, 'region': region, 'password': password,
     'real_name': real_name, 'gender': gender}).then(answer => {
-        if (answer == false || answer == "Internal Server Error!") {
+        if (answer == "Internal Server Error!" || answer == false) {
             console.log("false");
             return false;
         } 
@@ -61,7 +61,7 @@ function logout() {
 async function user_information() {
     if (_get_cookie("token")) {
         return await _post_request("https://mps-api.phildree.de/user_info.php", {'token': _get_cookie("token")}).then(answer => {
-            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB") {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
             else {
@@ -78,7 +78,7 @@ async function user_information() {
 async function change_pw(password_old, password_new) {
     if (_get_cookie("token")) {
         return await _post_request("https://mps-api.phildree.de/change_pw.php", {'token': _get_cookie("token"), 'password_old': password_old, 'password_new': password_new}).then(answer => {
-            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB") {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
             else {
@@ -95,7 +95,7 @@ async function change_pw(password_old, password_new) {
 async function delete_all_items(password) {
     if (_get_cookie("token")) {
         return await _post_request("https://mps-api.phildree.de/delete_items.php", {'token': _get_cookie("token"), 'password': password}).then(answer => {
-            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB") {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
             else {
@@ -112,7 +112,7 @@ async function delete_all_items(password) {
 async function delete_account(password) {
     if (_get_cookie("token")) {
         return await _post_request("https://mps-api.phildree.de/delete_account.php", {'token': _get_cookie("token"), 'password': password}).then(answer => {
-            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB") {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
             else  {
@@ -148,7 +148,7 @@ async function add_item(category, name, carbon) {
 async function retrieve_items() {
     if (_get_cookie("token")) {
         return await _post_request("https://mps-api.phildree.de/retrieve_items.php", {'token': _get_cookie("token")}).then(answer => {
-            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB") {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
             else  {
@@ -164,11 +164,10 @@ async function retrieve_items() {
 async function retrieve_ranking() {
     if (_get_cookie("token")) {
         return await _post_request("https://mps-api.phildree.de/get_ranking.php", {'token': _get_cookie("token")}).then(answer => {
-            if (answer == "Internal Server Error!" || answer == "Error") {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
                 return false;
             }
             else  {
-                console.log(answer);
                 return answer;
             }
         });
@@ -177,6 +176,41 @@ async function retrieve_ranking() {
         return false;
     }
 }
+
+async function deed_check() {
+    if (_get_cookie("token")) {
+        return await _post_request("https://mps-api.phildree.de/deed_check.php", {'token': _get_cookie("token")}).then(answer => {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
+                return false;
+            }
+            else  {
+                return new Date(answer);
+            }
+        });
+    }
+    else {
+        return false;
+    }
+}
+
+async function deed_mark() {
+    if (_get_cookie("token")) {
+        return await _post_request("https://mps-api.phildree.de/deed_mark.php", {'token': _get_cookie("token")}).then(answer => {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
+                return false;
+            }
+            else  {
+                return true;
+            }
+        });
+    }
+    else {
+        return false;
+    }
+}
+
+
+
 
 function _post_request(url, data) {
     return $.ajax({
