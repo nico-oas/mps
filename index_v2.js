@@ -58,14 +58,19 @@ var deeds = [ "Forego the car today and only walk instead",
               "Donate something to an environmental organisation of your liking"];
 
 function rankings() {
-    retrieve_ranking().then(ans => {
+    check_login().then(ans => {
         if (ans) {
-            ans = JSON.parse(ans);
-            for (let i = 1; i <= 5 && i <= ans.length; i++) {
-                $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
-            }
+            retrieve_ranking().then(ans => {
+                if (ans) {
+                    ans = JSON.parse(ans);
+                    for (let i =  1; i <= 5 && i <= ans.length; i++) {
+                        $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+                    }
+                }
+            });
         }
     });
+
 }
 
 function check_deed_done() {
