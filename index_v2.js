@@ -57,35 +57,6 @@ var deeds = [ "Forego the car today and only walk instead",
               "Pick up as much trash as you can today",
               "Donate something to an environmental organisation of your liking"];
 
-function rankings() {
-    check_login().then(ans => {
-        if (ans) {
-            retrieve_ranking().then(ans => {
-                if (ans) {
-                    ans = JSON.parse(ans);
-                    for (let i =  1; i <= 5 && i <= ans.length; i++) {
-                        $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
-                    }
-                }
-            });
-        }
-    });
-
-}
-
-function check_deed_done() {
-    deed_check().then(ans => {
-        const today = new Date()
-        console.log("deed done: " + (ans.getDate() === today.getDate() && ans.getMonth() === today.getMonth() && ans.getFullYear() === today.getFullYear()));
-    });    
-}
-
-function mark_deed_done() {
-    deed_mark().then(ans => {
-        console.log(ans);
-    })
-}
-
 function frontEndLogin(){
     if(!$("#loginForm")[0].reportValidity()){
         return;
@@ -124,6 +95,54 @@ function frontEndRegistration(){
         }
     });
 }
+
+function rankings() {
+    check_login().then(ans => {
+        if (ans) {
+            retrieve_ranking().then(ans => {
+                if (ans) {
+                    ans = JSON.parse(ans);
+                    for (let i =  1; i <= 5 && i <= ans.length; i++) {
+                        $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+                    }
+                }
+            });
+        }
+    });
+
+}
+
+function check_deed_done() {
+    deed_check().then(ans => {
+        const today = new Date()
+        console.log("deed done: " + (ans.getDate() === today.getDate() && ans.getMonth() === today.getMonth() && ans.getFullYear() === today.getFullYear()));
+    });    
+}
+
+function mark_deed_done() {
+    deed_mark().then(ans => {
+        console.log(ans);
+    })
+    location.reload();
+}
+
+check_login().then(ans => {
+    if (ans) {
+        deed_check().then(deed_done => {
+            if (!deed_done) {
+                user_information().then(user_info => {
+                    if (user_info) {
+                        let x = Math.floor((new Date().getTime()/(1000*60*60*24)) + JSON.parse(user_info)['user_id'])%deeds.length;
+                        $('#deeds').html(deeds[x] + "<p><button type='button' class='btn btn-success' onclick='mark_deed_done()'>Deed accomplished!</button></p>");
+                    }
+                });
+            }
+            else {
+                $('#deeds').html("Daily deed has been accomplished. Good job! :) <div data-toggle='modal' data-target='#shareModal'> <a class='nav-link'>Share your sucess</a></div>");
+            }
+        });
+    }
+});
 
 function calculateCarbonUsage(){
     if(!$(".categoryform.show form")[0].reportValidity()){
@@ -260,13 +279,6 @@ window.addEventListener("load", function(){
                     });
                 }
             });
-        }
-    });
-
-    check_login().then(ans => {
-        if (ans) {
-            let x = Math.floor((new Date().getTime()/(1000*60*60*24)))%deeds.length;
-            $('#deeds').text(deeds[x]);
         }
     });
 

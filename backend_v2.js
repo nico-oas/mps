@@ -5,6 +5,8 @@ TESTING AREA  ---  Web API (https://mps-api.phildree.de)
 */
 
 
+// handle to access the browsers local storage to store and retrieve the users token
+local_storage = window.localStorage;
 
 // ------------ FUNCTIONS HANDLING THE WEB API ------------
 
@@ -55,7 +57,7 @@ async function check_login() {
 }
 
 function logout() {
-    _del_cookie("token");
+    localStorage.clear();
 }
 
 async function user_information() {
@@ -178,15 +180,17 @@ async function deed_check() {
     if (_get_local_storage("token")) {
         return await _post_request("https://mps-api.phildree.de/deed_check.php", {'token': _get_local_storage("token")}).then(answer => {
             if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
-                return false;
+                return "Error";
             }
-            else  {
-                return new Date(answer);
+            else {
+                today = new Date();
+                answer = new Date(answer);
+                return answer.getDate() === today.getDate() && answer.getMonth() === today.getMonth() && answer.getFullYear() === today.getFullYear();
             }
         });
     }
     else {
-        return false;
+        return "User not logged in (error in logic)";
     }
 }
 

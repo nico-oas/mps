@@ -94,7 +94,8 @@ async function registration(username, mail, birthdate, region, password, real_na
         'region': region,
         'real_name': real_name,
         'gender': gender,
-        'items': []
+        'items': [],
+        'last_deed_accomplished': new Date("1970-01-01")
     };
 
     await sha256(password).then(hash => {
@@ -207,6 +208,24 @@ async function delete_all_items(verification_pw) {
         _set_local_storage("users", JSON.stringify(users));
         return true;
     });
+}
+
+function deed_check() {
+    if (check_login() == false)
+        return false;
+
+    today = new Date();
+    last = new Date(users[current_user_index]['last_deed_accomplished']);
+    return last.getDate() === today.getDate() && last.getMonth() === today.getMonth() && last.getFullYear() === today.getFullYear();
+}
+
+function deed_done() {
+    if (check_login() == false)
+        return false;
+
+    users[current_user_index]['last_deed_accomplished'] = new Date();
+    _set_local_storage("users", JSON.stringify(users));
+    location.reload();
 }
 
 

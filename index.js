@@ -234,8 +234,13 @@ window.addEventListener("load", function(){
 
     //daily deeds
     if(check_login()){
-        let x = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
-        $('#deeds').text(deeds[x]);
+        if (!deed_check()) {
+            let x = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
+            $('#deeds').html(deeds[x] + "<p><button type='button' class='btn btn-success' onclick='deed_done()'>Deed accomplished!</button></p>");
+        }
+        else {
+            $('#deeds').html("Daily deed has been accomplished. Good job! :) <div data-toggle='modal' data-target='#shareModal'> <a class='nav-link'>Share your sucess</a></div>");
+        }
     }
 
     //countdown
