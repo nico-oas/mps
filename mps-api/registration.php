@@ -14,8 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-// TODO WICHTIG: Checken dass es keinen user mit der selben mail/username bereits gibt!!
-
 if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdate'], $_POST['gender'], $_POST['password'], $_POST['real_name'], $_POST['region'])) {
     require 'jwt_handler.php';
     $jwt = new JwtHandler();
@@ -34,20 +32,44 @@ if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdat
         exit(1);
     }
 
-    if (!($auth_statement = $mysqli->prepare("INSERT INTO mps_users (name, mail, birthdate, gender, password_hash, real_name, region) VALUES (?, ?, ?, ?, ?, ?, ?)"))) {
+    if (!($check_account_staement = $mysqli->prepare("SELECT * FROM mps_users WHERE name = ? OR mail = ?"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->bind_param("sssssss", $name, $mail, $birthdate, $gender, $password_hash, $real_name, $region)) {
-        error_log("Binding parameters failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    if (!$check_account_staement->bind_param("ss", $name, $mail)) {
+        error_log("Binding parameters failed: (" . $check_account_staement->errno . ") " . $check_account_staement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->execute()) {
-        error_log("Execute failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    if (!$check_account_staement->execute()) {
+        error_log("Execute failed: (" . $check_account_staement->errno . ") " . $check_account_staement->error);
+        echo("Internal Server Error!");
+        exit(1);
+    }
+
+    $result = $check_account_staement->get_result();
+    if ($result->num_rows != 0) {
+        echo(FALSE);
+        exit(1);
+    }
+
+    if (!($register_statement = $mysqli->prepare("INSERT INTO mps_users (name, mail, birthdate, gender, password_hash, real_name, region) VALUES (?, ?, ?, ?, ?, ?, ?)"))) {
+        error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
+        echo("Internal Server Error!");
+        exit(1);
+    }
+
+    if (!$register_statement->bind_param("sssssss", $name, $mail, $birthdate, $gender, $password_hash, $real_name, $region)) {
+        error_log("Binding parameters failed: (" . $register_statement->errno . ") " . $register_statement->error);
+        echo("Internal Server Error!");
+        exit(1);
+    }
+
+    if (!$register_statement->execute()) {
+        error_log("Execute failed: (" . $register_statement->errno . ") " . $register_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }

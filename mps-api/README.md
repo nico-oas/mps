@@ -22,6 +22,8 @@ registration(username, mail, birthdate, region, password, real_name, gender).the
     }
     else {
         code_im_fehlerfall();
+        // oder falls es schon einen user mit dem username oder der mail gab 
+        // -> (kann potentiell noch ergaenzen was von beidem bereits vorgekommen ist falls gewollt)
     }
 });
 ```
@@ -133,12 +135,11 @@ retrieve_ranking().then(ans => {
 ## deed_check:
 ```javascript
 deed_check().then(ans => {
-    if (ans == false) {
-        code_im_fehlerfall();
+    if (ans) {
+        code_deed_erledigt();
     }
     else {
-        const today = new Date()
-        console.log("deed done: " + (ans.getDate() === today.getDate() && ans.getMonth() === today.getMonth() && ans.getFullYear() === today.getFullYear()));
+        code_deed_noch_nicht_erledigt();
     }
 });
 ```
@@ -147,10 +148,10 @@ deed_check().then(ans => {
 ```javascript
 deed_mark().then(ans => {
     if (ans) {
-        deed_erledigt();
+        deed_als_erledigt_markiert();
     }
     else {
-        deed_noch_nicht_erledigt();
+        code_im_fehlerfall();
     }
 });
 ```

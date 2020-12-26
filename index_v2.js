@@ -112,18 +112,10 @@ function rankings() {
 
 }
 
-function check_deed_done() {
-    deed_check().then(ans => {
-        const today = new Date()
-        console.log("deed done: " + (ans.getDate() === today.getDate() && ans.getMonth() === today.getMonth() && ans.getFullYear() === today.getFullYear()));
-    });    
-}
-
 function mark_deed_done() {
     deed_mark().then(ans => {
-        console.log(ans);
-    })
-    location.reload();
+        location.reload();
+    });
 }
 
 check_login().then(ans => {

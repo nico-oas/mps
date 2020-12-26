@@ -27,11 +27,9 @@ async function registration(username, mail, birthdate, region, password, real_na
     return await _post_request("https://mps-api.phildree.de/registration.php", {'username': username, 'mail': mail, 'birthdate': birthdate, 'region': region, 'password': password,
     'real_name': real_name, 'gender': gender}).then(answer => {
         if (answer == "Internal Server Error!" || answer == false) {
-            console.log("false");
             return false;
         } 
         else {
-            console.log("true");
             _set_local_storage("token", answer);
             return true;
         }
