@@ -13,11 +13,15 @@
 </head>
 
 <body>
-    <script src="lib/jquery-3.5.1.slim.min.js"></script>
+    <script src="lib/jquery-3.5.1.min.js"></script>
     <script src="lib/bootstrap.bundle.min.js"></script>
     <script src="lib/countdown.js"></script>
     <script src="backend.js"></script>
     <script src="index.js"></script>
+    <!--
+        <script src="backend.js"></script>
+        <script src="index.js"></script>
+    -->
     
     <nav class="navbar-toggleable-md navbar-dark bd-faded"> 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,28 +75,25 @@
 
     <div class="ifLoggedIn container text-center" id="abc">
         <h1>One good deed a day challenge</h1>
-        <p id="deeds">Inform yourself about ECO-friendly-electricity providers</p>
-        <div data-toggle="modal" data-target="#shareModal">
-            <a class="nav-link">Share your sucess</a>
-        </div>
+        <p id="deeds"></p>
     </div>
   
-    <div class="container text-center">
+    <div class="container text-center ifLoggedIn">
         <h1>Leaderboard</h1>
         <table class="table table-dark">
            <p>
-                See who currently is the eco-friendliest user
+                See who currently is the eco-friendliest user (die Nutzer die nix eingeben werden halt "gewinnen")
            </p>
         </thead> 
-        <tbody>
+        <tbody id="ranking_table">
            <tr>
                 <th scope="row">Ranking</th>
                 <th scope="row">User</th>
                 <th scope="row">Carbon footprint</th> 
             </tr>
-            <tr>
-                <td>1.</td>
-            </tr>
+            <script>
+                rankings();
+            </script>
         </tbody>
         </table>
 
