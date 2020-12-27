@@ -80,6 +80,12 @@ nav>img {
         margin-left: 1rem;
     }
 }
+#settings{
+    padding-left: 0.5rem;
+}
+#settings a {
+    font-size: small;
+}
 
 /* countdown */
 .countdown {
@@ -98,9 +104,6 @@ nav>img {
 .h1, h1 {
     font-size: medium;
 }
-
-
-  
 @media (min-width: 768px) {
     .countdown span {
         width: 100px;
@@ -122,6 +125,9 @@ nav>img {
 }
 .fab, .fas {
     margin-right: 1rem;
+}
+.fa-bolt {
+    margin-left: 3px;
 }
 .social-login {
     margin-top: -1.8rem;
@@ -166,11 +172,6 @@ td{
 div[data-dep] {
     display: none;
 }
-
-#settings{
-    padding-left: 0.5rem;
+small {
+    opacity: 0.7;
 }
-#settings a {
-    font-size: small;
-}
-

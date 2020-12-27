@@ -17,6 +17,7 @@
     <script src="lib/bootstrap.bundle.min.js"></script>
     <script src="lib/countdown.js"></script>
     <script src="backend.js"></script>
+    <script src="data.js"></script>
     <script src="index.js"></script>
     <!--
         <script src="backend.js"></script>
@@ -36,6 +37,9 @@
                 </li>
                 <li class="ifLoggedOut nav-item" data-toggle="modal" data-target="#registerModal">
                     <a class="navbar-link">Register</a>
+                </li>
+                <li class="ifLoggedIn nav-item" data-toggle="modal" data-target="#trackModal">
+                    <a class="navbar-link">Track</a>
                 </li>
                 <li class="ifLoggedIn nav-item" onclick="logout(); location.reload();">
                     <a class="navbar-link">Logout</a>
@@ -70,7 +74,6 @@
     </div>
            
     <div class="ifLoggedIn container text-center">
-    <!---<div class="container text-center"> Use this line instead of line above in order to track stuff even when not logged in-->
         <p id="greeting"></p>
         <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#trackModal">Track Carbon usage now!</button>
     </div>
@@ -81,9 +84,9 @@
         <p id="source">- Utopia.de</p>
     </div>
 
-    <div class="ifLoggedIn container text-center" id="abc">
+    <div class="ifLoggedIn container text-center">
         <h1>One good deed a day challenge</h1>
-        <p id="deeds"></p>
+        <p id="deeds">Inform yourself about ECO-friendly-electricity providers</p>
     </div>
   
     <div class="container text-center ifLoggedIn">
@@ -357,12 +360,12 @@
                     <!-- share html -->
                     <article class="card-body mx-auto">
                         <div class="social-login">
-                            <a href="" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>Twitter</a>
-                            <a href="" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>Facebook</a>
-                            <a href="" class="btn btn-block btn-instagram"> <i class="fab fa-instagram"></i>Instagram</a>
-                            <a href="" class="btn btn-block btn-envelope"> <i class="fas fa-envelope"></i>E-Mail</a>
-                            <a href="" class="btn btn-block btn-whatsapp"> <i class="fab fa-whatsapp"></i>WhatsApp</a>
-                            <a href="" class="btn btn-block btn-snapchat"> <i class="fab fa-snapchat"></i>Snapchat</a>
+                            <a onclick="alert('This functionality is not implemented yet.')" class="btn btn-block btn-twitter"> <i class="fab fa-twitter"></i>Twitter</a>
+                            <a onclick="alert('This functionality is not implemented yet.')" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i>Facebook</a>
+                            <a onclick="alert('This functionality is not implemented yet.')" class="btn btn-block btn-instagram"> <i class="fab fa-instagram"></i>Instagram</a>
+                            <a onclick="alert('This functionality is not implemented yet.')" class="btn btn-block btn-envelope"> <i class="fas fa-envelope"></i>E-Mail</a>
+                            <a onclick="alert('This functionality is not implemented yet.')" class="btn btn-block btn-whatsapp"> <i class="fab fa-whatsapp"></i>WhatsApp</a>
+                            <a onclick="alert('This functionality is not implemented yet.')" class="btn btn-block btn-snapchat"> <i class="fab fa-snapchat"></i>Snapchat</a>
                         </div>
                     </article>
                 </div>
@@ -449,10 +452,49 @@
                         </article>
                     </div>
                     <div class="categoryform collapse" id="purchaseCategory" data-parent="#trackModal .modal-body">
+                        <!-- MPS-15 -->
                         To Do: Implement form for purchase Category
                     </div>
                     <div class="categoryform collapse" id="householdCategory" data-parent="#trackModal .modal-body">
-                        To Do: Implement form for household Category
+                        <article class="card-body mx-auto">
+                            <form id="householdForm">
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-home"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="electricity" selected>Electricity</option>
+                                        <option value="naturalgas">Gas</option>
+                                        <option value="water">Water</option>
+                                        <option value="oil">Heating Oil</option>
+                                        <option value="propane">Propane/Butane</option>
+                                        <option value="coal">Coal</option>
+                                        <option value="woodpellets">Wood Pellets</option>
+                                    </select>
+                                </div>
+                                <div data-dep="electricity naturalgas" class="form-group input-group" style="display: flex;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-bolt"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Usage in kWh" type="number" min="1" step="0.01" required>
+                                </div>
+                                <div data-dep="electricity" style="display: flex;">
+                                    <small>Reference Grid: <span id="grid">none</span></small>
+                                </div>
+                                <div data-dep="water oil propane" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-tint"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Usage in litres" type="number" min="1" step="0.1" required>
+                                </div>
+                                <div data-dep="coal woodpellets" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-fire-alt"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Usage in tonnes" type="number" min="0" step="0.001" required>
+                                </div>
+                            </form>
+                        </article>
                     </div>
                     <div class="categoryform collapse" id="otherCategory" data-parent="#trackModal .modal-body">
                         <article class="card-body mx-auto">
