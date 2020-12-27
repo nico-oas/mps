@@ -87,8 +87,8 @@ nav>img {
 }
 .countdown span {
     color: white;
-    width: 60px;
-    height: 60px;
+    width: 33px;
+    height: 33px;
     border-radius: 50%;
     background: var(--secondary);
     display: flex;
@@ -96,15 +96,18 @@ nav>img {
     justify-content: center;
 }
 .h1, h1 {
-    font-size: large;
+    font-size: medium;
 }
+
+
+  
 @media (min-width: 768px) {
     .countdown span {
         width: 100px;
         height: 100px;
     }
     .h1, h1 {
-        font-size: 30px;
+        font-size: 40px;
     }
 }
 
