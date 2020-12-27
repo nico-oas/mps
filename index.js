@@ -2,13 +2,17 @@ function frontEndLogin(){
     if(!$("#loginForm")[0].reportValidity()){
         return;
     }
+
     var fields = $("#loginForm input");
-    if(login($(fields[0]).val(), $(fields[1]).val())){
-        location.reload();
-    }else{
-        $("#loginError").show();
-        $("#loginForm input").val("");
-    }
+    login($(fields[0]).val(), $(fields[1]).val()).then(ans => {
+        if (ans) {
+            location.reload();
+        }
+        else {
+            $("#loginError").show();
+            $("#loginForm input").val("");
+        }
+    });
 }
 
 function frontEndRegistration(){
@@ -22,11 +26,37 @@ function frontEndRegistration(){
         return;
     }
     $("#validationError").hide();
-    if(registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val())){
+    registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val()).then(ans => {
+        console.log("ans: " + ans);
+        if (ans) {
+            location.reload();
+        }
+        else {
+            $("#registerError").show();
+        }
+    });
+}
+
+function rankings() {
+    check_login().then(ans => {
+        if (ans) {
+            retrieve_ranking().then(ans => {
+                if (ans) {
+                    ans = JSON.parse(ans);
+                    for (let i =  1; i <= 5 && i <= ans.length; i++) {
+                        $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+                    }
+                }
+            });
+        }
+    });
+
+}
+
+function mark_deed_done() {
+    deed_mark().then(ans => {
         location.reload();
-    }else{
-        $("#registerError").show();
-    }
+    });
 }
 
 function calculateCarbonUsage(){
@@ -104,46 +134,68 @@ function calculateCarbonUsage(){
     if(result == "NaN"){
         alert("Error: Calculated value is not a number!");
     }
-    if(add_item(category, name, result)){
-        location.reload();
-    }else{
-        alert(name + ", emitted " + result + " (Not tracked because not logged in)");
-    }
+    add_item(category, name, result).then(ans => {
+        if (ans) {
+            location.reload();
+        }
+        else {
+            alert(name + ", emitted " + result + " (Not tracked because not logged in)");
+        }
+    });
 }
 
+/*
 function saveItemDelete(){
-    //Hier deleten
+    //Hier deleten; nachfragen wegen verificationPW
 }
 
 function saveChangePw(){
     //Hier deleten
-    let usr = user_information();
+    user_information().then(ans => {
+        if(!ans) {
+
+        }
+    })
     let fields = $("#pwForm input");
     if($(fields[1]).val() == $(fields[2]).val()){
-        //Hier neues pw setzen
-        if(true){ //Hier backend changepw aufrufen
+        $("#passwordError2").hide();
+        if(change_pw($(fields[0]).val(), $(fields[1]).val())){
             $("#changepw").modal('hide');
-            $("#passwordConfirm").show();
+            //location.reload();
+            $("#passwordConfirm").modal('show');
         }
         else{
             $("#passwordError").show();
+            $("#pwForm input").val("");
         }
     }
     else{
         $("#passwordError2").show();
+        $("#passwordError").hide();
+        $("#pwForm input").val("");
     }
 }
 
 function saveAccountDelete(){
-    //Hier deleten
-    let usr = user_information();
+    let fields = $("#accountForm input");
+    console.log($(fields[0]).val());
+    if(delete_account($(fields[0]).val())){
+        location.reload();
+    }
+    else{
+        $("#passwordErrorPW").show();
+    }
 }
+*/
 
-if(check_login()){
-    $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; } .ifLoggedOut { display: none; }</style>")
-}else{
-    $("body").append("<style id='loggedOutStyle'>.ifLoggedOut { display: block; } .ifLoggedIn { display: none; }</style>")
-}
+check_login().then(ans => {
+    if (ans) {
+        $("body").append("<style id='loggedInStyle'>.ifLoggedIn { display: block; } .ifLoggedOut { display: none; }</style>");
+    }
+    else {
+        $("body").append("<style id='loggedOutStyle'>.ifLoggedOut { display: block; } .ifLoggedIn { display: none; }</style>");
+    }
+});
 
 window.addEventListener("load", function(){
     //enable popovers
@@ -156,56 +208,68 @@ window.addEventListener("load", function(){
         }
     });
 
-    if(check_login()){
-        //greeting
-        let hrs = new Date().getHours();
-        let realname = user_information()['real_name'];
-        let username = (realname && realname!='') ? realname : user_information()['username'];
-        let user_items = retrieve_items();
-        let greet = 'Good Evening ' + username;
-        let greet2 = 'So far, you have not logged any carbon usage.'
-        
-        if (hrs < 12){
-            greet = 'Good Morning '  + username;
-        }else if (hrs <= 17){
-            greet = 'Good Afternoon ' + username;
+    check_login().then(ans => {
+        if (ans) {
+            user_information().then(ans => {
+                if (ans) {
+                    ans = JSON.parse(ans);
+                  
+                    //greeting
+                    let realname = ans['real_name'];
+                    let username = (realname && realname!='') ? realname : ans['username'];
+                    let greet = 'Good Evening ' + username;
+                    let hrs = new Date().getHours();
+                    if (hrs < 12){
+                        greet = 'Good Morning '  + username;
+                    }else if (hrs <= 17){
+                        greet = 'Good Afternoon ' + username;
+                    }
+                    document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>'
+                    retrieve_items().then(items => {
+                        if (items) {
+                            items = JSON.parse(items);
+                            var carbon = 0;
+                            for (i = 0; i < items.length; i++){
+                                carbon += Math.round(parseFloat(items[i]['carbon']));
+                            }
+                            if(carbon > 0){
+                                document.getElementById('greeting').innerHTML += 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon.';
+                            }
+                        }
+                    });
+                  
+                    //set correct country grid
+                    let c = ans['region'];
+                    let cd = countries.find(function(e){return e.name==c;});
+                    if(cd && cd.intensity){
+                        $("#grid").text(cd.name + " (" + cd.intensity + "kg per kWh)");
+                    }else{
+                        cd = countries.find(function(e){return e.name=="Germany";});
+                        $("#grid").text("Germany "+ " (" + cd.intensity + "kg per kWh, No Data for " + c + ")");
+                    }
+                  
+                    //daily deeds
+                    deed_check().then(deed_done => {
+                        let x = Math.floor((new Date().getTime()/(1000*60*60*24)) + JSON.parse(ans)['user_id'])%deeds.length;
+                        if (!deed_done) {
+                            $('#deeds').html(deeds[x] + "</br></br><p><button type='button' class='btn btn-dark' onclick='mark_deed_done()'>Deed accomplished!</button></p>");
+                        }else {
+                            $('#deeds').html("Daily deed has been accomplished. Good job! :) <div data-toggle='modal' data-target='#shareModal'> <a class='nav-link'>Share your sucess</a></div>");
+                            if(navigator.share){
+                                $("#share").attr("data-target", "").click(function(){
+                                    navigator.share({
+                                        title : 'Carbon Footprint Tracker',
+                                        text : "I've completed my daily deed in the Carbon Footprint Tracker: " + deeds[x],
+                                        url : window.location.href
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         }
-        let carbon = 0.0;
-        for(i in user_items){
-            if(user_items[i].carbon > 0){
-                carbon += parseFloat(user_items[i].carbon);
-            }
-        }
-        if(carbon > 0){
-            greet2 = 'So far, you\'ve tracked <b>' + carbon.toFixed(numbers.accuracy) + '</b> kg of carbon.'
-        }
-        document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>' + greet2;
-
-        //set correct country grid
-        let c = user_information()['region'];
-        let cd = countries.find(function(e){return e.name==c;});
-        if(cd && cd.intensity){
-            $("#grid").text(cd.name + " (" + cd.intensity + "kg per kWh)");
-        }else{
-            cd = countries.find(function(e){return e.name=="Germany";});
-            $("#grid").text("Germany "+ " (" + cd.intensity + "kg per kWh, No Data for " + user_information()['region'] + ")");
-        }
-
-        //daily deeds
-        var randomDeedId = Math.floor((new Date().getTime()/(1000*60*60*24))+current_user_index)%deeds.length;
-        $('#deeds').text(deeds[randomDeedId]);
-
-        //use share API
-        if(navigator.share){
-            $("#share").attr("data-target", "").click(function(){
-                navigator.share({
-                    title : 'Carbon Footprint Tracker',
-                    text : "I've completed my daily deed in the Carbon Footprint Tracker: " + deeds[randomDeedId],
-                    url : window.location.href
-                });
-            })
-        }
-    }
+    });
 
     //countdown
     var countdown = new Date(new Date().getFullYear(), 07, 22);
