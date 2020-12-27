@@ -19,16 +19,12 @@
     <script src="backend.js"></script>
     <script src="data.js"></script>
     <script src="index.js"></script>
-    <!--
-        <script src="backend.js"></script>
-        <script src="index.js"></script>
-    -->
     
     <nav class="navbar-toggleable-md navbar-dark bd-faded"> 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
              <span class="navbar-toggler-icon"></span> 
         </button>
-        <img src="BaumLogo.png">
+        <img src="logo.png">
         <a class="navbar-brand">Carbon Footprint Tracker </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -254,7 +250,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-green" onclick="saveItemDelete();">Yes</button>
+                    <button type="submit" class="btn btn-dark" onclick="saveItemDelete();">Yes</button>
                 </div>
             </div>
         </div>
@@ -291,13 +287,13 @@
                                 <input class="form-control" placeholder="Repeat new password" type="password" required>
                             </div>
                         </form>
-                        <p id="passwordError" class="error text-center" style="color:red; display:none;">Please make sure you have entered the right User Password</p>
+                        <p id="passwordError" class="error text-center" style="color:red; display:none;">Please make sure you have entered the correct Password</p>
                         <p id="passwordError2" class="error text-center" style="color:red; display:none;">Please make sure you have entered the same password in the two password fields.</p>
                     </article>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-green" onclick="saveChangePw();" data-target="#passwordConfirm">Change Password</button>
+                    <button type="submit" class="btn btn-dark" onclick="saveChangePw();" data-target="#passwordConfirm">Change Password</button>
                 </div>
             </div>
         </div>
@@ -310,7 +306,7 @@
                     <h5 class="col-12 modal-title text-center" id="loginModalLabel">Your new Password has been set</h5>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -328,20 +324,21 @@
                 <div class="modal-body">
                     <article class="card-body mx-auto">
                         <div id="accountForm">
+                            <p id="validationError" class="text-center" style="color:red;">Are you sure you want to delete your Account? This process is irreversible!</p>
+                            <br/>
                             <div class="form-group input-group" >
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
                                 </div>
                                 <input class="form-control" placeholder="Confirm Password" type="password" required>
                             </div>
-                            <p id="validationError" class="text-center" style="color:red;">Are you sure you want to delete your Account? This process is irreversible!</p>
                         </div>
-                        <p id="passwordErrorPW" class="error text-center" style="color:red; display:none;">Wrong password</p>
+                        <p id="passwordErrorPW" class="error text-center" style="color:red; display:none;">Please make sure you have entered the correct Password</p>
                     </article>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-green" onclick="saveAccountDelete();">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-dark" onclick="saveAccountDelete();">Confirm</button>
                 </div>
             </div>
         </div>

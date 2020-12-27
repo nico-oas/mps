@@ -59,87 +59,101 @@ function mark_deed_done() {
     });
 }
 
+function share(deedName){
+    navigator.share({
+        title : 'Carbon Footprint Tracker',
+        text : "I've completed my daily deed in the Carbon Footprint Tracker: " + deedName,
+        url : window.location.href
+    });
+}
+
 function calculateCarbonUsage(){
     if(!$(".categoryform.show form")[0].reportValidity()){
         return;
     }
-    let form = $(".categoryform.show");
-    let fields = form.find("input:visible, select:visible")
-    let result = 0.0;
-    let category = null, name = null;
-    switch(form.attr("id")){
-        case "transportationCategory":
-            category = "Transportation";
-            let vehicle = $(fields[0]).val();
-            let distance = parseFloat($(fields[1]).val());
-            name = "Travelled " + distance + "km in a " + (["ElectricCar", "GasCar"].indexOf(vehicle)>-1 ? "Car" : vehicle);
-            if(["GasCar", "Motorcycle", "Truck"].indexOf(vehicle)>-1){
-                let fuelType = $(fields[2]).val();
-                let consumption = parseFloat($(fields[3]).val());
-                result = (distance * consumption * numbers.consumptionToCo2[fuelType]).toFixed(numbers.accuracy);
-            }else if(["Bus", "Plane", "Boat", "Train"].indexOf(vehicle)>-1){
-                let th = numbers.thresholds[vehicle];
-                console.log("Threshold: "+th);
-                result = (parseFloat( (distance > th) ? numbers.co2PerKm["long"+vehicle] : numbers.co2PerKm["short"+vehicle])*distance).toFixed(numbers.accuracy);
-            }else if(vehicle == "ElectricCar"){
-                //to do: get CO2 emitted by keeping user country's electricity generation in mind! API?
-            }else{
-                console.error("No Vehicle selected!");
-                return;
+    user_information().then((info) => {
+        if(!info){
+            console.error("Error: Not logged in, cannot track data!");
+        }else{
+            info = JSON.parse(info);
+            let form = $(".categoryform.show");
+            let fields = form.find("input:visible, select:visible")
+            let result = 0.0;
+            let category = null, name = null;
+            switch(form.attr("id")){
+                case "transportationCategory":
+                    category = "Transportation";
+                    let vehicle = $(fields[0]).val();
+                    let distance = parseFloat($(fields[1]).val());
+                    name = "Travelled " + distance + "km in a " + (["ElectricCar", "GasCar"].indexOf(vehicle)>-1 ? "Car" : vehicle);
+                    if(["GasCar", "Motorcycle", "Truck"].indexOf(vehicle)>-1){
+                        let fuelType = $(fields[2]).val();
+                        let consumption = parseFloat($(fields[3]).val());
+                        result = (distance * consumption * numbers.consumptionToCo2[fuelType]).toFixed(numbers.accuracy);
+                    }else if(["Bus", "Plane", "Boat", "Train"].indexOf(vehicle)>-1){
+                        let th = numbers.thresholds[vehicle];
+                        console.log("Threshold: "+th);
+                        result = (parseFloat( (distance > th) ? numbers.co2PerKm["long"+vehicle] : numbers.co2PerKm["short"+vehicle])*distance).toFixed(numbers.accuracy);
+                    }else if(vehicle == "ElectricCar"){
+                        //to do: get CO2 emitted by keeping user country's electricity generation in mind! API?
+                    }else{
+                        console.error("No Vehicle selected!");
+                        return;
+                    }
+                    break;
+                case "purchaseCategory":
+                    category = "Purchase";
+                    /* MPS-15
+                    https://www.programmableweb.com/api/brighter-planet-cm1
+                    https://www.programmableweb.com/api/carbon-calculated
+                    https://www.programmableweb.com/api/co2-benchmark */
+                    break;
+                case "householdCategory":
+                    category = "Household";
+                    let subcategory = $(fields[0]).val();
+                    let usage = parseFloat($(fields[1]).val());
+                    if(["water", "oil", "propane"].indexOf(subcategory)>-1){
+                        name = "Used " + usage + " litres of " + subcategory;
+                        result = (usage * numbers.consumptionToCo2[subcategory]).toFixed(numbers.accuracy);
+                    }else if(["coal", "woodpellets"].indexOf(subcategory)>-1){
+                        name = "Burned " + usage + " tonnes of " + fields[0].selectedOptions[0].innerText;
+                        result = (usage * numbers.consumptionToCo2[subcategory]).toFixed(numbers.accuracy);
+                    }else if(subcategory == "naturalgas"){
+                        name = "Used " + usage + " kWh of natural gas";
+                        result = (usage * numbers.consumptionToCo2.naturalgas).toFixed(numbers.accuracy);
+                    }else if(subcategory == "electricity"){
+                        //temporary solution, optimally we would use the costly API here: https://api.electricitymap.org/
+                        name = "Consumed " + usage + " kWh of electricity";
+                        let c = info['region'];
+                        let cd = countries.find(function(e){return e.name==c;});
+                        if(!cd || !cd.intensity){
+                            cd = countries.find(function(e){return e.name=="Germany";});
+                        }
+                        result = (usage * cd.intensity).toFixed(numbers.accuracy);
+                    }else{
+                        console.error("No Household Subcategory selected!");
+                        return;
+                    }
+                    break;
+                case "otherCategory":
+                    category = "Other";
+                    name = $(fields[0]).val();
+                    result = parseFloat($(fields[1]).val()).toFixed(numbers.accuracy);
+                    break;
+                default:
+                    console.error("No Category selected!");
+                    return;
             }
-            break;
-        case "purchaseCategory":
-            category = "Purchase";
-            /* MPS-15
-            https://www.programmableweb.com/api/brighter-planet-cm1
-            https://www.programmableweb.com/api/carbon-calculated
-            https://www.programmableweb.com/api/co2-benchmark */
-            break;
-        case "householdCategory":
-            category = "Household";
-            let subcategory = $(fields[0]).val();
-            let usage = parseFloat($(fields[1]).val());
-            if(["water", "oil", "propane"].indexOf(subcategory)>-1){
-                name = "Used " + usage + " litres of " + subcategory;
-                result = (usage * numbers.consumptionToCo2[subcategory]).toFixed(numbers.accuracy);
-            }else if(["coal", "woodpellets"].indexOf(subcategory)>-1){
-                name = "Burned " + usage + " tonnes of " + fields[0].selectedOptions[0].innerText;
-                result = (usage * numbers.consumptionToCo2[subcategory]).toFixed(numbers.accuracy);
-            }else if(subcategory == "naturalgas"){
-                name = "Used " + usage + " kWh of natural gas";
-                result = (usage * numbers.consumptionToCo2.naturalgas).toFixed(numbers.accuracy);
-            }else if(subcategory == "electricity"){
-                //temporary solution, optimally we would use the costly API here: https://api.electricitymap.org/
-                name = "Consumed " + usage + " kWh of electricity";
-                let c = user_information()['region'];
-                let cd = countries.find(function(e){return e.name==c;});
-                if(!cd || !cd.intensity){
-                    cd = countries.find(function(e){return e.name=="Germany";});
+            if(result == "NaN"){
+                alert("Error: Calculated value is not a number!");
+            }
+            add_item(category, name, result).then(ans => {
+                if (ans) {
+                    location.reload();
+                }else {
+                    alert(name + ", emitted " + result + " (Not tracked because not logged in)");
                 }
-                result = (usage * cd.intensity).toFixed(numbers.accuracy);
-            }else{
-                console.error("No Household Subcategory selected!");
-                return;
-            }
-            break;
-        case "otherCategory":
-            category = "Other";
-            name = $(fields[0]).val();
-            result = parseFloat($(fields[1]).val()).toFixed(numbers.accuracy);
-            break;
-        default:
-            console.error("No Category selected!");
-            return;
-    }
-    if(result == "NaN"){
-        alert("Error: Calculated value is not a number!");
-    }
-    add_item(category, name, result).then(ans => {
-        if (ans) {
-            location.reload();
-        }
-        else {
-            alert(name + ", emitted " + result + " (Not tracked because not logged in)");
+            });
         }
     });
 }
@@ -148,45 +162,41 @@ function calculateCarbonUsage(){
 function saveItemDelete(){
     //Hier deleten; nachfragen wegen verificationPW
 }
+*/
 
 function saveChangePw(){
-    //Hier deleten
-    user_information().then(ans => {
-        if(!ans) {
-
-        }
-    })
-    let fields = $("#pwForm input");
-    if($(fields[1]).val() == $(fields[2]).val()){
-        $("#passwordError2").hide();
-        if(change_pw($(fields[0]).val(), $(fields[1]).val())){
-            $("#changepw").modal('hide');
-            //location.reload();
-            $("#passwordConfirm").modal('show');
-        }
-        else{
-            $("#passwordError").show();
-            $("#pwForm input").val("");
-        }
+    if(!$("#pwForm")[0].reportValidity()){
+        return;
     }
-    else{
+    let fields = $("#pwForm input");
+    $("#changepw .error").hide();
+    if($(fields[1]).val() == $(fields[2]).val()){
+        change_pw($(fields[0]).val(), $(fields[1]).val()).then((res) => {
+            if(res){
+                $("#changepw").modal('hide');
+                $("#passwordConfirm").modal('show');
+            }else{
+                $("#passwordError").show();
+                $("#pwForm input").val("");
+            }
+        });
+    }else{
         $("#passwordError2").show();
-        $("#passwordError").hide();
         $("#pwForm input").val("");
     }
 }
 
 function saveAccountDelete(){
     let fields = $("#accountForm input");
-    console.log($(fields[0]).val());
-    if(delete_account($(fields[0]).val())){
-        location.reload();
-    }
-    else{
-        $("#passwordErrorPW").show();
-    }
+    delete_account($(fields[0]).val()).then((res) => {
+        if(res){
+            logout();
+            location.reload();
+        }else{
+            $("#passwordErrorPW").show();
+        }
+    });
 }
-*/
 
 check_login().then(ans => {
     if (ans) {
@@ -250,20 +260,13 @@ window.addEventListener("load", function(){
                   
                     //daily deeds
                     deed_check().then(deed_done => {
-                        let x = Math.floor((new Date().getTime()/(1000*60*60*24)) + JSON.parse(ans)['user_id'])%deeds.length;
+                        let x = Math.floor((new Date().getTime()/(1000*60*60*24)) + ans['user_id'])%deeds.length;
                         if (!deed_done) {
                             $('#deeds').html(deeds[x] + "</br></br><p><button type='button' class='btn btn-dark' onclick='mark_deed_done()'>Deed accomplished!</button></p>");
-                        }else {
-                            $('#deeds').html("Daily deed has been accomplished. Good job! :) <div data-toggle='modal' data-target='#shareModal'> <a class='nav-link'>Share your sucess</a></div>");
-                            if(navigator.share){
-                                $("#share").attr("data-target", "").click(function(){
-                                    navigator.share({
-                                        title : 'Carbon Footprint Tracker',
-                                        text : "I've completed my daily deed in the Carbon Footprint Tracker: " + deeds[x],
-                                        url : window.location.href
-                                    });
-                                });
-                            }
+                        }else if(navigator.share){
+                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' onclick='share(\"" + deeds[x] + "\");'>Share your sucess</button>");
+                        }else{
+                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' data-toggle='modal' data-target='#shareModal'>Share your sucess</button>");
                         }
                     });
                 }

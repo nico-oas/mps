@@ -682,7 +682,7 @@ var numbers = {
         lpg : 0.0179, //source: https://www.deutsche-handwerks-zeitung.de/kraftstoffverbrauch-in-co2-ausstoss-umrechnen/150/3097/57956
         cng : 0.0163, //source: https://www.deutsche-handwerks-zeitung.de/kraftstoffverbrauch-in-co2-ausstoss-umrechnen/150/3097/57956
         naturalgas : 0.18416, //source: http://www.carbon-calculator.org.uk/
-        water : 0.298, //source: https://www.theguardian.com/environment/2007/aug/02/ethicalliving.ethicalliving
+        water : 0.000298, //source: https://www.theguardian.com/environment/2007/aug/02/ethicalliving.ethicalliving
         oil : 2.96573, //source: http://www.carbon-calculator.org.uk/
         propane : 1.50807, //source: http://www.carbon-calculator.org.uk/
         coal : 2862, //source: http://www.carbon-calculator.org.uk/

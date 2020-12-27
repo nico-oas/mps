@@ -1,104 +1,158 @@
-# mps
-### Link to our projekt site:
-https://nico-oas.github.io/mps/
+# DOKUMENTATION BACKEND WEB-API
 
-### Backend API: registration
-Signature: 
+### Diese Dokumentation beschreibt die Nutzung der WEB-API, welche Serverseitig l&auml;uft. Die Dateien im aktuellen Verzeichnis stellen diese Serverseiteige API dar. Angeschprochen wird diese API mittels des wrappers, welcher sich im dar&uuml;ber liegenden Verzeichniss in der Datei backend_v2.js befindet.
+
+## login:
 ```javascript
-registration(username, mail, birthdate, region, password, real_name, gender);
+login(username, password).then(ans => {
+    if (ans) {
+        code_nach_einloggen();
+    }
+    else {
+        code_bei_falschen_zugangsdaten();
+    }
+});
 ```
 
-Function that handles the registration of users to out fake backend. 
-
-This function returns "true" if the registration was succesfull, and false if there was already an account with this username/mail.
-
-### Backend API: login
-Signature: 
+## registration:
 ```javascript
-login(login_ID, password);
+registration(username, mail, birthdate, region, password, real_name, gender).then(ans => {
+    if (ans) {
+        code_nach_registrierung();
+    }
+    else {
+        code_im_fehlerfall();
+        // oder falls es schon einen user mit dem username oder der mail gab 
+        // -> (kann potentiell noch ergaenzen was von beidem bereits vorgekommen ist falls gewollt)
+    }
+});
 ```
 
-Funtion that handles the login of a user, using his username or email (-> login_ID) and his correspoding password.
-
-This function returns true if the login was succesfull and false if there was no account matching the given credentials.
-
-### Backend API: check_login
-Signature: 
+## check_login:
 ```javascript
-check_login();
+check_login().then(ans => {
+    if (ans) {
+        code_falls_eingeloggt();
+    }
+    else {
+        code_falls_nicht_eingeloggt();
+    }
+});
 ```
 
-Function that is used to check if someone is still logged in with this browser (the logout function was not called after the user logged in).
-
-This function returns true if a user is currently logged in. If this is the case, all user related functions can be used (eg. add_item, retrieve item...). This function returns false, in case the user is not logged in.
-
-### Backend API: logout
-Signature: 
+## logout:
 ```javascript
 logout();
 ```
 
-Function that shall be called when the user wants to log out from our site.
-
-This function does not return any values (might be changed in the future if needed).
-
-### Backend API: user_information
-Signature: 
+## user_information:
 ```javascript
-user_information();
+user_information().then(ans => {
+    if (ans) {
+        ans = JSON.parse(ans);
+        // alle Daten ueber den User sind jetzt wie zuvor in dem 'ans' JSON Object gespeichert
+    }
+    else {
+        code_im_fehlerfall();
+    }
+});
 ```
-Function that handles the fronted request concerning information about the currently logged in user. The data is retreived from the backend.
 
-This function returns a dictinary in the following format, if the user is logged in.
+## change_pw:
 ```javascript
-user_data = {
-    username: "name",
-    mail: "user@mail.com",
-    birthdate: "1970-01-01",
-    region: "Country",
-    real_name: "Ausgemusterter Max",
-    gender: "Other"
-};
+change_pw(akt_pw, new_pw).then(ans => {
+    if (ans) {
+        code_wenn_pw_geaender();
+    }
+    else {
+        code_wenn_akt_pw_falsch_war();
+    }
+});
 ```
-If this function is called while the user is not logged in, it returns null.
 
-### Backend API: add_item
-Signature: 
+## delete_all_items:
 ```javascript
-add_item(category, name, carbon);
+delete_all_items(password).then(ans => {
+    if (ans) {
+        code_wenn_alle_items_geloescht_wurden();
+    }
+    else {
+        code_bei_falschem_pw();
+    }
+});
 ```
-Functions that add's one item to list of items belonging to the user. The parameters *category* and *name* shall be strings, the parameter *carbon* should be a number.
 
-This function returns true if the items was added sucessfully or false if the function got called, even though the user is not logged in.
-
-### Backend API: retrieve_items
-Signature: 
+## delete_account:
 ```javascript
-retrieve_items();
+delete_account(password).then(ans => {
+    if (ans) {
+        code_wenn_account_geloescht_wurde();
+    }
+    else {
+        code_bei_falschem_pw();
+    }
+});
 ```
-Function that retrieves all items, belonging to the currently logged in user, from the backend. The items are returned as a JSON Object with the corresponding item structure.
 
-This function returns a list/array on success and null, if the function got called, even though the user is not logged in.
-
-
-### Item Structure
-Each Item is a JSON Object which contains the following information:
- - category
- - name
- - carbon (in kg)
-
- ### Control backend with __init_backend()
- Signature: 
+## add_item:
 ```javascript
-__init_backend(switch_arg);
+add_item(category, name, carbon).then(ans => {
+    if (ans) {
+        code_wenn_item_hinzugefuegt_wurde();
+    }
+    else {
+        code_im_fehlerfall();
+    }
+});
 ```
-The __init_backend() function is used, to control the backend:
 
-It works by calling the function from the console.
+## retrieve_items:
+```javascript
+retrieve_items().then(ans => {
+    if (ans == false) {
+        code_im_fehlerfall();
+    }
+    else {
+        items = JSON.parse(items);
+        // alle Daten ueber die Items sind jetzt wie zuvor in dem 'items' JSON Object gespeichert
+    }
+});
+```
 
-The function uses 3 control arguments that can be passed along using the *switch_arg* argument.
+## retrieve_ranking:
+```javascript
+retrieve_ranking().then(ans => {
+    if (ans) {
+        rankings = JSON.parse(ans);
+        // alle Daten ueber das Ranking sind jetzt 'rankings' JSON Object gespeichert
+    }
+    else {
+        code_im_fehlerfall();
+    }
+});
+```
 
-- switch_arg := "testing" => Site enters the testing mode. Instructions are printed to the console.
-- switch_arg := "revert_testing" => Site reverts back to the normal mode. Instructions are printed to the console.
-- switch_arg := "full_reset" => Can be used in case anything breaks. This function resets everything, including user accounts.
+## deed_check:
+```javascript
+deed_check().then(ans => {
+    if (ans) {
+        code_deed_erledigt();
+    }
+    else {
+        code_deed_noch_nicht_erledigt();
+    }
+});
+```
+
+## deed_mark:
+```javascript
+deed_mark().then(ans => {
+    if (ans) {
+        deed_als_erledigt_markiert();
+    }
+    else {
+        code_im_fehlerfall();
+    }
+});
+```
 
