@@ -143,7 +143,7 @@ function calculateCarbonUsage(){
 }
 
 function saveItemDelete(){
-    //Hier deleten
+    //Hier deleten; nachfragen wegen verificationPW
 }
 
 function saveChangePw(){
@@ -151,23 +151,33 @@ function saveChangePw(){
     let usr = user_information();
     let fields = $("#pwForm input");
     if($(fields[1]).val() == $(fields[2]).val()){
-        //Hier neues pw setzen
-        if(true){ //Hier backend changepw aufrufen
+        $("#passwordError2").hide();
+        if(change_pw($(fields[0]).val(), $(fields[1]).val())){
             $("#changepw").modal('hide');
-            $("#passwordConfirm").show();
+            //location.reload();
+            $("#passwordConfirm").modal('show');
         }
         else{
             $("#passwordError").show();
+            $("#pwForm input").val("");
         }
     }
     else{
         $("#passwordError2").show();
+        $("#passwordError").hide();
+        $("#pwForm input").val("");
     }
 }
 
 function saveAccountDelete(){
-    //Hier deleten
-    let usr = user_information();
+    let fields = $("#accountForm input");
+    console.log($(fields[0]).val());
+    if(delete_account($(fields[0]).val())){
+        location.reload();
+    }
+    else{
+        $("#passwordErrorPW").show();
+    }
 }
 
 if(check_login()){
