@@ -40,19 +40,27 @@
                 <li class="ifLoggedIn nav-item" onclick="logout(); location.reload();">
                     <a class="navbar-link">Logout</a>
                 </li>
+                
+                <li class="ifLoggedIn nav-item dropdown">
+                    <a class="navbar-link" href="#settings" role="button" data-toggle="collapse" data-target="#settings" aria-expanded="false" aria-controls="settings">
+                        Settings <i class="fas fa-caret-down"></i>
+                    </a>
+                </li>
+                <div class="collapse" id="settings">
+                    <li class="nav-item">
+                        <a class="navbar-link" data-toggle="modal" data-target="#sureDeleteItems"> Delete all Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="navbar-link" data-toggle="modal" data-target="#changepw"> Change Password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="navbar-link" data-toggle="modal" data-target="#sureDeleteAccount"> Delete Account</a>
+                    </li>
+
+                </div>
                 <li class="nav-item">
                     <a class="navbar-link" target="_blank" href="https://www.overshootday.org/">Learn more</a>
                 </li>
-                <li class="ifLoggedIn nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Settings
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" data-toggle="modal" data-target="#shureDeleteItems">Delete all items</a>
-                      <a class="dropdown-item" data-toggle="modal" data-target="#changepw">Change Password</a>
-                      <a class="dropdown-item" data-toggle="modal" data-target="#shureDeleteAccount">Delete Account</a>
-                    </div>
-                  </li>
             </ul>
         </div>
     </nav>
@@ -224,7 +232,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="shureDeleteItems" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal fade" id="sureDeleteItems" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -237,7 +245,7 @@
                     <!-- settings html -->
                     <article class="card-body mx-auto">
                         <div id="itemForm">
-                            <p id="validationError" class="error text-center" style="color:red;">Are you shure you want to delete all items?</p>
+                            <p id="validationError" class="text-center" style="color:red;">Are you sure you want to delete all items?</p>
                         </div>
                     </article>
                 </div>
@@ -259,7 +267,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- settings html -->
                     <article class="card-body mx-auto">
                         <form id="pwForm">
                             <div class="form-group input-group" >
@@ -281,8 +288,8 @@
                                 <input class="form-control" placeholder="Repeat new password" type="password" required>
                             </div>
                         </form>
-                        <p id="passwordError" class="error text-center" style="color:red; display:none;">Wrong password</p>
-                        <p id="passwordError2" class="error text-center" style="color:red; display:none;">New password and confirm password have to be the same password</p>
+                        <p id="passwordError" class="error text-center" style="color:red; display:none;">Please make sure you have entered the right User Password</p>
+                        <p id="passwordError2" class="error text-center" style="color:red; display:none;">Please make sure you have entered the same password in the two password fields.</p>
                     </article>
                 </div>
                 <div class="modal-footer">
@@ -298,11 +305,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="col-12 modal-title text-center" id="loginModalLabel">Your new Password has been set</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
-                <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
                 </div>
@@ -310,7 +313,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="shureDeleteAccount" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal fade" id="sureDeleteAccount" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -320,7 +323,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- settings html -->
                     <article class="card-body mx-auto">
                         <div id="accountForm">
                             <div class="form-group input-group" >
@@ -329,8 +331,9 @@
                                 </div>
                                 <input class="form-control" placeholder="Confirm Password" type="password" required>
                             </div>
-                            <p id="validationError" class="error text-center" style="color:red;">Are you shure you want to delete your Account? This process is irreversible!</p>
+                            <p id="validationError" class="text-center" style="color:red;">Are you sure you want to delete your Account? This process is irreversible!</p>
                         </div>
+                        <p id="passwordErrorPW" class="error text-center" style="color:red; display:none;">Wrong password</p>
                     </article>
                 </div>
                 <div class="modal-footer">

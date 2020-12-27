@@ -163,3 +163,11 @@ td{
 div[data-dep] {
     display: none;
 }
+
+#settings{
+    padding-left: 0.5rem;
+}
+#settings a {
+    font-size: small;
+}
+
