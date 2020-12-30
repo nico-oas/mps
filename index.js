@@ -224,6 +224,9 @@ window.addEventListener("load", function(){
                 if (ans) {
                     ans = JSON.parse(ans);
                   
+                    //carbon visual (I made it asynchronous so that it does not block the rest)
+                    build_carbon_visual()
+
                     //greeting
                     let realname = ans['real_name'];
                     let username = (realname && realname!='') ? realname : ans['username'];
