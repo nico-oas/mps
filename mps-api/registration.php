@@ -25,6 +25,7 @@ if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdat
     $password_hash = password_hash(htmlspecialchars($_POST['password'], ENT_QUOTES), PASSWORD_DEFAULT);
     $real_name  = htmlspecialchars($_POST['real_name'], ENT_QUOTES);
     $region  = htmlspecialchars($_POST['region'], ENT_QUOTES);
+    $ip = htmlspecialchars($_SERVER['REMOTE_ADDR']);
 
     if ($mysqli->connect_errno) {
         error_log("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
@@ -56,13 +57,13 @@ if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdat
         exit(1);
     }
 
-    if (!($register_statement = $mysqli->prepare("INSERT INTO mps_users (name, mail, birthdate, gender, password_hash, real_name, region) VALUES (?, ?, ?, ?, ?, ?, ?)"))) {
+    if (!($register_statement = $mysqli->prepare("INSERT INTO mps_users (name, mail, birthdate, gender, password_hash, real_name, region, client_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$register_statement->bind_param("sssssss", $name, $mail, $birthdate, $gender, $password_hash, $real_name, $region)) {
+    if (!$register_statement->bind_param("ssssssss", $name, $mail, $birthdate, $gender, $password_hash, $real_name, $region, $ip)) {
         error_log("Binding parameters failed: (" . $register_statement->errno . ") " . $register_statement->error);
         echo("Internal Server Error!");
         exit(1);
