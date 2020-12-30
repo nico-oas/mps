@@ -1,7 +1,9 @@
 /*
-==============================================================
-TESTING AREA  ---  Web API (https://mps-api.phildree.de)
-==============================================================
+========================================================================================
+WEB API WRAPPER  ---  (https://mps-api.phildree.de)
+
+-> Allows changes on the API without having to change the logic on the frontend code!
+========================================================================================
 */
 
 
@@ -22,7 +24,6 @@ async function login(login_id, password) {
     });
 }
 
-// todo: auf serverseite pruefen dass es keinen acc mit username/mail gibt
 async function registration(username, mail, birthdate, region, password, real_name, gender) {
     return await _post_request("https://mps-api.phildree.de/registration.php", {'username': username, 'mail': mail, 'birthdate': birthdate, 'region': region, 'password': password,
     'real_name': real_name, 'gender': gender}).then(answer => {
@@ -43,8 +44,6 @@ async function check_login() {
                 return true;
             }
             else {
-                console.log(" asdfasdf")
-
                 return false;
             }
         });
@@ -115,7 +114,7 @@ async function delete_account(password) {
             }
             else  {
                 console.log("Account was deleted!");
-                _del_cookie("token");
+                localStorage.clear();
                 return true;
             }
         });
@@ -221,6 +220,9 @@ function _post_request(url, data) {
             return data;
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
             return false;
         },
         crossDomain: true
