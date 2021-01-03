@@ -220,13 +220,12 @@ window.addEventListener("load", function(){
 
     check_login().then(ans => {
         if (ans) {
+            //carbon pollution visual
+            build_carbon_visual();
             user_information().then(ans => {
                 if (ans) {
                     ans = JSON.parse(ans);
                   
-                    //carbon visual (I made it asynchronous so that it does not block the rest)
-                    build_carbon_visual()
-
                     //greeting
                     let realname = ans['real_name'];
                     let username = (realname && realname!='') ? realname : ans['username'];
@@ -240,7 +239,7 @@ window.addEventListener("load", function(){
                     document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>'
                     retrieve_items().then(items => {
                         if (items) {
-                            items = JSON.parse(items);
+                            items = JSON.parse(items);                         
                             var carbon = 0;
                             for (i = 0; i < items.length; i++){
                                 carbon += Math.round(parseFloat(items[i]['carbon']));

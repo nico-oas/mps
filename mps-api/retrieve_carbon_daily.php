@@ -32,7 +32,7 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($items_statement = $mysqli->prepare("SELECT add_date AS date, SUM(carbon) FROM mps_user_items WHERE user_id = ? GROUP BY add_date ORDER BY add_date ASC"))) {
+    if (!($items_statement = $mysqli->prepare("SELECT date_added AS date, SUM(carbon) AS total_carbon FROM mps_user_items WHERE user_id = ? GROUP BY date_added ORDER BY date_added ASC"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);

@@ -32,36 +32,29 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($auth_statement = $mysqli->prepare("SELECT user_id, name AS username, mail, birthdate, gender, real_name, region, leaderboard_consent FROM mps_users WHERE user_id = ?"))) {
+    if (!($carbon_statement = $mysqli->prepare("SELECT SUM(carbon) AS carbon, STR_TO_DATE(CONCAT(YEAR(date_added), '-', MONTH(date_added)), '%Y-%m') AS date FROM mps_user_items WHERE user_id = ? GROUP BY YEAR(date_added), MONTH(date_added) ORDER BY YEAR(date_added), MONTH(date_added) ASC"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->bind_param("i", $user_id)) {
-        error_log("Binding parameters failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    if (!$carbon_statement->bind_param("i", $user_id)) {
+        error_log("Binding parameters failed: (" . $carbon_statement->errno . ") " . $carbon_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->execute()) {
-        error_log("Execute failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    if (!$carbon_statement->execute()) {
+        error_log("Execute failed: (" . $carbon_statement->errno . ") " . $carbon_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    $result = $auth_statement->get_result();
-    if($result->num_rows != 1) {
-        echo("Wrong number of results from DB");
-        exit(0);
-    }
-
-    $result = $result->fetch_assoc();
+    $result = $carbon_statement->get_result()->fetch_all(MYSQLI_ASSOC);
     http_response_code(200);
     echo(json_encode($result));
 }
 else { 
     echo(FALSE);
 }
-
 ?>

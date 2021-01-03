@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdate'], $_POST['gender'], $_POST['password'], $_POST['real_name'], $_POST['region'])) {
+if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdate'], $_POST['gender'], $_POST['password'], $_POST['real_name'], $_POST['region'], $_POST['consent'])) {
     require 'jwt_handler.php';
     $jwt = new JwtHandler();
     $mysqli = new mysqli("localhost", "mps", "=RCASrDR6+gZLf.@z^(EAR@CsE.B7!4!", "mps_db");
@@ -25,7 +25,13 @@ if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdat
     $password_hash = password_hash(htmlspecialchars($_POST['password'], ENT_QUOTES), PASSWORD_DEFAULT);
     $real_name  = htmlspecialchars($_POST['real_name'], ENT_QUOTES);
     $region  = htmlspecialchars($_POST['region'], ENT_QUOTES);
+    $consent  = htmlspecialchars($_POST['consent'], ENT_QUOTES);
     $ip = htmlspecialchars($_SERVER['REMOTE_ADDR']);
+
+    if ($consent != 0 && $consent != 1) {
+        echo("Error");
+        exit(1);
+    }
 
     if ($mysqli->connect_errno) {
         error_log("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
@@ -57,13 +63,13 @@ if (!empty($_POST) && isset($_POST['username'], $_POST['mail'], $_POST['birthdat
         exit(1);
     }
 
-    if (!($register_statement = $mysqli->prepare("INSERT INTO mps_users (name, mail, birthdate, gender, password_hash, real_name, region, client_ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"))) {
+    if (!($register_statement = $mysqli->prepare("INSERT INTO mps_users (name, mail, birthdate, gender, password_hash, real_name, region, client_ip, consent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$register_statement->bind_param("ssssssss", $name, $mail, $birthdate, $gender, $password_hash, $real_name, $region, $ip)) {
+    if (!$register_statement->bind_param("ssssssssi", $name, $mail, $birthdate, $gender, $password_hash, $real_name, $region, $ip, $consent)) {
         error_log("Binding parameters failed: (" . $register_statement->errno . ") " . $register_statement->error);
         echo("Internal Server Error!");
         exit(1);

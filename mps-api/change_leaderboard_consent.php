@@ -14,14 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-if (!empty($_POST) && isset($_POST['token'])) {
+if (!empty($_POST) && isset($_POST['token'], $_POST['consent'])) {
     require 'jwt_handler.php';
     $jwt = new JwtHandler();
     $mysqli = new mysqli("localhost", "mps", "=RCASrDR6+gZLf.@z^(EAR@CsE.B7!4!", "mps_db");
+    $consent = htmlspecialchars($_POST['consent'], ENT_QUOTES);
 
-    try {
-        $user_id = ($jwt->_jwt_decode_data(htmlspecialchars($_POST['token'], ENT_QUOTES)))->user_id;
-    } catch(\Exception $e) {
+    if ($consent != 0 && $consent != 1) {
         echo("Error");
         exit(1);
     }
@@ -32,36 +31,36 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($auth_statement = $mysqli->prepare("SELECT user_id, name AS username, mail, birthdate, gender, real_name, region, leaderboard_consent FROM mps_users WHERE user_id = ?"))) {
+    if (!($consent_statement = $mysqli->prepare("UPDATE mps_users SET leaderboard_consent = ? WHERE user_id = ?"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->bind_param("i", $user_id)) {
-        error_log("Binding parameters failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    try {
+        $user_id = ($jwt->_jwt_decode_data(htmlspecialchars($_POST['token'], ENT_QUOTES)))->user_id;
+    } catch(\Exception $e) {
+        echo("Error");
+        exit(1);
+    }
+
+    if (!$consent_statement->bind_param("ii", $consent, $user_id)) {
+        error_log("Binding parameters failed: (" . $consent_statement->errno . ") " . $consent_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    if (!$auth_statement->execute()) {
-        error_log("Execute failed: (" . $auth_statement->errno . ") " . $auth_statement->error);
+    if (!$consent_statement->execute()) {
+        error_log("Execute failed: (" . $consent_statement->errno . ") " . $consent_statement->error);
         echo("Internal Server Error!");
         exit(1);
     }
 
-    $result = $auth_statement->get_result();
-    if($result->num_rows != 1) {
-        echo("Wrong number of results from DB");
-        exit(0);
-    }
-
-    $result = $result->fetch_assoc();
     http_response_code(200);
-    echo(json_encode($result));
-}
+    echo(TRUE);
+    exit(0);
+} 
 else { 
     echo(FALSE);
 }
-
 ?>
