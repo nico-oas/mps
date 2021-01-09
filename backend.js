@@ -24,10 +24,10 @@ async function login(login_id, password) {
     });
 }
 
-async function registration(username, mail, birthdate, region, password, real_name, gender, consent) {
+async function registration(username, mail, birthdate, region, password, real_name, gender, consent = true) {
     return await _post_request("https://mps-api.phildree.de/registration.php", {'username': username, 'mail': mail, 'birthdate': birthdate, 'region': region, 'password': password,
     'real_name': real_name, 'gender': gender, 'consent': consent}).then(answer => {
-        if (answer == "Internal Server Error!" || answer == "error" || answer == false) {
+        if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
             return false;
         } 
         else {
@@ -250,6 +250,7 @@ async function deed_mark() {
 
 async function change_leaderboard_consent(consent) {
     if (_get_local_storage("token")) {
+        console.log(consent);
         return await _post_request("https://mps-api.phildree.de/change_leaderboard_consent.php", {'token': _get_local_storage("token"), 'consent': consent}).then(answer => {
             if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
                 return false;

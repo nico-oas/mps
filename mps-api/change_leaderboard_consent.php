@@ -19,11 +19,19 @@ if (!empty($_POST) && isset($_POST['token'], $_POST['consent'])) {
     $jwt = new JwtHandler();
     $mysqli = new mysqli("localhost", "mps", "=RCASrDR6+gZLf.@z^(EAR@CsE.B7!4!", "mps_db");
     $consent = htmlspecialchars($_POST['consent'], ENT_QUOTES);
-
+    if ($consent == "false") {
+        $consent = 0;
+    }
+    else if ($consent == "true"){
+        $consent = 1;
+    }
+    
     if ($consent != 0 && $consent != 1) {
         echo("Error");
         exit(1);
     }
+
+    //error_log($consent);
 
     if ($mysqli->connect_errno) {
         error_log("Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);

@@ -334,3 +334,11 @@ window.addEventListener("load", function(){
         $("#householdForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
     });
 });
+
+
+// Listen for orientation changes for carbon visuals
+window.addEventListener("orientationchange", function(event) {
+    console.log("the orientation of the device is now " + event.target.screen.orientation.angle);
+    $("#carbon_vis_daily").empty();
+    build_carbon_visual("daily");
+  });
