@@ -90,9 +90,9 @@ async function change_pw(password_old, password_new) {
     }
 }
 
-async function delete_all_items(password) {
+async function delete_all_items() {
     if (_get_local_storage("token")) {
-        return await _post_request("https://mps-api.phildree.de/delete_items.php", {'token': _get_local_storage("token"), 'password': password}).then(answer => {
+        return await _post_request("https://mps-api.phildree.de/delete_items.php", {'token': _get_local_storage("token")}).then(answer => {
             if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
