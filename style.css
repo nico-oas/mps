@@ -178,3 +178,8 @@ div[data-dep] {
 small {
     opacity: 0.7;
 }
+button {
+    position: relative;
+    margin: 1em;
+    padding: .1em 2em;
+}
