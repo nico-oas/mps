@@ -21,12 +21,21 @@ function frontEndRegistration(){
     }
     var fields = $("#registerForm input, #registerForm select");
     
+    var check = document.getElementById("check");
+    if(!check.checked){
+        check.value = '0';
+    }
+    else{
+        check.value = '1';
+    }
+    console.log($(fields[2]).val());
+    
     if($(fields[3]).val() != $(fields[4]).val()){
         $("#validationError").show();
         return;
     }
     $("#validationError").hide();
-    registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val()).then(ans => {
+    registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val(), $(check).val()).then(ans => {
         console.log("ans: " + ans);
         if (ans) {
             location.reload();
@@ -158,11 +167,13 @@ function calculateCarbonUsage(){
     });
 }
 
-/*
+
 function saveItemDelete(){
-    //Hier deleten; nachfragen wegen verificationPW
+    delete_all_items();
+    $("#sureDeleteItems").modal('hide');
+    location.reload();
 }
-*/
+
 
 function saveChangePw(){
     if(!$("#pwForm")[0].reportValidity()){
@@ -212,7 +223,7 @@ window.addEventListener("load", function(){
     $("span[data-toggle='popover']").popover({placement : "top"});
     //enable submit on enter
     $("input").keypress(function (e) {
-        if (e.which == 13) {
+        if (e.keyCode == 13) {
             $(this).parents(".modal-content").find("button[type='submit']").click();
             return false;
         }
@@ -220,6 +231,8 @@ window.addEventListener("load", function(){
 
     check_login().then(ans => {
         if (ans) {
+            //carbon pollution visual
+            build_carbon_visual();
             user_information().then(ans => {
                 if (ans) {
                     ans = JSON.parse(ans);
@@ -237,7 +250,7 @@ window.addEventListener("load", function(){
                     document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>'
                     retrieve_items().then(items => {
                         if (items) {
-                            items = JSON.parse(items);
+                            items = JSON.parse(items);                         
                             var carbon = 0;
                             for (i = 0; i < items.length; i++){
                                 carbon += Math.round(parseFloat(items[i]['carbon']));
