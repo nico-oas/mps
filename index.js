@@ -21,12 +21,21 @@ function frontEndRegistration(){
     }
     var fields = $("#registerForm input, #registerForm select");
     
+    var check = document.getElementById("check");
+    if(!check.checked){
+        check.value = '0';
+    }
+    else{
+        check.value = '1';
+    }
+    console.log($(fields[2]).val());
+    
     if($(fields[3]).val() != $(fields[4]).val()){
         $("#validationError").show();
         return;
     }
     $("#validationError").hide();
-    registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val()).then(ans => {
+    registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val(), $(check).val()).then(ans => {
         console.log("ans: " + ans);
         if (ans) {
             location.reload();
@@ -163,11 +172,13 @@ function calculateCarbonUsage(){
     });
 }
 
-/*
+
 function saveItemDelete(){
-    //Hier deleten; nachfragen wegen verificationPW
+    delete_all_items();
+    $("#sureDeleteItems").modal('hide');
+    location.reload();
 }
-*/
+
 
 function saveChangePw(){
     if(!$("#pwForm")[0].reportValidity()){
@@ -217,7 +228,7 @@ window.addEventListener("load", function(){
     $("span[data-toggle='popover']").popover({placement : "top"});
     //enable submit on enter
     $("input").keypress(function (e) {
-        if (e.which == 13) {
+        if (e.keyCode == 13) {
             $(this).parents(".modal-content").find("button[type='submit']").click();
             return false;
         }

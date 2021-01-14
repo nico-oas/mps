@@ -180,7 +180,7 @@ small {
 }
 
 
-
+/* carbon visual */
 .line {
     fill: none;
     stroke: #318f34;
@@ -202,4 +202,94 @@ div.tooltip {
     border: 0px;
     border-radius: 8px;
     pointer-events: none;
+}
+
+
+/* Call to action */
+.vertical-alignment-helper {
+    display:table;
+    height: 100%;
+    width: 100%;
+    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+}
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+    pointer-events:none;
+}
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width:inherit;
+    max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+    height:inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+    pointer-events: all;
+}
+
+#callToActionLabel {
+    font-size: small;
+}
+
+#modal-content-call {
+    max-width: 350px;
+}
+
+#RF {
+    max-width: 315px;
+}
+
+#modal-footer-call {
+    font-size: medium;
+}
+
+#callButtons {
+    font-size: x-small;
+}
+
+@media (min-width: 576px) {
+    #callToActionLabel {
+        font-size: large;
+    }
+
+    #modal-content-call {
+        max-width: 528px;
+    }
+
+    #RF {
+        max-width: 495px;
+    }
+
+    #modal-footer-call {
+        font-size: large;
+    }
+
+    #callButtons {
+        font-size: medium;
+    }
+
+}
+
+@media (min-width: 1400px) {
+    #callToActionLabel {
+        font-size:xx-large;
+    }
+
+    #modal-content-call {
+        max-width: 800px;
+    }
+
+    #RF {
+        max-width: 767px;
+    }
+
+    #modal-footer-call {
+        font-size: x-large;
+    }
+
+    #callButtons {
+        font-size: x-large;
+    }
+
 }
