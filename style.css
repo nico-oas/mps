@@ -179,6 +179,32 @@ small {
     opacity: 0.7;
 }
 
+
+/* carbon visual */
+.line {
+    fill: none;
+    stroke: #318f34;
+    stroke-width: 2px;
+}
+.line2 {
+    fill: none;
+    stroke: #0f5380;
+    stroke-width: 2px;
+}
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 120px;
+    height: 42px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+
 /* Call to action */
 .vertical-alignment-helper {
     display:table;
@@ -267,4 +293,3 @@ small {
     }
 
 }
-
