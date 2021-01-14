@@ -178,6 +178,13 @@ div[data-dep] {
 small {
     opacity: 0.7;
 }
+/* Zu Pruefen @Nico
+button {
+    position: relative;
+    margin: 1em;
+    padding: .1em 2em;
+}
+*/
 
 
 /* carbon visual */
@@ -293,3 +300,4 @@ div.tooltip {
     }
 
 }
+

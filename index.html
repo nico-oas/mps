@@ -130,6 +130,54 @@
         </table>
 
     </div>
+<div class="container text-center ifLoggedIn">
+    <h1>Your personal statistics</h1>
+    <p> 
+        Check your total carbon usage
+    </p>
+   <!-- Button trigger modal -->
+    <button type="button" class="btn btn-dark collapsed" data-toggle="modal" data-target="#statisticsModal">
+       Go to overview
+      </button>
+    <!-- Modal -->
+    <div class="modal fade" id="statisticsModal" tabindex="-1" role="dialog" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="col-12 modal-title text-center" id="statisticsModalLabel">Overview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- statistics html-->
+                    <div id="statisticsCategories" class="row text-center">
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#weeklyCategory" aria-expanded="false" aria-controls="weeklyCategory">
+                            Weekly
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#monthlyCategory" aria-expanded="false" aria-controls="monthlyCategory">
+                            Monthly
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#yearlyCategory" aria-expanded="false" aria-controls="yearlyCategory">
+                            Yearly
+                        </button>
+                    </div>
+                    <div class="categoryform collapse" id="weeklyCategory" data-parent="#statisticsModal .modal-body"> 
+                        Placeholder
+                    </div>  
+                    <div class="categoryform collapse" id="monthlyCategory" data-parent="#statisticsModal .modal-body"> 
+                        Placeholder
+                    </div>  
+                    <div class="categoryform collapse" id="yearlyCategory" data-parent="#statisticsModal .modal-body"> 
+                        Placeholder
+                    </div>               
+                </div>
+             </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <div class="modal fade" id="callToAction" tabindex="-1" role="dialog" aria-labelledby="callToActionLabel" aria-hidden="true">
         <div class="vertical-alignment-helper">
