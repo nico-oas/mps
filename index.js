@@ -171,6 +171,7 @@ function calculateCarbonUsage(){
 function saveItemDelete(){
     delete_all_items();
     $("#sureDeleteItems").modal('hide');
+    location.reload();
 }
 
 
