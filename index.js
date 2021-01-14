@@ -38,19 +38,24 @@ function frontEndRegistration(){
 }
 
 function rankings() {
-    check_login().then(ans => {
-        if (ans) {
+    //user_informatio() returns false when not logged in => replace a call to check_login()
+    user_information().then(user_info => {
+        if (user_info) {
+            user_info = JSON.parse(user_info);
             retrieve_ranking().then(ans => {
                 if (ans) {
                     ans = JSON.parse(ans);
-                    for (let i =  1; i <= 5 && i <= ans.length; i++) {
-                        $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+                    for (let i = 1; i <= ans.length; i++) {
+                        if (user_info['username'] == ans[i - 1]['username']){
+                            $("#ranking_table").append("<tr><td>" + i + "</td><td><b>" + ans[i - 1]['username'] + "</b></td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+                        } else {
+                            $("#ranking_table").append("<tr><td>" + i + "</td><td>" + ans[i - 1]['username'] + "</td><td>" + parseFloat(ans[i - 1]['total_carbon']).toFixed(3) + " kg</td></tr>"); 
+                        }
                     }
                 }
             });
         }
     });
-
 }
 
 function mark_deed_done() {
