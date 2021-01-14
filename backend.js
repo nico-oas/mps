@@ -1,7 +1,9 @@
 /*
-==============================================================
-TESTING AREA  ---  Web API (https://mps-api.phildree.de)
-==============================================================
+========================================================================================
+WEB API WRAPPER  ---  (https://mps-api.phildree.de)
+
+-> Allows changes on the API without having to change the logic on the frontend code!
+========================================================================================
 */
 
 
@@ -22,11 +24,10 @@ async function login(login_id, password) {
     });
 }
 
-// todo: auf serverseite pruefen dass es keinen acc mit username/mail gibt
-async function registration(username, mail, birthdate, region, password, real_name, gender) {
+async function registration(username, mail, birthdate, region, password, real_name, gender, consent = true) {
     return await _post_request("https://mps-api.phildree.de/registration.php", {'username': username, 'mail': mail, 'birthdate': birthdate, 'region': region, 'password': password,
-    'real_name': real_name, 'gender': gender}).then(answer => {
-        if (answer == "Internal Server Error!" || answer == false) {
+    'real_name': real_name, 'gender': gender, 'consent': consent}).then(answer => {
+        if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
             return false;
         } 
         else {
@@ -43,8 +44,6 @@ async function check_login() {
                 return true;
             }
             else {
-                console.log(" asdfasdf")
-
                 return false;
             }
         });
@@ -91,9 +90,9 @@ async function change_pw(password_old, password_new) {
     }
 }
 
-async function delete_all_items(password) {
+async function delete_all_items() {
     if (_get_local_storage("token")) {
-        return await _post_request("https://mps-api.phildree.de/delete_items.php", {'token': _get_local_storage("token"), 'password': password}).then(answer => {
+        return await _post_request("https://mps-api.phildree.de/delete_items.php", {'token': _get_local_storage("token")}).then(answer => {
             if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
                 return false;
             }
@@ -115,7 +114,7 @@ async function delete_account(password) {
             }
             else  {
                 console.log("Account was deleted!");
-                _del_cookie("token");
+                localStorage.clear();
                 return true;
             }
         });
@@ -152,6 +151,47 @@ async function retrieve_items() {
                 return answer;
             }
         });
+    }
+    else {
+        return false;
+    }
+}
+
+async function retrieve_carbon(timespan) {
+    if (_get_local_storage("token")) {
+        switch (timespan) {
+            case "daily":
+                return await _post_request("https://mps-api.phildree.de/retrieve_carbon_daily.php", {'token': _get_local_storage("token")}).then(answer => {
+                    if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
+                        return false;
+                    }
+                    else  {
+                        return answer;
+                    }
+                });
+
+            case "monthly":
+                return await _post_request("https://mps-api.phildree.de/retrieve_carbon_monthly.php", {'token': _get_local_storage("token")}).then(answer => {
+                    if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
+                        return false;
+                    }
+                    else  {
+                        return answer;
+                    }
+                });
+
+            case "yearly":
+                return await _post_request("https://mps-api.phildree.de/retrieve_carbon_yearly.php", {'token': _get_local_storage("token")}).then(answer => {
+                    if (answer == "Internal Server Error!" || answer == "Error" || answer == "Wrong number of results from DB" || answer == false) {
+                        return false;
+                    }
+                    else  {
+                        return answer;
+                    }
+                });
+        }
+
+
     }
     else {
         return false;
@@ -208,7 +248,22 @@ async function deed_mark() {
     }
 }
 
-
+async function change_leaderboard_consent(consent) {
+    if (_get_local_storage("token")) {
+        console.log(consent);
+        return await _post_request("https://mps-api.phildree.de/change_leaderboard_consent.php", {'token': _get_local_storage("token"), 'consent': consent}).then(answer => {
+            if (answer == "Internal Server Error!" || answer == "Error" || answer == false) {
+                return false;
+            }
+            else  {
+                return true;
+            }
+        });
+    }
+    else {
+        return false;
+    }
+}
 
 
 function _post_request(url, data) {
@@ -221,6 +276,9 @@ function _post_request(url, data) {
             return data;
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log(XMLHttpRequest);
+            console.log(textStatus);
+            console.log(errorThrown);
             return false;
         },
         crossDomain: true
