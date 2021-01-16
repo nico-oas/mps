@@ -18,6 +18,16 @@ function rebuild_carbon_visuals() {
     if (visuals_built["yearly"]) { $("#carbon_vis_yearly").html(''); build_yearly_vis(); }
 }
 
+function getModalInnerWidth(){
+    let maxWidth = $(".modal-lg").css("max-width");
+    if(maxWidth == "none"){
+        maxWidth = window.innerWidth - parseFloat(getComputedStyle(document.documentElement).fontSize); //device width - 1rem
+    }else{
+        maxWidth = maxWidth.substring(0, maxWidth.length-2);
+    }
+    return parseInt(maxWidth-2*parseFloat(getComputedStyle(document.documentElement).fontSize));
+}
+
 async function build_daily_vis() {
     await retrieve_carbon("daily").then(data => {
         if (data) {
@@ -27,7 +37,7 @@ async function build_daily_vis() {
             // set the dimensions and margins of the graph dynamically for responsiveness
             let margin = {top: 20, right: 70, bottom: 100, left: 70},
             default_ratio = 1.2
-            current_width = $("#statisticsModal").width();
+            current_width = getModalInnerWidth();
             if (current_width >= 900) current_width /= 2;
             current_height = current_width * 0.8;
             current_ratio = current_width / current_height;
@@ -237,7 +247,7 @@ async function build_monthly_vis() {
             // set the dimensions and margins of the graph dynamically for responsiveness
             let margin = {top: 20, right: 70, bottom: 100, left: 70},
             default_ratio = 1.2
-            current_width = $(document.getElementById("carbon_vis_monthly")).width();
+            current_width = getModalInnerWidth();
             if (current_width >= 900) current_width /= 2;
             current_height = current_width * 0.8;
             current_ratio = current_width / current_height;
@@ -448,7 +458,7 @@ async function build_yearly_vis() {
             // set the dimensions and margins of the graph dynamically for responsiveness
             let margin = {top: 20, right: 70, bottom: 100, left: 70},
             default_ratio = 1.2
-            current_width = $(document.getElementById("carbon_vis_yearly")).width();
+            current_width = getModalInnerWidth();
             if (current_width >= 900) current_width /= 2;
             current_height = current_width * 0.8;
             current_ratio = current_width / current_height;

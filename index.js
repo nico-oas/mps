@@ -281,9 +281,9 @@ window.addEventListener("load", function(){
                         if (!deed_done) {
                             $('#deeds').html("<p>" + deeds[x] + "</p><button type='button' class='btn btn-dark' onclick='mark_deed_done()'>Deed accomplished!</button>");
                         }else if(navigator.share){
-                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' onclick='share(\"" + deeds[x] + "\");'>Share your sucess</button>");
+                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' onclick='share(\"" + deeds[x] + "\");'>Share your success</button>");
                         }else{
-                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' data-toggle='modal' data-target='#shareModal'>Share your sucess</button>");
+                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' data-toggle='modal' data-target='#shareModal'>Share your success</button>");
                         }
                     });
                 }
@@ -362,13 +362,10 @@ window.addEventListener("load", function(){
             statsOpened = true;
         }
     });
-    /*$("#statisticsModal").on('hidden.bs.modal', function() {
-        $(this).find(".collapse").html("");
-    });*/
 });
 
 
-// Listen for orientation changes for carbon visuals
+// Listen for orientation changes for carbon visuals //commented out because it causes race conditions when resizing
 /*window.addEventListener("resize", function(event) {   
     rebuild_carbon_visuals();
 });*/
