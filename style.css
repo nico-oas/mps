@@ -2,6 +2,7 @@
 :root {
     --primary: hsl(0, 0%, 6%);
     --secondary: #1d1f1d;
+    --green: #318f34;
 }
 
 /* general css */
@@ -29,13 +30,11 @@ a {
     margin-top: 80px;
 }
 @media (min-width: 576px) {
-    .container:first-of-type {
-        margin-top: 120px;
-    }
-}
-@media (min-width: 576px) {
     .container {
         border-radius: 1rem;
+    }
+    .container:first-of-type {
+        margin-top: 120px;
     }
 }
 
@@ -165,19 +164,18 @@ table, th, td {
 td{
     text-align: left;
 }
-
 #ranking_table td b{
-    color: #318f34;
+    color: var(--green);
 }
 
-/* tracking modal */
-#trackCategories {
+/* tracking and statistics modals */
+#trackCategories, #statisticsCategories {
     padding: inherit;
 }
-#trackCategories button {
+#trackCategories button, #statisticsCategories button {
     margin: 0.2rem;
 }
-#trackCategories button:not(.collapsed) {
+#trackCategories button:not(.collapsed), #statisticsCategories button:not(.collapsed) {
     background-color: #171a1d;
     pointer-events: none;
 }
@@ -190,19 +188,12 @@ div[data-dep] {
 small {
     opacity: 0.7;
 }
-/* Zu Pruefen @Nico
-button {
-    position: relative;
-    margin: 1em;
-    padding: .1em 2em;
-}
-*/
 
 
 /* carbon visual */
 .line {
     fill: none;
-    stroke: #318f34;
+    stroke: var(--green);
     stroke-width: 2px;
 }
 .line2 {

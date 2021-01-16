@@ -21,18 +21,6 @@
     <script src="data.js"></script>
     <script src="carbon_visual.js"></script>
     <script src="index.js"></script>
-    <script>
-        $(document).ready(function(){
-            check_login().then(ans => {
-                if (ans) {
-                    $("#callToAction").modal('hide');
-                }
-                else {
-                    $("#callToAction").modal('show');
-                }
-            });
-        });
-    </script>
     
     <nav class="navbar-toggleable-md navbar-dark bd-faded fixed-top"> 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,102 +69,57 @@
         </div>
     </nav>
 
-
-    <br/><br/>
-
-    <div class="container text-center ifLoggedIn" id="carbon_vis_daily"></div>
-    <div class="container text-center ifLoggedIn" id="carbon_vis_monthly"></div>
-    <div class="container text-center ifLoggedIn" id="carbon_vis_yearly"></div>
+<!-- CONTAINERS START HERE -->
 
     <div class="container text-center">
         <div id="clock" class="countdown"></div>
     </div>
            
     <div class="ifLoggedIn container text-center">
+        <h1>How much CO2 did you emit today?</h1>
         <p id="greeting"></p>
-        <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#trackModal">Track Carbon usage now!</button>
+        <button id="trackNow" type="button" class="btn btn-dark" data-toggle="modal" data-target="#trackModal">Track Carbon usage</button>
+        <span id="checkOutStatistics" style="display: none;">
+            &nbsp;
+            <button type="button" class="btn btn-dark collapsed" data-toggle="modal" data-target="#statisticsModal">Check out personal Statistics</button>
+        </span>
+    </div>
+
+    <div class="ifLoggedIn container text-center">
+        <h1>One good deed a day challenge</h1>
+        <span id="deeds">Inform yourself about ECO-friendly-electricity providers</span>
     </div>
   
+    <div class="ifLoggedIn container text-center">
+        <h1>Leaderboard</h1>
+        <table class="table table-dark">
+            <thead>
+                <p>
+                        Who is currently the eco-friendliest user?
+                </p>
+            </thead> 
+            <tbody id="ranking_table">
+                <tr>
+                    <th scope="row">Ranking</th>
+                    <th scope="row">User</th>
+                    <th scope="row">Carbon footprint</th> 
+                </tr>
+                <script>
+                    rankings();
+                </script>
+            </tbody>
+        </table>
+    </div>
+
     <div class="container text-center">
         <h1>Fun fact about carbon emissions</h1>
         <p id="fact">Per day a cruise emits as much carbon as 84000 cars</p>
         <p id="source">- Utopia.de</p>
     </div>
 
-    <div class="ifLoggedIn container text-center">
-        <h1>One good deed a day challenge</h1>
-        <p id="deeds">Inform yourself about ECO-friendly-electricity providers</p>
-    </div>
-  
-    <div class="container text-center ifLoggedIn">
-        <h1>Leaderboard</h1>
-        <table class="table table-dark">
-           <p>
-                See who currently is the eco-friendliest user (die Nutzer die nix eingeben werden halt "gewinnen")
-           </p>
-        </thead> 
-        <tbody id="ranking_table">
-           <tr>
-                <th scope="row">Ranking</th>
-                <th scope="row">User</th>
-                <th scope="row">Carbon footprint</th> 
-            </tr>
-            <script>
-                rankings();
-            </script>
-        </tbody>
-        </table>
+<!-- MODALS START HERE -->
 
-    </div>
-<div class="container text-center ifLoggedIn">
-    <h1>Your personal statistics</h1>
-    <p> 
-        Check your total carbon usage
-    </p>
-   <!-- Button trigger modal -->
-    <button type="button" class="btn btn-dark collapsed" data-toggle="modal" data-target="#statisticsModal">
-       Go to overview
-      </button>
-    <!-- Modal -->
-    <div class="modal fade" id="statisticsModal" tabindex="-1" role="dialog" aria-labelledby="statisticsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="col-12 modal-title text-center" id="statisticsModalLabel">Overview</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- statistics html-->
-                    <div id="statisticsCategories" class="row text-center">
-                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#weeklyCategory" aria-expanded="false" aria-controls="weeklyCategory">
-                            Weekly
-                        </button>
-                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#monthlyCategory" aria-expanded="false" aria-controls="monthlyCategory">
-                            Monthly
-                        </button>
-                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#yearlyCategory" aria-expanded="false" aria-controls="yearlyCategory">
-                            Yearly
-                        </button>
-                    </div>
-                    <div class="categoryform collapse" id="weeklyCategory" data-parent="#statisticsModal .modal-body"> 
-                        Placeholder
-                    </div>  
-                    <div class="categoryform collapse" id="monthlyCategory" data-parent="#statisticsModal .modal-body"> 
-                        Placeholder
-                    </div>  
-                    <div class="categoryform collapse" id="yearlyCategory" data-parent="#statisticsModal .modal-body"> 
-                        Placeholder
-                    </div>               
-                </div>
-             </div> 
-            </div>
-        </div>
-    </div>
-</div>
-
-
+    <!-- call to action modal-->
     <div class="modal fade" id="callToAction" tabindex="-1" role="dialog" aria-labelledby="callToActionLabel" aria-hidden="true">
         <div class="vertical-alignment-helper">
             <div class="modal-dialog vertical-align-center">
@@ -188,7 +131,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <img id="rainforest" src="RF_and_bRF.png"></img>
+                        <img id="rainforest" src="rainforest.png"></img>
                         <div class="text-center" id="modal-footer-call">
                             Now is your chance to find out how big your impact on the environment really is.<br/>Start counting and living more consciously.
                         </div>
@@ -212,6 +155,7 @@
         </div>
     </div>
 
+    <!-- register modal -->
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -299,6 +243,7 @@
         </div>
     </div>
 
+    <!-- login modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -341,6 +286,7 @@
         </div>
     </div>
 
+    <!-- delete items modal -->
     <div class="modal fade" id="sureDeleteItems" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -366,6 +312,7 @@
         </div>
     </div>
 
+    <!-- change password modal -->
     <div class="modal fade" id="changepw" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -409,6 +356,7 @@
         </div>
     </div>
 
+    <!-- confirm password change modal -->
     <div class="modal fade" id="passwordConfirm" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -422,6 +370,7 @@
         </div>
     </div>
 
+    <!-- delete account modal -->
     <div class="modal fade" id="sureDeleteAccount" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -454,6 +403,7 @@
         </div>
     </div>
 
+    <!-- share modal -->
     <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -483,6 +433,7 @@
         </div>
     </div>
 
+    <!-- track modal -->
     <div class="modal fade" id="trackModal" tabindex="-1" role="dialog" aria-labelledby="trackModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -631,63 +582,46 @@
             </div>
         </div>
     </div>
-  
-    <div class="modal fade" id="gdprModal" tabindex="-1" role="dialog" aria-labelledby="gdprModalLabel" aria-hidden="true">
+
+    <!-- statistics modal -->
+    <div class="modal fade" id="statisticsModal" tabindex="-1" role="dialog" aria-labelledby="statisticsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="col-12 modal-title text-center" id="gdprModalLabel">Data Privacy</h5>
+                    <h5 class="col-12 modal-title text-center" id="statisticsModalLabel">Statistics</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>This Carbon Footprint Tracker is currently in its <b>Testing Phase</b>. This Privacy Policy document contains types of information that is collected and recorded by our webapp and how we use it.</p>
-                    <p>If you have additional questions or require more information about our Privacy Policy, do not hesitate to <a href="mailto:nico.hoechstaedter@fau.de">contact us</a>.</p>
-                    <h2>General Data Protection Regulation (GDPR)</h2>
-                    <p>We are a Data Controller of your information.</p>
-                    <p>Carbon Footprint Trackers legal basis for collecting and using the personal information described in this Privacy Policy depends on the Personal Information we collect and the specific context in which we collect the information:</p>
-                    <ul>
-                        <li>The Carbon Footprint Tracker needs to perform a contract with you</li>
-                        <li>You have given this Carbon Footprint Tracker permission to do so</li>
-                        <li>Processing your personal information is in Carbon Footprint Trackers legitimate interests</li>
-                        <li>This Carbon Footprint Tracker needs to comply with the law</li>
-                    </ul>
-                    <p>This Carbon Footprint Tracker will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use your information to the extent necessary to comply with our legal obligations, resolve disputes, and enforce our policies.</p>
-                    <p>If you are a resident of the European Economic Area (EEA), you have certain data protection rights. If you wish to be informed what Personal Information we hold about you and if you want it to be removed from our systems, please <a href="mailto:nico.hoechstaedter@fau.de">contact us</a>.</p>
-                    <p>In certain circumstances, you have the following data protection rights:</p>
-                    <ul>
-                        <li>The right to access, update or to delete the information we have on you.</li>
-                        <li>The right of rectification.</li> 
-                        <li>The right to object.</li>
-                        <li>The right of restriction.</li>
-                        <li>The right to data portability.</li>
-                        <li>The right to withdraw consent.</li>
-                    </ul>
-                    <h2>Privacy Policies</h2>
-                    <p>This page is hosted on Github Pages. Their <a href="https://docs.github.com/en/free-pro-team@latest/github/site-policy/github-privacy-statement" target="_blank">Privacy Policy</a> applies.</p>
-                    <p>The Carbon Footprint Tracker uses no further tools which track users.</p>
-                    <p>If you choose to register on this Website, the information you entered during registration will be saved on a server in Germany, hosted by <a href="https://contabo.de/" target="_blank">Contabo</a>.</p>
-                    <h2>Cookies and local Storage</h2>
-                    <p>The Carbon Footprint Tracker does not use any cookies. It does, however, save information in your browser's local storage in order to remember whether you are logged in. If you choose not to register or log in at all, no data is saved.</p>
-                    <h2>Log Files</h2>
-                    <p>The Carbon Footprint Tracker follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable. The purpose of the information is for analyzing trends, administering the site, tracking users' movement on the website, and gathering demographic information.</p>
-                    <h2>Children's Information</h2>
-                    <p>Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.</p>
-                    <p>Carbon Footprint Tracker does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.</p>
-                    <h2>Online Privacy Policy Only</h2>
-                    <p>Our Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Carbon Footprint Tracker. This policy is not applicable to any information collected offline or via channels other than this website.</p>
-                    <h2>Consent</h2>
-                    <p>By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
-                    <small>This privacy policy was generated with the help of <a href="https://www.gdprprivacynotice.com/" target="_blank">https://www.gdprprivacynotice.com/</a>, but adjusted by us to meet the criteria of our specific usecase.</small>
+                    <!-- statistics html-->
+                    <div id="statisticsCategories" class="row text-center">
+                        <button type="button" class="col-sm btn btn-dark" data-toggle="collapse" data-target="#carbon_vis_daily" aria-expanded="true" aria-controls="weeklyCategory">
+                            Daily
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#carbon_vis_monthly" aria-expanded="false" aria-controls="monthlyCategory">
+                            Monthly
+                        </button>
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#carbon_vis_yearly" aria-expanded="false" aria-controls="yearlyCategory">
+                            Yearly
+                        </button>
+                    </div>
+                    <div class="categoryform collapse show" id="carbon_vis_daily" data-parent="#statisticsModal .modal-body" data-timespan="daily">
+                    </div>
+                    <div class="categoryform collapse" id="carbon_vis_monthly" data-parent="#statisticsModal .modal-body" data-timespan="monthly">
+                    </div>
+                    <div class="categoryform collapse" id="carbon_vis_yearly" data-parent="#statisticsModal .modal-body" data-timespan="yearly">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" data-dismiss="modal" data-toggle="modal" data-target="#trackModal">Track more Carbon usage</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- gdpr modal -->
     <div class="modal fade" id="gdprModal" tabindex="-1" role="dialog" aria-labelledby="gdprModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">

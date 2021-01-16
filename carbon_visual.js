@@ -1,19 +1,15 @@
 visuals_built = [];
 
 function build_carbon_visual(timespan) {
-    /*switch(timespan) {
-        case "daily":
+    if(!visuals_built[timespan]){
+        if(timespan == "daily"){
             build_daily_vis();
-
-        case "monthly":
+        }else if(timespan == "monthly"){
             build_monthly_vis();
-
-        case "yearly":
-            build_yearly_vis(); 
-    }*/
-    if (timespan == "daily") build_daily_vis();
-    else if (timespan == "monthly") build_monthly_vis();
-    else if (timespan == "yearly") build_yearly_vis();
+        }else{
+            build_yearly_vis();
+        }
+    }
 }
 
 function rebuild_carbon_visuals() {
@@ -31,7 +27,7 @@ async function build_daily_vis() {
             // set the dimensions and margins of the graph dynamically for responsiveness
             let margin = {top: 20, right: 70, bottom: 100, left: 70},
             default_ratio = 1.2
-            current_width = $(document.getElementById("carbon_vis_daily")).width();
+            current_width = $("#statisticsModal").width();
             if (current_width >= 900) current_width /= 2;
             current_height = current_width * 0.8;
             current_ratio = current_width / current_height;
@@ -49,7 +45,7 @@ async function build_daily_vis() {
             width = w - margin.left - margin.right;
             height = h - margin.top - margin.bottom;
 
-            //console.log(width + "|" + height + "|" + current_height + "|" + current_width);
+            //console.log("Daily: " + width + "|" + height + "|" + current_height + "|" + current_width);
 
             // format the data and summarize carbon two show second line with total sum of co2
             let parseDate = d3.timeParse("%Y-%m-%d %H:%M:%S");
@@ -200,7 +196,7 @@ async function build_daily_vis() {
             svg.append("text")             
             .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 60) + ")")
             .style("text-anchor", "middle")
-            .text("Date");
+            .text("Day");
 
             // Add the y Axis
             svg.append("g")
@@ -259,7 +255,7 @@ async function build_monthly_vis() {
             width = w - margin.left - margin.right;
             height = h - margin.top - margin.bottom;
 
-            //console.log(width + "|" + height + "|" + current_height + "|" + current_width);
+            //console.log("Monthly: " + width + "|" + height + "|" + current_height + "|" + current_width);
 
             // format the data and summarize carbon two show second line with total sum of co2
             let parseDate = d3.timeParse("%Y-%m");
@@ -411,7 +407,7 @@ async function build_monthly_vis() {
             svg.append("text")             
             .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 60) + ")")
             .style("text-anchor", "middle")
-            .text("Date");
+            .text("Month");
 
             // Add the y Axis
             svg.append("g")
@@ -470,7 +466,7 @@ async function build_yearly_vis() {
             width = w - margin.left - margin.right;
             height = h - margin.top - margin.bottom;
 
-            //console.log(width + "|" + height + "|" + current_height + "|" + current_width);
+            //console.log("Yearly: " + width + "|" + height + "|" + current_height + "|" + current_width);
 
             // format the data and summarize carbon two show second line with total sum of co2
             let parseDate = d3.timeParse("%Y");
@@ -622,7 +618,7 @@ async function build_yearly_vis() {
             svg.append("text")             
             .attr("transform", "translate(" + (width/2) + " ," + (height + margin.top + 60) + ")")
             .style("text-anchor", "middle")
-            .text("Date");
+            .text("Year");
 
             // Add the y Axis
             svg.append("g")
@@ -649,9 +645,7 @@ async function build_yearly_vis() {
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .style("fill", "#0f5380")
-            .text("Total Carbon Amount in kg"); 
+            .text("Total Carbon Amount in kg");
         }
     });
 }
-
-build_carbon_visual("daily");
