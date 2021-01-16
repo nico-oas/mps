@@ -354,8 +354,6 @@ window.addEventListener("load", function(){
 
 
 // Listen for orientation changes for carbon visuals
-window.addEventListener("orientationchange", function(event) {
-    console.log("the orientation of the device is now " + event.target.screen.orientation.angle);
-    $("#carbon_vis_daily").empty();
-    build_carbon_visual("daily");
-  });
+window.addEventListener("resize", function(event) {   
+    rebuild_carbon_visuals();
+});

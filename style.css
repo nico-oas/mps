@@ -167,7 +167,7 @@ td{
 }
 
 #ranking_table td b{
-    color: rgb(35, 230, 58);
+    color: #318f34;
 }
 
 /* tracking modal */
@@ -216,10 +216,10 @@ div.tooltip {
     width: 120px;
     height: 42px;
     padding: 2px;
-    font: 12px sans-serif;
+    font: 10px sans-serif;
     background: lightsteelblue;
     border: 0px;
-    border-radius: 8px;
+    border-radius: 4px;
     pointer-events: none;
 }
 
