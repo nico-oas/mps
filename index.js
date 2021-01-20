@@ -113,12 +113,17 @@ function calculateCarbonUsage(){
                         return;
                     }
                     break;
-                case "purchaseCategory":
-                    category = "Purchase";
-                    /* MPS-15
-                    https://www.programmableweb.com/api/brighter-planet-cm1
-                    https://www.programmableweb.com/api/carbon-calculated
-                    https://www.programmableweb.com/api/co2-benchmark */
+                case "foodCategory":
+                    category = "Food";
+                    let amount = parseFloat($(fields[fields.length-1]).val());
+                    let foodType = $(fields[fields.length-2]).val();
+                    if(["chicken", "turkey", "duck", "goose"].indexOf(foodType)>-1){
+                        foodType = "poultry";
+                    }else if(["oranges", "bloodoranges", "clementines", "limes", "grapefruits", "lemons", "citrons", "tangerines"].indexOf(foodType)>-1){
+                        foodType = "citrus";
+                    }
+                    name = "Consumed " + amount + " kg of " + $(fields[fields.length-2]).find("option:selected").text();
+                    result = (parseFloat(amount * numbers.co2PerKg[foodType])).toFixed(numbers.accuracy);
                     break;
                 case "householdCategory":
                     category = "Household";
@@ -345,6 +350,21 @@ window.addEventListener("load", function(){
     $("#transportationForm select:first").change(function () {
         $("#transportationForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
         $("#transportationForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
+    });
+    $("#foodForm select:first").change(function () {
+        $("#foodForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
+        $("#foodForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
+    });
+    $("#foodForm select").change(function () {
+        let food = $("#foodForm select:visible").last().val();
+        let data = foodHelperMessages[food];
+        if(data){
+            $("#foodForm input").val(data.weight);
+            $("#foodHelperMessage").text(data.message);
+        }else{
+            $("#foodForm input").val("");
+            $("#foodHelperMessage").text("");
+        }
     });
     $("#householdForm select:first").change(function () {
         $("#householdForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);

@@ -448,8 +448,8 @@
                         <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#transportationCategory" aria-expanded="false" aria-controls="transportationCategory">
                             Transportation
                         </button>
-                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#purchaseCategory" aria-expanded="false" aria-controls="purchaseCategory">
-                            Purchase
+                        <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#foodCategory" aria-expanded="false" aria-controls="foodCategory">
+                            Food
                         </button>
                         <button type="button" class="col-sm btn btn-dark collapsed" data-toggle="collapse" data-target="#householdCategory" aria-expanded="false" aria-controls="householdCategory">
                             Household
@@ -508,9 +508,122 @@
                             </form>
                         </article>
                     </div>
-                    <div class="categoryform collapse" id="purchaseCategory" data-parent="#trackModal .modal-body">
-                        <!-- MPS-15 -->
-                        To Do: Implement form for purchase Category
+                    <div class="categoryform collapse" id="foodCategory" data-parent="#trackModal .modal-body">
+                        <article class="card-body mx-auto">
+                            <form id="foodForm">
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-utensils"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="meat" selected>Meat</option>
+                                        <option value="animalProducts">Animal Products</option>
+                                        <option value="seafood">Seafood</option>
+                                        <option value="crops">Crops</option>
+                                        <option value="fruits">Fruits & Vegetables</option>
+                                        <option value="oil">Oil</option>
+                                        <option value="nuts">Nuts</option>
+                                        <option value="cane_sugar">Cane Sugar</option>
+                                        <option value="chocolate">Chocolate</option>
+                                        <option value="coffee">Coffee</option>
+                                        <option value="soymilk">Soy Milk</option>
+                                    </select>
+                                </div>
+                                <div data-dep="meat" class="form-group input-group" style="display: flex;">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-drumstick-bite"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="beef" selected>Beef</option>
+                                        <option value="dairybeef">Dairy Herd Beef</option>
+                                        <option value="lamb">Lamb</option>
+                                        <option value="pig">Pig Meat</option>
+                                        <option value="chicken">Chicken</option>
+                                        <option value="turkey">Turkey</option>
+                                        <option value="duck">Duck</option>
+                                        <option value="goose">Goose</option>
+                                    </select>
+                                </div>
+                                <div data-dep="animalProducts" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-egg"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="eggs" selected>Eggs</option>
+                                        <option value="milk">Milk</option>
+                                        <option value="cheese">Cheese</option>
+                                    </select>
+                                </div>
+                                <div data-dep="seafood" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-fish"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="fish" selected>Fish</option>
+                                        <option value="wildfish">Wild Fish</option>
+                                        <option value="prawns">Prawns</option>
+                                    </select>
+                                </div>
+                                <div data-dep="crops" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-mortar-pestle"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="rice" selected>Rice</option>
+                                        <option value="corn">Corn (Maize)</option>
+                                        <option value="wheat">Wheat</option>
+                                        <option value="cassava">Cassava</option>
+                                    </select>
+                                </div>
+                                <div data-dep="fruits" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fab fa-apple"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="apples" selected>Apples</option>
+                                        <option value="bananas">Bananas</option>
+                                        <option value="tomatoes">Tomatoes</option>
+                                        <option value="peas">Peas</option>
+                                        <option value="oranges">Oranges</option>
+                                        <option value="bloodoranges">Blood Oranges</option>
+                                        <option value="clementines">Clementines</option>
+                                        <option value="limes">Limes</option>
+                                        <option value="grapefruits">Grapefruits</option>
+                                        <option value="lemons">Lemons</option>
+                                        <option value="citrons">Citrons</option>
+                                        <option value="tangerines">Tangerines</option>
+                                        <option value="root">Root Vegetables</option>
+                                    </select>
+                                </div>
+                                <div data-dep="oil" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-tint"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="oliveoil" selected>Olive Oil</option>
+                                        <option value="palmoil">Palm Oil</option>
+                                    </select>
+                                </div>
+                                <div data-dep="nuts" class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-tree"></i> </span>
+                                    </div>
+                                    <select class="form-control">
+                                        <option value="groundnuts" selected>Peanuts</option>
+                                        <option value="nuts">Other Nuts</option>
+                                    </select>
+                                </div>
+                                <div class="form-group input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="fa fa-weight-hanging"></i> </span>
+                                    </div>
+                                    <input class="form-control" placeholder="Amount in kg" type="number" min="0.001" step="0.001" required>
+                                </div>
+                                <div>
+                                    <small id="foodHelperMessage"></small>
+                                </div>
+                            </form>
+                        </article>
                     </div>
                     <div class="categoryform collapse" id="householdCategory" data-parent="#trackModal .modal-body">
                         <article class="card-body mx-auto">
