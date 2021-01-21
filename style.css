@@ -2,6 +2,7 @@
 :root {
     --primary: hsl(0, 0%, 6%);
     --secondary: #1d1f1d;
+    --green: #318f34;
 }
 
 /* general css */
@@ -29,14 +30,18 @@ a {
     margin-top: 80px;
 }
 @media (min-width: 576px) {
+    .container {
+        border-radius: 1rem;
+    }
     .container:first-of-type {
         margin-top: 120px;
     }
 }
-@media (min-width: 576px) {
-    .container {
-        border-radius: 1rem;
-    }
+.container button {
+    margin-bottom: 0.4rem;
+}
+h1 {
+    font-size: x-large;
 }
 
 /* navbar */
@@ -99,20 +104,20 @@ nav>img {
 }
 
 /* countdown */
-.countdown {
+.countdown>div {
     text-transform: uppercase;
 }
 .countdown span {
     color: white;
-    width: 33px;
-    height: 33px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--secondary);
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.h1, h1 {
+.countdown .h1 {
     font-size: medium;
 }
 @media (min-width: 768px) {
@@ -120,8 +125,8 @@ nav>img {
         width: 100px;
         height: 100px;
     }
-    .h1, h1 {
-        font-size: 40px;
+    .countdown .h1 {
+        font-size: 35px;
     }
 }
 
@@ -165,19 +170,18 @@ table, th, td {
 td{
     text-align: left;
 }
-
 #ranking_table td b{
-    color: rgb(35, 230, 58);
+    color: var(--green);
 }
 
-/* tracking modal */
-#trackCategories {
+/* tracking and statistics modals */
+#trackCategories, #statisticsCategories {
     padding: inherit;
 }
-#trackCategories button {
+#trackCategories button, #statisticsCategories button {
     margin: 0.2rem;
 }
-#trackCategories button:not(.collapsed) {
+#trackCategories button:not(.collapsed), #statisticsCategories button:not(.collapsed) {
     background-color: #171a1d;
     pointer-events: none;
 }
@@ -190,19 +194,15 @@ div[data-dep] {
 small {
     opacity: 0.7;
 }
-/* Zu Pruefen @Nico
-button {
-    position: relative;
-    margin: 1em;
-    padding: .1em 2em;
+#statisticsModal .categoryform {
+    text-align: center;
 }
-*/
 
 
 /* carbon visual */
 .line {
     fill: none;
-    stroke: #318f34;
+    stroke: var(--green);
     stroke-width: 2px;
 }
 .line2 {
@@ -216,10 +216,10 @@ div.tooltip {
     width: 120px;
     height: 42px;
     padding: 2px;
-    font: 12px sans-serif;
+    font: 10px sans-serif;
     background: lightsteelblue;
     border: 0px;
-    border-radius: 8px;
+    border-radius: 4px;
     pointer-events: none;
 }
 
@@ -229,89 +229,57 @@ div.tooltip {
     display:table;
     height: 100%;
     width: 100%;
-    pointer-events:none; /* This makes sure that we can still click outside of the modal to close it */
+    pointer-events:none;
 }
 .vertical-align-center {
-    /* To center vertically */
     display: table-cell;
     vertical-align: middle;
     pointer-events:none;
 }
-.modal-content {
-    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+.vertical-alignment-helper .modal-content {
     width:inherit;
-    max-width:inherit; /* For Bootstrap 4 - to avoid the modal window stretching full width */
+    max-width:inherit;
     height:inherit;
-    /* To center horizontally */
     margin: 0 auto;
     pointer-events: all;
 }
-
 #callToActionLabel {
     font-size: small;
 }
-
 #modal-content-call {
     max-width: 350px;
 }
-
-#RF {
-    max-width: 315px;
-}
-
 #modal-footer-call {
     font-size: medium;
 }
-
-#callButtons {
-    font-size: x-small;
+#callToAction .modal-footer {
+    justify-content: space-evenly;
 }
-
+.callToActionButtons .col-sm {
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid #dee2e6;
+}
+.callButtons {
+    display: block;
+    margin: 0.2rem auto;
+}
+#rainforest {
+    width: 100%;
+}
 @media (min-width: 576px) {
-    #callToActionLabel {
+    #callToActionLabel, #modal-footer-call, .callButtons {
         font-size: large;
     }
-
     #modal-content-call {
         max-width: 528px;
     }
-
-    #RF {
-        max-width: 495px;
-    }
-
-    #modal-footer-call {
-        font-size: large;
-    }
-
-    #callButtons {
-        font-size: medium;
-    }
-
 }
-
 @media (min-width: 1400px) {
-    #callToActionLabel {
-        font-size:xx-large;
+    #callToActionLabel, .callButtons {
+        font-size: x-large;
     }
-
     #modal-content-call {
         max-width: 800px;
     }
-
-    #RF {
-        max-width: 767px;
-    }
-
-    #modal-footer-call {
-        font-size: x-large;
-    }
-
-    #callButtons {
-        font-size: x-large;
-    }
-
 }
-
-
-

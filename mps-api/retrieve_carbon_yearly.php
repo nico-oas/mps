@@ -32,7 +32,7 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($items_statement = $mysqli->prepare("SELECT SUM(carbon) AS carbon, STR_TO_DATE(YEAR(date_added), '%Y') AS date FROM mps_user_items WHERE user_id = ? GROUP BY YEAR(date_added) ORDER BY YEAR(date_added) ASC"))) {
+    if (!($items_statement = $mysqli->prepare("SELECT SUM(carbon) AS total_carbon, YEAR(date_added) AS date FROM mps_user_items WHERE user_id = ? GROUP BY YEAR(date_added) ORDER BY YEAR(date_added) ASC"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);

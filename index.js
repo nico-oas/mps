@@ -28,7 +28,6 @@ function frontEndRegistration(){
     else{
         check.value = '1';
     }
-    console.log($(fields[2]).val());
     
     if($(fields[3]).val() != $(fields[4]).val()){
         $("#validationError").show();
@@ -36,7 +35,6 @@ function frontEndRegistration(){
     }
     $("#validationError").hide();
     registration($(fields[0]).val(), $(fields[1]).val(), $(fields[2]).val(), $(fields[5]).val(), $(fields[3]).val(), $(fields[7]).val(), $(fields[6]).val(), $(check).val()).then(ans => {
-        console.log("ans: " + ans);
         if (ans) {
             location.reload();
         }
@@ -107,7 +105,6 @@ function calculateCarbonUsage(){
                         result = (distance * consumption * numbers.consumptionToCo2[fuelType]).toFixed(numbers.accuracy);
                     }else if(["Bus", "Plane", "Boat", "Train"].indexOf(vehicle)>-1){
                         let th = numbers.thresholds[vehicle];
-                        console.log("Threshold: "+th);
                         result = (parseFloat( (distance > th) ? numbers.co2PerKm["long"+vehicle] : numbers.co2PerKm["short"+vehicle])*distance).toFixed(numbers.accuracy);
                     }else if(vehicle == "ElectricCar"){
                         //to do: get CO2 emitted by keeping user country's electricity generation in mind! API?
@@ -116,12 +113,17 @@ function calculateCarbonUsage(){
                         return;
                     }
                     break;
-                case "purchaseCategory":
-                    category = "Purchase";
-                    /* MPS-15
-                    https://www.programmableweb.com/api/brighter-planet-cm1
-                    https://www.programmableweb.com/api/carbon-calculated
-                    https://www.programmableweb.com/api/co2-benchmark */
+                case "foodCategory":
+                    category = "Food";
+                    let amount = parseFloat($(fields[fields.length-1]).val());
+                    let foodType = $(fields[fields.length-2]).val();
+                    if(["chicken", "turkey", "duck", "goose"].indexOf(foodType)>-1){
+                        foodType = "poultry";
+                    }else if(["oranges", "bloodoranges", "clementines", "limes", "grapefruits", "lemons", "citrons", "tangerines"].indexOf(foodType)>-1){
+                        foodType = "citrus";
+                    }
+                    name = "Consumed " + amount + " kg of " + $(fields[fields.length-2]).find("option:selected").text();
+                    result = (parseFloat(amount * numbers.co2PerKg[foodType])).toFixed(numbers.accuracy);
                     break;
                 case "householdCategory":
                     category = "Household";
@@ -237,8 +239,6 @@ window.addEventListener("load", function(){
 
     check_login().then(ans => {
         if (ans) {
-            //carbon pollution visual
-            build_carbon_visual();
             user_information().then(ans => {
                 if (ans) {
                     ans = JSON.parse(ans);
@@ -262,7 +262,10 @@ window.addEventListener("load", function(){
                                 carbon += Math.round(parseFloat(items[i]['carbon']));
                             }
                             if(carbon > 0){
-                                document.getElementById('greeting').innerHTML += 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon.';
+                                document.getElementById('greeting').innerHTML += 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon in total.';
+                                $("#checkOutStatistics").show();
+                            }else{
+                                $("#trackNow").text("Track your first carbon usage now!")
                             }
                         }
                     });
@@ -281,15 +284,17 @@ window.addEventListener("load", function(){
                     deed_check().then(deed_done => {
                         let x = Math.floor((new Date().getTime()/(1000*60*60*24)) + ans['user_id'])%deeds.length;
                         if (!deed_done) {
-                            $('#deeds').html(deeds[x] + "</br></br><p><button type='button' class='btn btn-dark' onclick='mark_deed_done()'>Deed accomplished!</button></p>");
+                            $('#deeds').html("<p>" + deeds[x] + "</p><button type='button' class='btn btn-dark' onclick='mark_deed_done()'>Deed accomplished!</button>");
                         }else if(navigator.share){
-                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' onclick='share(\"" + deeds[x] + "\");'>Share your sucess</button>");
+                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' onclick='share(\"" + deeds[x] + "\");'>Share your success</button>");
                         }else{
-                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' data-toggle='modal' data-target='#shareModal'>Share your sucess</button>");
+                            $('#deeds').html("<p>Daily deed has been accomplished. Good job! :)</p><button type='button' class='btn btn-dark' data-toggle='modal' data-target='#shareModal'>Share your success</button>");
                         }
                     });
                 }
             });
+        }else{
+            $("#callToAction").modal('show');
         }
     });
 
@@ -320,7 +325,7 @@ window.addEventListener("load", function(){
     for(i in countries){
         $("#countrySelect").append("<option value='" + countries[i].name + "'>" + countries[i].name + "</option>");
     }
-    $(".modal").on('hidden.bs.modal', function(){
+    $(".modal:not(#statisticsModal)").on('hidden.bs.modal', function(){
         $(this).find("input").val("");
         $(this).find("select").each(function(){
             $(this).val($(this).find("option[selected]")[0].value);
@@ -330,7 +335,7 @@ window.addEventListener("load", function(){
     });
 
     //track modal
-    $(".categoryform").on('shown.bs.collapse', function () {
+    $("#trackModal .categoryform").on('shown.bs.collapse', function () {
         $("#trackSubmit").popover("disable");
         $("#trackSubmit>button").prop("disabled", false);
         $(this).find("input").val("");
@@ -346,16 +351,41 @@ window.addEventListener("load", function(){
         $("#transportationForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
         $("#transportationForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
     });
+    $("#foodForm select:first").change(function () {
+        $("#foodForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
+        $("#foodForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
+    });
+    $("#foodForm select").change(function () {
+        let food = $("#foodForm select:visible").last().val();
+        let data = foodHelperMessages[food];
+        if(data){
+            $("#foodForm input").val(data.weight);
+            $("#foodHelperMessage").text(data.message);
+        }else{
+            $("#foodForm input").val("");
+            $("#foodHelperMessage").text("");
+        }
+    });
     $("#householdForm select:first").change(function () {
         $("#householdForm div[data-dep*='" + $(this).val() + "']").css("display", "flex").find("input").attr("required", true);
         $("#householdForm div[data-dep]:not([data-dep*='" + $(this).val() + "'])").hide().find("input").attr("required", false);
     });
+
+    //statistics modal
+    $("#statisticsModal .categoryform").on('shown.bs.collapse', function() {
+        build_carbon_visual($(this).attr("data-timespan"));
+    });
+    var statsOpened = false;
+    $("button[data-target='#statisticsModal']").click(function() {
+        if(!statsOpened){
+            build_carbon_visual("daily");
+            statsOpened = true;
+        }
+    });
 });
 
 
-// Listen for orientation changes for carbon visuals
-window.addEventListener("orientationchange", function(event) {
-    console.log("the orientation of the device is now " + event.target.screen.orientation.angle);
-    $("#carbon_vis_daily").empty();
-    build_carbon_visual("daily");
-  });
+// Listen for orientation changes for carbon visuals //commented out because it causes race conditions when resizing
+/*window.addEventListener("resize", function(event) {   
+    rebuild_carbon_visuals();
+});*/
