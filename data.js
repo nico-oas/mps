@@ -661,15 +661,15 @@ var facts = [
     {fact : "Certain modern aircrafts use less than 3 litres of jet fuel per 100 passenger kilometres. This matches the efficiency of most modern compact cars",
         source : "- ATAG"},
     {fact : "Trees literally make it rain",
-       source : "- One Tree Planted"},
-    {fact : "Your water incoperates a high Carbon Footprint, so don´t waste it",
-       source : "- Thrive Global"},
-    {fact : "Every dollat invested in clean green energy creates approximatly three times as many jobs as the same dollar invested into fossil fuels",
-       source : "- EDF"},
-    {fact : "Preserving an average acre/4000m^2 of forest can keep more than 120000kg of caron dioxide out of the atmosphere",
-       source : "- Global envoirement and technology Foundation"},
+        source : "- One Tree Planted"},
+    {fact : "Your water incorporates a high Carbon Footprint, so don´t waste it",
+        source : "- Thrive Global"},
+    {fact : "Every dollar invested in clean green energy creates approximatly three times as many jobs as the same dollar invested into fossil fuels",
+        source : "- EDF"},
+    {fact : "Preserving an average acre/4000m² of forest can keep more than 120 tons of carbon dioxide out of the atmosphere",
+        source : "- Global envoirement and technology Foundation"},
     {fact : "Replacing six interior incandescent bulbs with compact fluorescents can keep 250kg of CO2 out of the atmosphere",
-       source : "- Rocky Mountain Institute"},   
+         source : "- Rocky Mountain Institute"}     
 ];
 
 var deeds = [
