@@ -246,14 +246,14 @@ window.addEventListener("load", function(){
                     //greeting
                     let realname = ans['real_name'];
                     let username = (realname && realname!='') ? realname : ans['username'];
-                    let greet = 'Good Evening ' + username;
+                    let greet = 'Good Evening ' + username + "!";
                     let hrs = new Date().getHours();
                     if (hrs < 12){
-                        greet = 'Good Morning '  + username;
+                        greet = 'Good Morning '  + username + "!";
                     }else if (hrs <= 17){
-                        greet = 'Good Afternoon ' + username;
+                        greet = 'Good Afternoon ' + username + "!";
                     }
-                    document.getElementById('greeting').innerHTML = '<b>' + greet + '</b> and welcome to the Carbon Footprint Tracker!<br>'
+                    document.getElementById('greeting').innerHTML = '<h1>' + greet + '</h1>'
                     retrieve_items().then(items => {
                         if (items) {
                             items = JSON.parse(items);                         
@@ -265,6 +265,7 @@ window.addEventListener("load", function(){
                                 document.getElementById('greeting').innerHTML += 'So far, you\'ve tracked about <b>' + carbon + '</b> kg of carbon in total.';
                                 $("#checkOutStatistics").show();
                             }else{
+                                document.getElementById('greeting').innerHTML += 'So far, you haven\'t tracked any CO2 emissions.';
                                 $("#trackNow").text("Track your first carbon usage now!")
                             }
                         }
@@ -384,8 +385,9 @@ window.addEventListener("load", function(){
     });
 });
 
-
-// Listen for orientation changes for carbon visuals //commented out because it causes race conditions when resizing
-/*window.addEventListener("resize", function(event) {   
-    rebuild_carbon_visuals();
-});*/
+function dateFormatter(value){
+    return new Date(value).toLocaleDateString('de-DE', {year: "numeric", month: "2-digit", day: "2-digit"});
+}
+function carbonFormatter(value){
+    return (value/1000).toFixed(numbers.accuracy) + " kg";
+}

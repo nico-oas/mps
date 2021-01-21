@@ -6,8 +6,10 @@ function build_carbon_visual(timespan) {
             build_daily_vis();
         }else if(timespan == "monthly"){
             build_monthly_vis();
-        }else{
+        }else if(timespan == "yearly"){
             build_yearly_vis();
+        }else{
+            build_table();
         }
     }
 }
@@ -659,3 +661,27 @@ async function build_yearly_vis() {
         }
     });
 }
+
+function build_table() {
+    retrieve_items().then(items => {
+        if(items){
+            items = JSON.parse(items).map(item => {
+                item.add_date = new Date(item.add_date).getTime();
+                item.carbon = item.carbon * Math.pow(10, numbers.accuracy);
+                return item;
+            });
+            console.log(items);
+            $("#all_table").bootstrapTable({data: items, classes: "table table-sm", sortName: "add_date", sortOrder: "desc", pagination: true, pageSize: 15, paginationParts: ["pageInfo", "pageList"]});
+        }else{
+            $("#carbon_vis_all").html("<p>So far, you have not tracked any data. Start Tracking now!</p>");
+        }
+    });
+}
+/*
+function fillDB() {
+    for(var i = 0; i < 100; i++){
+        add_item("Test", "This is fake", 100+i).then(ans => {
+            console.log(ans);
+        });
+    }
+}*/

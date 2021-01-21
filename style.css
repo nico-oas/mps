@@ -129,6 +129,9 @@ nav>img {
         font-size: 35px;
     }
 }
+#tip a {
+    color: var(--green) !important;
+}
 
 
 /* forms */
@@ -158,17 +161,9 @@ button.close {
 }
 
 /* table */
-table {
-    width: 800px;
-}
-th {
+#ranking_table th, #ranking_table td {
     text-align: left;
-}
-table, th, td {
-    border: 1px solid #0c0e0b;
-}
-td{
-    text-align: left;
+    border: 1px solid #454d55;
 }
 #ranking_table td b{
     color: var(--green);
@@ -196,6 +191,28 @@ small {
 }
 #statisticsModal .categoryform {
     text-align: center;
+}
+#statisticsCategories .fas {
+    opacity: 0.5;
+}
+.pagination li a {
+    color: #fff;
+    background-color: #343a40;
+}
+.pagination li a:hover {
+    color: #fff;
+    background-color: #23272b;
+}
+.pagination li.active a {
+    background-color: #171a1d !important;
+    border-color: #dee2e6 !important;
+}
+.pagination li a:focus {
+    box-shadow: 0 0 0 0.2rem rgba(82,88,93,.5);
+}
+.pagination .disabled a {
+    color: #fff !important;
+    background-color: #6c757d !important;
 }
 
 
