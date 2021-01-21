@@ -239,7 +239,7 @@ window.addEventListener("load", function(){
             $('#deeds').html(deeds[x] + "<p><button type='button' class='btn btn-success' onclick='deed_done()'>Deed accomplished!</button></p>");
         }
         else {
-            $('#deeds').html("Daily deed has been accomplished. Good job! :) <div data-toggle='modal' data-target='#shareModal'> <a class='nav-link'>Share your sucess</a></div>");
+            $('#deeds').html("Daily deed has been accomplished. Good job! :) <div data-toggle='modal' data-target='#shareModal'> <a class='nav-link'>Share your success</a></div>");
         }
     }
 
