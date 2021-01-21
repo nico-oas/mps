@@ -1,5 +1,5 @@
 # MPS - Carbon Footprint Tracker
-## Link to our projekt site:
+## Link to our project's website:
 https://nico-oas.github.io/mps/
 ## Link to our WEB-API (use with interface in backend.js)
 https://mps-api.phildree.de
