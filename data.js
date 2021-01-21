@@ -674,32 +674,31 @@ var facts = [
 
 var deeds = [
     "Forego the car today and only walk instead",
-    "Forego the car today and only ride a bike instead",
-    "Forego the car today and use public transportation instead",
     "Forego meat today",
     "If biking isn’t an option, hitch a ride with a friend or coworker",
     "Only eat regional foods today",
-   /* "Before buying clothes next time look for something second hand instead",*/
     "Plant a tree",
     "Pick up as much trash as you can today",
     "Take an empty milk carton and poke holes in the top of the cap and voila, you’ve got yourself a DIY watering can",
-    "Unplugging items that aren’t used constantly, like the coffee maker or toaster",
-    /* "Air drying your clothes, rather than using a clothes dryer", */
-    "Making sure that when you do need the lights on, you’re using energy efficient LED light bulbs",
-    "Avoid your oven and use your microwave",
-   /* "Bringing reusable bags to the grocery store and buying in bulk whenever you can", */
-    "Using a washcloth instead of a paper towel when cleaning up kitchen messes",
-    /* "Taking shorter showers", */
-    "Hand washing dishes instead of using the dishwasher",
-    "Avoiding single-use plastics",
-    "Avoiding plastic utensils and making sure to recycle them when you must use them",
-    "Investing in a reusable water bottle instead of using single-use plastic bottles",
-    /* "Use your old toothbrush to scrub small, hard to reach areas when cleaning the house", */
+    "Unplug items that aren’t used constantly, like the coffee maker or toaster",
+    "Air dry your clothes, rather than using a dryer",
+    "Avoid plastic utensils and making sure to recycle them when you must use them",
+    "If you are using old light bulbs, replace them with eco-friendly LEDs",
+    "Use your microwave instead of your oven today",
+    "Use a reusable bag instead of plastic bags when shopping groceries",
+    "Use a washcloth instead of a paper towel when cleaning up kitchen messes",
+    "Take a shorter shower",
+    "Forego the car today and use public transportation instead",
+    "Hand wash dishes instead of using the dishwasher",
+    "Avoid single-use plastics",
+    "Invest in a reusable water bottle instead of using single-use plastic bottles",
     "Reuse an old t-shirt and turn it into a washrag",
     "Clean and reuse Plastic takeout containers to store your leftovers instead of throwing them away",
     "Recycle Newspapers and magazines as a wrapping paper alternative",
-    "Buy a all-natural, eco-friendly soap.",
-    "Donate something to an environmental organisation of your liking"];
+    "Buy an all-natural, eco-friendly soap",
+    "Forego the car today and only ride a bike instead",
+    "Donate something to an environmental organisation of your liking"
+];
 
 var foodHelperMessages = {
     milk : { //source: https://www.calculateme.com/recipe/milk-by-volume
@@ -766,7 +765,7 @@ var foodHelperMessages = {
         weight : 1.027,
         message : "One liter of soymilk weighs about 1.027 kg."
     }
-}
+};
 
 var numbers = {
     accuracy : 3, //i.e. we round to 3 decimal digits e.g. 123.456789 kg -> 123.457 kg
