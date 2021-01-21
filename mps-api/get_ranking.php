@@ -33,7 +33,7 @@ if (!empty($_POST) && isset($_POST['token'])) {
         exit(1);
     }
 
-    if (!($ranking_statement = $mysqli->prepare("SELECT mps_users.name AS username, SUM(mps_user_items.carbon) AS total_carbon FROM mps_users JOIN mps_user_items ON (mps_users.user_id = mps_user_items.user_id) WHERE mps_users.leaderboard_consent = 1 GROUP BY mps_users.user_id ORDER BY SUM(mps_user_items.carbon) ASC LIMIT 5"))) {
+    if (!($ranking_statement = $mysqli->prepare("SELECT mps_users.name AS username, SUM(mps_user_items.carbon) AS total_carbon FROM mps_users JOIN mps_user_items ON (mps_users.user_id = mps_user_items.user_id) WHERE mps_users.leaderboard_consent = 1 AND mps_user_items.date_added >= CURDATE() - INTERVAL 7 DAY GROUP BY mps_users.user_id HAVING SUM(mps_user_items.carbon) > 0 ORDER BY SUM(mps_user_items.carbon) ASC LIMIT 5"))) {
         error_log("Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error);
         echo("Internal Server Error!");
         exit(1);

@@ -645,7 +645,31 @@ var facts = [
     {fact : "Cows produce 150 billion gallons of methane per day ->  Methane has a global warming potential 86 times that of CO2 on a 20 year time frame",
         source : "- Drew Shindell, Climate Specialist"},
     {fact : "A plant based diet cuts your carbon footprint by 50%",
-        source : "- Cowspiracy"}
+        source : "- Cowspiracy"},
+    {fact : "Food Production Accounts for 83% of Carbon Emissions each year",
+        source : "- projektsolaruk"},
+    {fact : "For every 10% waste reduction, you can avoid around 500kg of CO2, CH4 and N2O",
+        source : "- CNN"},
+    {fact : "Appliances like computer, clothes dryers and TVs still use energy, when turned off. Unplugging them when not needed will stop that",
+        source : "- Arcadia Blog"},
+    {fact : "Driving not faster than the speed limit can improve fuel economy by 7% to 14%",
+        source : "- Arcadia Blog"},
+    {fact : "Companies can measure emissions using the Greenhouse Gas Protocol created by the World Resources Institute",
+        source : "- Arcadia Blog"},
+    {fact : "Fossil fuels account for around 80% to 90% of CO2 emissions",
+        source : "- Mega Online"},
+    {fact : "Certain modern aircrafts use less than 3 litres of jet fuel per 100 passenger kilometres. This matches the efficiency of most modern compact cars",
+        source : "- ATAG"},
+    {fact : "Trees literally make it rain",
+       source : "- One Tree Planted"},
+    {fact : "Your water incoperates a high Carbon Footprint, so don´t waste it",
+       source : "- Thrive Global"},
+    {fact : "Every dollat invested in clean green energy creates approximatly three times as many jobs as the same dollar invested into fossil fuels",
+       source : "- EDF"},
+    {fact : "Preserving an average acre/4000m^2 of forest can keep more than 120000kg of caron dioxide out of the atmosphere",
+       source : "- Global envoirement and technology Foundation"},
+    {fact : "Replacing six interior incandescent bulbs with compact fluorescents can keep 250kg of CO2 out of the atmosphere",
+       source : "- Rocky Mountain Institute"},   
 ];
 
 var deeds = [
@@ -677,6 +701,73 @@ var deeds = [
     "Buy a all-natural, eco-friendly soap.",
     "Donate something to an environmental organisation of your liking"];
 
+var foodHelperMessages = {
+    milk : { //source: https://www.calculateme.com/recipe/milk-by-volume
+        weight : 1.022,
+        message : "One liter of milk weighs about 1.022 kg."
+    },
+    eggs : { //source: https://en.wikipedia.org/wiki/Chicken_egg_sizes
+        weight : 0.050,
+        message : "An average medium sizes egg weighs about 50 grams."
+    },
+    bananas : { //source: https://lunchsense.com/how-much-does-a-banana-weigh/
+        weight : 0.120,
+        message : "An average banana weighs about 120 grams."
+    },
+    tomatoes : { //source: https://hannaone.com/Recipe/weighttomato.html
+        weight : 0.123,
+        message : "An average tomato weighs about 123 grams."
+    },
+    apples : { //source: https://hannaone.com/Recipe/weightapple.html
+        weight : 0.180,
+        message : "An average medium sized apple weighs about 180 grams."
+    },
+    oranges : { //source: https://hannaone.com/Recipe/weightorange.html
+        weight : 0.130,
+        message : "An average medium sized orange weighs about 130 grams."
+    },
+    tangerines : { //source: https://hannaone.com/Recipe/weightorange.html
+        weight : 0.09,
+        message : "An average medium sized tangerine weighs about 90 grams."
+    },
+    bloodoranges : { //source: http://fruitspecies.blogspot.com/2011/11/blood-orange.html
+        weight : 0.137,
+        message : "An average blood orange weighs about 137 grams."
+    },
+    clementines : { //source: https://www.livestrong.com/article/303062-how-many-calories-are-in-a-clementine/
+        weight : 0.074,
+        message : "An average clementine weighs about 74 grams."
+    },
+    limes : { //source: https://www.healthline.com/nutrition/limes#nutrition
+        weight : 0.067,
+        message : "An average lime weighs about 67 grams."
+    },
+    grapefruits : { //source: https://www.medicalnewstoday.com/articles/280882#:~:text=According%20to%20the%20United%20States,milligrams%20(mg)%20of%20potassium.
+        weight : 0.2,
+        message : "A small grapefruit weighs about 200 grams."
+    },
+    lemons : { //source: https://hannaone.com/Recipe/weightlemon.html
+        weight : 0.07,
+        message : "An average lemon weighs about 70 grams."
+    },
+    oliveoil : { //source: https://lamasangiorgio.com/gb/blog/post/26_how-much-does-a-liter-of-extra-virgin-olive-oil-weigh?page_type=post
+        weight : 0.69,
+        message : "750 ml of olive oil weigh about 690 grams."
+    },
+    palmoil : { //source: http://www.webconversiononline.com/weightof.aspx?quantity=1&measure=liter&ingredient=palmoil
+        weight : 0.913,
+        message : "One liter of palm oil weighs about 913 grams."
+    },
+    chocolate : {
+        weight : 0.1,
+        message : "Chocolate Bars usually weigh 100 grams."
+    },
+    soymilk : { //source: http://www.webconversiononline.com/weightof.aspx?quantity=1&measure=liter&ingredient=soymilk
+        weight : 1.027,
+        message : "One liter of soymilk weighs about 1.027 kg."
+    }
+}
+
 var numbers = {
     accuracy : 3, //i.e. we round to 3 decimal digits e.g. 123.456789 kg -> 123.457 kg
     co2PerKm : { //source: https://www.bbc.com/news/science-environment-49349566
@@ -688,6 +779,37 @@ var numbers = {
         longTrain : 0.006,
         shortBoat : 0.018,
         longBoat : 0.251
+    },
+    co2PerKg : { //source: https://www.visualcapitalist.com/visualising-the-greenhouse-gas-impact-of-each-food/
+        beef : 60,
+        lamb : 24,
+        cheese : 21,
+        dairybeef : 21,
+        chocolate : 19,
+        coffee : 17,
+        prawns : 12,
+        palmoil : 8,
+        pig : 7,
+        poultry : 6,
+        oliveoil : 6,
+        fish : 5,
+        eggs : 4.5,
+        rice : 4,
+        wildfish : 3,
+        milk : 3,
+        cane_sugar : 3,
+        groundnuts : 2.5,
+        wheat : 1.4,
+        tomatoes : 1.4,
+        corn : 1,
+        cassava : 1,
+        soymilk : 0.9,
+        peas : 0.9,
+        bananas : 0.7,
+        root : 0.4,
+        apples : 0.4,
+        citrus : 0.3,
+        nuts : 0.3
     },
     thresholds : {
         Plane : 2000, //i.e. we assume every flight of 2000km or less is short haul
